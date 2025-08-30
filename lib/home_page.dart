@@ -1,155 +1,249 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Screen width/height for responsiveness
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Colors.blue.shade700,
-        elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Civic Reporter-Jharkhand",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "Let's fix the city together !",
-              style: TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-          ],
-        ),
-        actions: [
-          Icon(Icons.settings, color: Colors.white),
-          SizedBox(width: 12),
-        ],
-      ),
+      backgroundColor: Colors.grey.shade100,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(width * 0.04),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Report an issue button
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade700,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 50,
-                    vertical: 14,
+            // Header Card
+            Container(
+              padding: EdgeInsets.all(width * 0.04),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade700,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Smart Civic Portal",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: width * 0.045,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(
+                        Icons.notifications,
+                        color: Colors.white,
+                        size: width * 0.07,
+                      ),
+                    ],
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                  SizedBox(height: height * 0.01),
+                  Text(
+                    "Good morning,",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: width * 0.035,
+                    ),
                   ),
-                ),
-                onPressed: () {},
-                child: const Text(
-                  "Report an Issue",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+                  Text(
+                    "Rahul Kumar",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: width * 0.045,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: height * 0.015),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.blue.shade700,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.04,
+                        vertical: height * 0.012,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {},
+                    icon: Icon(Icons.add, size: width * 0.05),
+                    label: Text(
+                      "Report an Issue",
+                      style: TextStyle(fontSize: width * 0.035),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
 
-            // Quick Report Categories
-            const Text(
-              "Quick Report Categories",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            SizedBox(height: height * 0.02),
+
+            // Quick Report
+            Text(
+              "Quick Report",
+              style: TextStyle(
+                fontSize: width * 0.04,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            SizedBox(height: height * 0.015),
+            GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: height * 0.015,
+              crossAxisSpacing: width * 0.04,
+              childAspectRatio: 1.1,
               children: [
-                _buildCategory(Icons.delete, "Garbage"),
-                _buildCategory(Icons.lightbulb, "Street Light"),
-                _buildCategory(Icons.car_repair, "Road Damage"),
-
-                // if available in your Flutter SDK
-                _buildCategory(Icons.water_drop, "Water Supply"),
+                _quickReportCard(
+                  Icons.delete,
+                  "Garbage",
+                  Colors.green.shade100,
+                  Colors.green,
+                  width,
+                ),
+                _quickReportCard(
+                  Icons.lightbulb_outline,
+                  "Street Light",
+                  Colors.yellow.shade100,
+                  Colors.orange,
+                  width,
+                ),
+                _quickReportCard(
+                  Icons.traffic,
+                  "Road Damage",
+                  Colors.red.shade100,
+                  Colors.red,
+                  width,
+                ),
+                _quickReportCard(
+                  Icons.water_drop,
+                  "Water Supply",
+                  Colors.blue.shade100,
+                  Colors.blue,
+                  width,
+                ),
               ],
             ),
-            const SizedBox(height: 20),
 
-            // City Progress
-            const Text(
-              "City Progress",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            SizedBox(height: height * 0.02),
+
+            // Badge Card
+            Container(
+              padding: EdgeInsets.all(width * 0.04),
+              decoration: BoxDecoration(
+                color: Colors.purple.shade400,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Current Badge",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: width * 0.035,
+                    ),
+                  ),
+                  Text(
+                    "Civic Hero 🧑‍🤝‍🧑",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: width * 0.04,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: height * 0.01),
+                  LinearProgressIndicator(
+                    value: 0.7,
+                    backgroundColor: Colors.white24,
+                    color: Colors.white,
+                    minHeight: height * 0.01,
+                  ),
+                  SizedBox(height: height * 0.01),
+                  Text(
+                    "2 more reports to reach Neighborhood Guardian 🦸‍♂️",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: width * 0.03,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 12),
+
+            SizedBox(height: height * 0.02),
+
+            // Report Summary
+            Text(
+              "Reports Summary",
+              style: TextStyle(
+                fontSize: width * 0.04,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: height * 0.012),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildProgress(Icons.search, "Total Reports", "0"),
-                _buildProgress(Icons.access_time, "Pending", "0"),
-                _buildProgress(Icons.check_circle, "Resolved", "0"),
+                _summaryBox("12", "Total", Colors.black, width),
+                _summaryBox("3", "Pending", Colors.orange, width),
+                _summaryBox("9", "Resolved", Colors.green, width),
               ],
             ),
-            const SizedBox(height: 20),
+
+            SizedBox(height: height * 0.02),
 
             // Recent Reports
-            const Text(
+            Text(
               "Recent Reports",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const Center(
-                child: Text(
-                  "No recent public reports yet.",
-                  style: TextStyle(color: Colors.grey),
-                ),
+              style: TextStyle(
+                fontSize: width * 0.04,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
-
-            // Community Engagement
-            const Text(
-              "Community Engagement",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            SizedBox(height: height * 0.012),
+            _reportItem(
+              "Broken Street Light",
+              "MG Road, Sector 14 • 2 days ago",
+              "Pending",
+              Colors.orange,
+              width,
             ),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.people, color: Colors.blue),
-                  SizedBox(width: 10),
-                  Text(
-                    "Join the Monthly Cleanup",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
+            _reportItem(
+              "Garbage Collection",
+              "Park Avenue, Block A • 5 days ago",
+              "Resolved",
+              Colors.green,
+              width,
+            ),
+            _reportItem(
+              "Pothole Repair",
+              "Main Street, Near Mall • 1 week ago",
+              "Resolved",
+              Colors.green,
+              width,
             ),
           ],
         ),
@@ -157,63 +251,116 @@ class HomePage extends StatelessWidget {
 
       // Bottom Navigation
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue.shade700,
+        unselectedItemColor: Colors.grey,
+        iconSize: width * 0.07,
+        selectedFontSize: width * 0.03,
+        unselectedFontSize: width * 0.03,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.file_copy), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle_outline),
+            label: "Report",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: "Complaints",
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
     );
   }
 
-  // Widget for categories
-  static Widget _buildCategory(IconData icon, String title) {
+  // Quick Report Card
+  Widget _quickReportCard(
+    IconData icon,
+    String title,
+    Color bgColor,
+    Color iconColor,
+    double width,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: iconColor, size: width * 0.1),
+          SizedBox(height: width * 0.02),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: width * 0.035,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Report Summary Box
+  Widget _summaryBox(String value, String label, Color color, double width) {
     return Column(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4,
-                offset: Offset(0, 2),
-              ),
-            ],
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: width * 0.045,
+            fontWeight: FontWeight.bold,
+            color: color,
           ),
-          padding: const EdgeInsets.all(16),
-          child: Icon(icon, size: 28, color: Colors.blue),
         ),
-        const SizedBox(height: 6),
-        Text(title, style: const TextStyle(fontSize: 12)),
+        SizedBox(height: width * 0.01),
+        Text(label, style: TextStyle(fontSize: width * 0.03)),
       ],
     );
   }
 
-  // Widget for progress stats
-  static Widget _buildProgress(IconData icon, String title, String value) {
-    return Container(
-      width: 100,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: Colors.blue, size: 28),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  // Recent Report Item
+  Widget _reportItem(
+    String title,
+    String subtitle,
+    String status,
+    Color statusColor,
+    double width,
+  ) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: width * 0.015),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: width * 0.035,
           ),
-          Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        ],
+        ),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: width * 0.03)),
+        trailing: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: width * 0.025,
+            vertical: width * 0.01,
+          ),
+          decoration: BoxDecoration(
+            color: statusColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            status,
+            style: TextStyle(
+              color: statusColor,
+              fontWeight: FontWeight.w600,
+              fontSize: width * 0.03,
+            ),
+          ),
+        ),
       ),
     );
   }
