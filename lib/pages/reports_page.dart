@@ -8,7 +8,6 @@ class MyReportsPage extends StatefulWidget {
 }
 
 class _MyReportsPageState extends State<MyReportsPage> {
-  // Dummy report data
   final List<Map<String, dynamic>> reports = [
     {
       "title": "Garbage - Overflowing Dustbin",
@@ -24,7 +23,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
       "date": "Aug 30, 11:20 AM",
       "status": "In Progress",
       "icon": Icons.lightbulb,
-      "image": "assets/images/streetlight.webp", // ✅ Fixed
+      "image": "assets/images/streetlight.png",
     },
     {
       "title": "Road Damage - Pothole",
@@ -69,7 +68,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Filter reports based on tab
     final filteredReports = selectedTab == "All"
         ? reports
         : reports.where((r) => r["status"] == selectedTab).toList();
@@ -82,120 +80,140 @@ class _MyReportsPageState extends State<MyReportsPage> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Column(
-        children: [
-          // Summary Row
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                _SummaryItem(title: "Total", value: "12", color: Colors.black),
-                _SummaryItem(
-                  title: "Pending",
-                  value: "3",
-                  color: Colors.orange,
-                ),
-                _SummaryItem(
-                  title: "In Progress",
-                  value: "4",
-                  color: Colors.blue,
-                ),
-                _SummaryItem(
-                  title: "Resolved",
-                  value: "5",
-                  color: Colors.green,
-                ),
-              ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Summary Row
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: const [
+                  _SummaryItem(
+                    title: "Total",
+                    value: "12",
+                    color: Colors.black,
+                  ),
+                  _SummaryItem(
+                    title: "Pending",
+                    value: "3",
+                    color: Colors.orange,
+                  ),
+                  _SummaryItem(
+                    title: "In Progress",
+                    value: "4",
+                    color: Colors.blue,
+                  ),
+                  _SummaryItem(
+                    title: "Resolved",
+                    value: "5",
+                    color: Colors.green,
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // Tabs
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                for (var tab in ["All", "Pending", "In Progress", "Resolved"])
-                  GestureDetector(
-                    onTap: () => setState(() => selectedTab = tab),
-                    child: _TabButton(label: tab, selected: selectedTab == tab),
-                  ),
-              ],
-            ),
-          ),
-
-          // Reports List
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredReports.length,
-              itemBuilder: (context, index) {
-                final report = filteredReports[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        report["image"],
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
-                              Icons.broken_image,
-                              size: 40,
-                              color: Colors.grey,
-                            ),
+            // Tabs
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  for (var tab in ["All", "Pending", "In Progress", "Resolved"])
+                    GestureDetector(
+                      onTap: () => setState(() => selectedTab = tab),
+                      child: _TabButton(
+                        label: tab,
+                        selected: selectedTab == tab,
                       ),
                     ),
-                    title: Text(report["title"]),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(report["location"]),
-                        Text(report["date"]),
-                      ],
+                ],
+              ),
+            ),
+
+            // Reports List
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 16),
+                itemCount: filteredReports.length,
+                itemBuilder: (context, index) {
+                  final report = filteredReports[index];
+                  final imageWidget =
+                      report["image"].toString().startsWith("http")
+                      ? Image.network(
+                          report["image"],
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.broken_image,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+                        )
+                      : Image.asset(
+                          report["image"],
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        );
+
+                  return Card(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                    trailing: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: imageWidget,
                       ),
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(
+                      title: Text(report["title"]),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(report["location"]),
+                          Text(report["date"]),
+                        ],
+                      ),
+                      trailing: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(
+                            report["status"],
+                          ).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
                           report["status"],
-                        ).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        report["status"],
-                        style: TextStyle(
-                          color: _getStatusColor(report["status"]),
-                          fontWeight: FontWeight.bold,
+                          style: TextStyle(
+                            color: _getStatusColor(report["status"]),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
 
-          const Padding(
-            padding: EdgeInsets.all(12.0),
-            child: Text(
-              "Government of India Initiative – Secure & Verified",
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+            const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Text(
+                "Government of Jharkhand Initiative – Secure & Verified",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

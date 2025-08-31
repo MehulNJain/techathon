@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'profile_page.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 class OtpPage extends StatefulWidget {
-  final String phoneNumber; // to show user’s phone
+  final String phoneNumber;
+  String verificationId; // mutable for resend
 
-  const OtpPage({super.key, required this.phoneNumber});
+  OtpPage({super.key, required this.phoneNumber, required this.verificationId});
 
   @override
   State<OtpPage> createState() => _OtpPageState();
@@ -17,6 +20,100 @@ class _OtpPageState extends State<OtpPage> {
     (index) => TextEditingController(),
   );
 
+  bool _isLoading = false;
+  ConfirmationResult? _confirmationResult; // for Web flow
+
+  Future<void> _verifyOtp() async {
+    String otp = _otpControllers.map((c) => c.text).join();
+
+    if (otp.length != 6) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter full OTP")));
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      if (kIsWeb) {
+        // ✅ Web flow
+        if (_confirmationResult == null) {
+          throw Exception("No confirmation result. Please resend OTP.");
+        }
+        await _confirmationResult!.confirm(otp);
+      } else {
+        // ✅ Mobile flow
+        PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: widget.verificationId,
+          smsCode: otp,
+        );
+        await FirebaseAuth.instance.signInWithCredential(credential);
+      }
+
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfilePage(phoneNumber: widget.phoneNumber),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Invalid OTP: $e")));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _resendOtp() async {
+    try {
+      if (kIsWeb) {
+        // ✅ Web: use RecaptchaVerifier
+        final verifier = RecaptchaVerifier(
+          auth: FirebaseAuthPlatform.instance,
+          container: 'recaptcha', // must exist in web/index.html
+          size: RecaptchaVerifierSize.compact,
+          theme: RecaptchaVerifierTheme.light,
+        );
+
+        _confirmationResult = await FirebaseAuth.instance.signInWithPhoneNumber(
+          widget.phoneNumber,
+          verifier,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("OTP resent successfully (Web)")),
+        );
+      } else {
+        // ✅ Mobile
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: widget.phoneNumber,
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            await FirebaseAuth.instance.signInWithCredential(credential);
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Failed: ${e.message}")));
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            setState(() => widget.verificationId = verificationId);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("OTP resent successfully (Mobile)")),
+            );
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {},
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,8 +124,6 @@ class _OtpPageState extends State<OtpPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 80),
-
-            // Logo Circle
             CircleAvatar(
               radius: 40,
               backgroundColor: Colors.blue.shade700,
@@ -39,7 +134,6 @@ class _OtpPageState extends State<OtpPage> {
               ),
             ),
             const SizedBox(height: 20),
-
             const Text(
               "Verify OTP",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -52,7 +146,7 @@ class _OtpPageState extends State<OtpPage> {
             ),
             const SizedBox(height: 30),
 
-            // OTP input boxes
+            // OTP input fields
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(6, (index) {
@@ -67,11 +161,11 @@ class _OtpPageState extends State<OtpPage> {
                     decoration: InputDecoration(
                       counterText: "",
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade400),
+                        borderSide: const BorderSide(color: Colors.grey),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue.shade700),
+                        borderSide: BorderSide(color: Colors.blue),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -98,54 +192,36 @@ class _OtpPageState extends State<OtpPage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {
-                  // Collect OTP
-                  String otp = _otpControllers.map((c) => c.text).join();
-                  if (otp.length == 6) {
-                    // Navigate to HomePage
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ProfilePage(phoneNumber: widget.phoneNumber),
+                onPressed: _isLoading ? null : _verifyOtp,
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                        "Verify & Login",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please enter full OTP")),
-                    );
-                  }
-                },
-                child: const Text(
-                  "Verify & Login",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
               ),
             ),
 
             const SizedBox(height: 20),
-
-            // Resend text
             const Text(
               "Didn't receive OTP?",
               style: TextStyle(color: Colors.black54),
             ),
             TextButton(
-              onPressed: () {
-                // resend OTP logic
-              },
+              onPressed: _resendOtp,
               child: const Text("Resend", style: TextStyle(color: Colors.blue)),
             ),
 
             const SizedBox(height: 40),
-
-            // Footer
             Column(
               children: const [
                 Icon(Icons.verified_user, size: 18, color: Colors.grey),
                 SizedBox(height: 4),
                 Text(
-                  "Government of India Initiative",
+                  "Government of Jharkhand Initiative",
                   style: TextStyle(fontSize: 12, color: Colors.black54),
                 ),
                 Text(
@@ -154,6 +230,14 @@ class _OtpPageState extends State<OtpPage> {
                 ),
               ],
             ),
+
+            const SizedBox(height: 20),
+            // Recaptcha space only on Web
+            if (kIsWeb)
+              const SizedBox(
+                height: 70,
+                child: HtmlElementView(viewType: 'recaptcha'),
+              ),
           ],
         ),
       ),

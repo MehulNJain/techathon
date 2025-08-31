@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'reports_page.dart'; // Import your reports page
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String fullName; // ✅ Accept full name from ProfilePage
+
+  const HomePage({super.key, required this.fullName});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Text(
-                    "Rahul Kumar",
+                    widget.fullName, // ✅ Dynamic name from ProfilePage
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: width * 0.045,

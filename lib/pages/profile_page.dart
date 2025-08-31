@@ -114,7 +114,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (_nameController.text.trim().isNotEmpty) {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(
+                          fullName: _nameController.text
+                              .trim(), // ✅ Pass required argument
+                        ),
+                      ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
