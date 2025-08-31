@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'reports_page.dart'; // Import your reports page
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,11 +15,18 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = index;
     });
+
+    // Navigate to My Reports when Complaints tab is tapped
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MyReportsPage()),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Screen width/height for responsiveness
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -86,7 +94,15 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      // Navigate to report page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MyReportsPage(),
+                        ),
+                      );
+                    },
                     icon: Icon(Icons.add, size: width * 0.05),
                     label: Text(
                       "Report an Issue",
@@ -225,22 +241,22 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: height * 0.012),
             _reportItem(
-              "Broken Street Light",
-              "MG Road, Sector 14 • 2 days ago",
+              "Garbage - Overflowing Dustbin",
+              "MG Road, Sector 14",
               "Pending",
               Colors.orange,
               width,
             ),
             _reportItem(
-              "Garbage Collection",
-              "Park Avenue, Block A • 5 days ago",
-              "Resolved",
-              Colors.green,
+              "Street Light - Not Working",
+              "Park Street, Block A",
+              "In Progress",
+              Colors.blue,
               width,
             ),
             _reportItem(
-              "Pothole Repair",
-              "Main Street, Near Mall • 1 week ago",
+              "Road Damage - Pothole",
+              "Main Road, Near Mall",
               "Resolved",
               Colors.green,
               width,
