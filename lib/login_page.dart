@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Added for input formatters
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'otp_page.dart';
-import '../worker_login_page.dart'; // Make sure to create this page
+import 'pages/otp_page.dart';
+import 'worker_login_page.dart'; // Make sure to create this page
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
