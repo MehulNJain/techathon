@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Added for input formatters
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'pages/otp_page.dart';
-import 'worker_login_page.dart'; // Make sure to create this page
+import 'worker_login_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,17 +19,9 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-    _phoneController.addListener(() {
-      final text = _phoneController.text;
-      if (text.startsWith("+91")) {
-        _phoneController.text = text.replaceFirst("+91", "");
-        _phoneController.selection = TextSelection.fromPosition(
-          TextPosition(offset: _phoneController.text.length),
-        );
-      }
-    });
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
   }
 
   Future<void> _sendOtp() async {
@@ -53,7 +45,6 @@ class _LoginPageState extends State<LoginPage> {
       final formattedPhone = "+91$phone";
 
       if (kIsWeb) {
-        // Web OTP flow
         final verifier = RecaptchaVerifier(
           auth: FirebaseAuthPlatform.instance,
           container: 'recaptcha',
@@ -76,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
       } else {
-        // Mobile OTP flow
         await _auth.verifyPhoneNumber(
           phoneNumber: formattedPhone,
           timeout: const Duration(seconds: 60),
@@ -116,143 +106,234 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    const mainBlue = Color(0xFF1746D1);
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 80),
-
-              // Logo
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.blue.shade700,
-                child: const Icon(
-                  Icons.account_balance,
-                  size: 40,
-                  color: Colors.white,
+      resizeToAvoidBottomInset: true,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                  maxWidth: 420,
                 ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Title
-              const Text(
-                "Smart Civic Portal",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                "Report civic issues and connect with your local government",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.black54),
-              ),
-
-              const SizedBox(height: 40),
-
-              // Phone Number Label
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Phone Number",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              // Phone Number Input
-              TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                maxLength: 10,
-                decoration: InputDecoration(
-                  counterText: "",
-                  prefixIcon: const Icon(Icons.phone),
-                  hintText: "Enter your 10-digit phone number",
-                  prefixText: "+91 ",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(10),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Send OTP Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: _isLoading ? null : _sendOtp,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text(
-                          "Send OTP",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(height: 40),
+                              CircleAvatar(
+                                radius: 48,
+                                backgroundColor: mainBlue,
+                                child: const Icon(
+                                  Icons.account_balance,
+                                  size: 44,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 28),
+                              const Text(
+                                "Smart Civic Portal",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              const Text(
+                                "Report civic issues and connect with your local government",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 36),
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Phone Number",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 8),
+                                    Icon(
+                                      Icons.phone,
+                                      color: Colors.grey.shade500,
+                                      size: 22,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    const Text(
+                                      "+91",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Container(
+                                      height: 36,
+                                      width: 1,
+                                      color: Colors.grey.shade300,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _phoneController,
+                                        keyboardType: TextInputType.phone,
+                                        maxLength: 10,
+                                        decoration: const InputDecoration(
+                                          counterText: "",
+                                          hintText: "Enter your phone number",
+                                          border: InputBorder.none,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: 10,
+                                          ),
+                                        ),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                          LengthLimitingTextInputFormatter(10),
+                                        ],
+                                        onChanged: (_) => setState(() {}),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        _phoneController.text.length == 10
+                                        ? mainBlue
+                                        : Colors.grey.shade300,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  onPressed:
+                                      (_phoneController.text.length == 10 &&
+                                          !_isLoading)
+                                      ? _sendOtp
+                                      : null,
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : const Text(
+                                          "Send OTP",
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                              if (kIsWeb) ...[
+                                const SizedBox(height: 20),
+                                const SizedBox(
+                                  height: 60,
+                                  child: HtmlElementView(viewType: 'recaptcha'),
+                                ),
+                              ],
+                              const SizedBox(height: 32),
+                              TextButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const WorkerLoginPage(),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.engineering,
+                                  size: 20,
+                                  color: mainBlue,
+                                ),
+                                label: Text(
+                                  "Login as Worker",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: mainBlue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                ),
-              ),
-
-              if (kIsWeb) ...[
-                const SizedBox(height: 20),
-                const SizedBox(
-                  height: 60,
-                  child: HtmlElementView(viewType: 'recaptcha'),
-                ),
-              ],
-
-              const SizedBox(height: 30),
-
-              // Login as Worker Button
-              TextButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const WorkerLoginPage(),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.engineering,
-                  size: 20,
-                  color: Colors.blue,
-                ),
-                label: const Text(
-                  "Login as Worker",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
+                      ),
+                      // Footer
+                      const SizedBox(height: 32),
+                      Divider(height: 1, color: Colors.grey.shade200),
+                      const SizedBox(height: 16),
+                      const Text(
+                        "Government of India Initiative",
+                        style: TextStyle(color: Colors.black54, fontSize: 14),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            Icons.verified_user,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            "Secure & Verified",
+                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
