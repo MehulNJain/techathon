@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'otp_page.dart';
+import '../worker_login_page.dart'; // Make sure to create this page
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -37,10 +38,10 @@ class _LoginPageState extends State<LoginPage> {
       final formattedPhone = "+91$phone";
 
       if (kIsWeb) {
-        // 🔹 WEB flow: use RecaptchaVerifier
+        // Web OTP flow
         final verifier = RecaptchaVerifier(
           auth: FirebaseAuthPlatform.instance,
-          container: 'recaptcha', // must exist in web/index.html
+          container: 'recaptcha',
           size: RecaptchaVerifierSize.compact,
           theme: RecaptchaVerifierTheme.light,
         );
@@ -60,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
       } else {
-        // 🔹 MOBILE flow: use verifyPhoneNumber
+        // Mobile OTP flow
         await _auth.verifyPhoneNumber(
           phoneNumber: formattedPhone,
           timeout: const Duration(seconds: 60),
@@ -102,108 +103,136 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 80),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 80),
 
-            // Logo
-            CircleAvatar(
-              radius: 40,
-              backgroundColor: Colors.blue.shade700,
-              child: const Icon(
-                Icons.account_balance,
-                size: 40,
-                color: Colors.white,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Title
-            const Text(
-              "Smart Civic Portal",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              "Report civic issues and connect with your local government",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.black54),
-            ),
-
-            const SizedBox(height: 40),
-
-            // Phone Number Label
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Phone Number",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Phone Number Input
-            TextField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              maxLength: 10,
-              decoration: InputDecoration(
-                counterText: "",
-                prefixIcon: const Icon(Icons.phone),
-                hintText: "Enter your 10-digit phone number",
-                prefixText: "+91 ",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+              // Logo
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.blue.shade700,
+                child: const Icon(
+                  Icons.account_balance,
+                  size: 40,
+                  color: Colors.white,
                 ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Send OTP Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade700,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
+              // Title
+              const Text(
+                "Smart Civic Portal",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                "Report civic issues and connect with your local government",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Phone Number Label
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Phone Number",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Phone Number Input
+              TextField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                maxLength: 10,
+                decoration: InputDecoration(
+                  counterText: "",
+                  prefixIcon: const Icon(Icons.phone),
+                  hintText: "Enter your 10-digit phone number",
+                  prefixText: "+91 ",
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: _isLoading ? null : _sendOtp,
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Text(
-                        "Send OTP",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
               ),
-            ),
 
-            if (kIsWeb) ...[
               const SizedBox(height: 20),
-              // 🔹 This div must exist for reCAPTCHA
-              const SizedBox(
-                height: 60,
-                child: HtmlElementView(viewType: 'recaptcha'),
+
+              // Send OTP Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade700,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: _isLoading ? null : _sendOtp,
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          "Send OTP",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                ),
+              ),
+
+              if (kIsWeb) ...[
+                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 60,
+                  child: HtmlElementView(viewType: 'recaptcha'),
+                ),
+              ],
+
+              const SizedBox(height: 30),
+
+              // Login as Worker Button
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WorkerLoginPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.engineering, // Helmet icon alternative
+                  size: 20,
+                  color: Colors.blue,
+                ),
+                label: const Text(
+                  "Login as Worker",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
-          ],
+          ),
         ),
       ),
     );
