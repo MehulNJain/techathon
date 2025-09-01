@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Added for input formatters
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'otp_page.dart';
@@ -16,6 +17,20 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _phoneController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(() {
+      final text = _phoneController.text;
+      if (text.startsWith("+91")) {
+        _phoneController.text = text.replaceFirst("+91", "");
+        _phoneController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _phoneController.text.length),
+        );
+      }
+    });
+  }
 
   Future<void> _sendOtp() async {
     String phone = _phoneController.text.trim();
@@ -162,6 +177,10 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
               ),
 
               const SizedBox(height: 20),
@@ -218,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
                 icon: const Icon(
-                  Icons.engineering, // Helmet icon alternative
+                  Icons.engineering,
                   size: 20,
                   color: Colors.blue,
                 ),
