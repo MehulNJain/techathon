@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import '../models/report_data.dart';
 import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
 
 class ReportDetailsPage extends StatelessWidget {
-  const ReportDetailsPage({Key? key}) : super(key: key);
+  final ReportData report;
+  const ReportDetailsPage({Key? key, required this.report}) : super(key: key);
 
   static const mainBlue = Color(0xFF1746D1);
   static const navBg = Color(0xFFF0F4FF);
@@ -12,18 +15,6 @@ class ReportDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-
-    // Dummy images for demo
-    final List<String> photoUrls = [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-    ];
-
-    final List<String> beforeAfterUrls = [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-    ];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -83,19 +74,19 @@ class ReportDetailsPage extends StatelessWidget {
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children: [
                                   Text(
-                                    "Road Damage - Pothole",
-                                    style: TextStyle(
+                                    "${report.category} - ${report.subcategory}",
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                       color: Colors.black,
                                     ),
                                   ),
-                                  SizedBox(height: 2),
+                                  const SizedBox(height: 2),
                                   Text(
-                                    "Aug 29, 2024 at 4:15 PM",
-                                    style: TextStyle(
+                                    report.dateTime,
+                                    style: const TextStyle(
                                       color: Colors.black54,
                                       fontSize: 13,
                                     ),
@@ -107,13 +98,17 @@ class ReportDetailsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          children: const [
-                            Icon(Icons.location_on, color: mainBlue, size: 18),
-                            SizedBox(width: 4),
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              color: mainBlue,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                "Main Road, Near City Mall, Sector 18",
-                                style: TextStyle(
+                                report.location,
+                                style: const TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14,
                                 ),
@@ -123,27 +118,27 @@ class ReportDetailsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 6),
                         Row(
-                          children: const [
-                            Icon(Icons.tag, color: Colors.grey, size: 18),
-                            SizedBox(width: 4),
+                          children: [
+                            const Icon(Icons.tag, color: Colors.grey, size: 18),
+                            const SizedBox(width: 4),
                             Text(
-                              "REF: CR-2024-08-001234",
-                              style: TextStyle(
+                              "REF: ${report.complaintId}",
+                              style: const TextStyle(
                                 color: Colors.black54,
                                 fontSize: 13,
                               ),
                             ),
-                            Spacer(),
-                            Chip(
+                            const Spacer(),
+                            const Chip(
                               label: Text(
-                                "Resolved",
+                                "Pending Review",
                                 style: TextStyle(
-                                  color: Color(0xFF12B76A),
+                                  color: Color(0xFFB26A00),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13,
                                 ),
                               ),
-                              backgroundColor: Color(0xFFD1FADF),
+                              backgroundColor: Color(0xFFFFF6E0),
                               padding: EdgeInsets.symmetric(
                                 horizontal: 10,
                                 vertical: 0,
@@ -156,47 +151,48 @@ class ReportDetailsPage extends StatelessWidget {
                   ),
 
                   // Photos Submitted
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Photos Submitted",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                  if (report.photoPaths.isNotEmpty)
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade200),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Photos Submitted",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 70,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: photoUrls.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(width: 10),
-                            itemBuilder: (context, i) => ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                photoUrls[i],
-                                width: 70,
-                                height: 70,
-                                fit: BoxFit.cover,
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 70,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: report.photoPaths.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 10),
+                              itemBuilder: (context, i) => ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.file(
+                                  File(report.photoPaths[i]),
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
 
                   // Issue Description & Voice Note
                   Container(
@@ -219,55 +215,60 @@ class ReportDetailsPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          "Large pothole on main road causing traffic issues and vehicle damage. Water accumulates during rain making it dangerous for two-wheelers. Immediate repair needed.",
-                          style: TextStyle(fontSize: 14, color: Colors.black87),
+                        Text(
+                          report.description,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
                         ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            ElevatedButton.icon(
-                              icon: const Icon(
-                                Icons.play_arrow,
-                                color: mainBlue,
-                              ),
-                              label: const Text(
-                                "Play Voice Note",
-                                style: TextStyle(
+                        if (report.voiceNotePath != null) ...[
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              ElevatedButton.icon(
+                                icon: const Icon(
+                                  Icons.play_arrow,
                                   color: mainBlue,
-                                  fontWeight: FontWeight.bold,
+                                ),
+                                label: const Text(
+                                  "Play Voice Note",
+                                  style: TextStyle(
+                                    color: mainBlue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: mainBlue.withOpacity(0.08),
+                                  elevation: 0,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  // TODO: Play voice note using report.voiceNotePath
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              const Text(
+                                "Voice Note",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 13,
                                 ),
                               ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: mainBlue.withOpacity(0.08),
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              onPressed: () {
-                                // TODO: Play voice note
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              "0:45 duration",
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   ),
 
-                  // Status Timeline
+                  // Status Timeline (dummy, you can add real status if you want)
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(bottom: 14),
@@ -289,154 +290,20 @@ class ReportDetailsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         _timelineTile(
-                          icon: Icons.check_circle,
-                          color: const Color(0xFF12B76A),
-                          title: "Resolved",
-                          date: "Aug 31, 2024 at 3:30 PM",
-                          desc: "Issue fixed by Municipal Corporation team",
-                        ),
-                        _timelineTile(
-                          icon: Icons.cancel,
-                          color: mainBlue,
-                          title: "In Progress",
-                          date: "Aug 30, 2024 at 10:15 AM",
-                          desc: "Assigned to repair team",
-                        ),
-                        _timelineTile(
                           icon: Icons.radio_button_unchecked,
                           color: Colors.grey,
                           title: "Submitted",
-                          date: "Aug 29, 2024 at 4:15 PM",
+                          date: report.dateTime,
                           desc: "Report submitted by citizen",
                         ),
                       ],
                     ),
                   ),
-
-                  // Resolution Details
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Resolution Details",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          "Pothole has been filled with hot mix asphalt and road surface has been leveled. Traffic flow restored to normal.",
-                          style: TextStyle(fontSize: 14, color: Colors.black87),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          "Before & After Photos",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          height: 70,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: beforeAfterUrls.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(width: 10),
-                            itemBuilder: (context, i) => ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                beforeAfterUrls[i],
-                                width: 70,
-                                height: 70,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          "Resolved by: Municipal Corporation Team - Sector 18",
-                          style: TextStyle(color: Colors.black54, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Buttons
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      icon: const Icon(
-                        Icons.report_gmailerrorred,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        "Raise Grievance",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {
-                        // TODO: Raise grievance
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      label: const Text(
-                        "Back to My Reports",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: mainBlue,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (_) => MyReportsPage()),
-                          (route) => false,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 18),
                 ],
               ),
             ),
           ),
-          // Bottom Navigation Bar
+          // Bottom Navigation Bar (same as before)
           Container(
             decoration: BoxDecoration(
               color: navBg,
@@ -468,11 +335,8 @@ class ReportDetailsPage extends StatelessWidget {
                     (route) => false,
                   );
                 } else if (index == 1) {
-                  // Go to report issue
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (_) => HomePage(fullName: ""),
-                    ), // or ReportIssuePage()
+                    MaterialPageRoute(builder: (_) => HomePage(fullName: "")),
                     (route) => false,
                   );
                 } else if (index == 2) {

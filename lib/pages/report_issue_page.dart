@@ -13,6 +13,7 @@ import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
 import 'submitted_page.dart';
+import '../models/report_data.dart';
 
 class _PhotoWithTimestamp {
   final File file;
@@ -765,17 +766,24 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       ),
                       onPressed: _isFormValid
                           ? () {
+                              final report = ReportData(
+                                category: selectedCategory ?? "",
+                                subcategory: selectedSubcategory ?? "",
+                                description: detailsController.text,
+                                photoPaths: photos
+                                    .map((p) => p.file.path)
+                                    .toList(),
+                                location: address ?? "",
+                                dateTime: DateFormat(
+                                  'dd MMM, hh:mm a',
+                                ).format(DateTime.now()),
+                                complaintId:
+                                    "CMP${DateTime.now().millisecondsSinceEpoch.toString().substring(5, 12)}",
+                                voiceNotePath: _audioPath,
+                              );
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (_) => SubmittedPage(
-                                    category: selectedCategory ?? "",
-                                    issueType: selectedSubcategory ?? "",
-                                    dateTime: DateFormat(
-                                      'dd MMM, hh:mm a',
-                                    ).format(DateTime.now()),
-                                    complaintId:
-                                        "CMP${DateTime.now().millisecondsSinceEpoch.toString().substring(5, 12)}",
-                                  ),
+                                  builder: (_) => SubmittedPage(report: report),
                                 ),
                               );
                             }
