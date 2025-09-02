@@ -770,8 +770,13 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                                 category: selectedCategory ?? "",
                                 subcategory: selectedSubcategory ?? "",
                                 description: detailsController.text,
-                                photoPaths: photos
-                                    .map((p) => p.file.path)
+                                photos: photos
+                                    .map(
+                                      (p) => ReportPhoto(
+                                        path: p.file.path,
+                                        timestamp: p.timestamp,
+                                      ),
+                                    )
                                     .toList(),
                                 location: address ?? "",
                                 dateTime: DateFormat(

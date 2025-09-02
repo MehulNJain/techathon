@@ -1,9 +1,83 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../models/report_data.dart';
 import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
+
+// Icon selection based on complaint category
+IconData getCategoryIcon(String category) {
+  switch (category) {
+    case 'Garbage':
+      return Icons.delete;
+    case 'Street Light':
+      return Icons.lightbulb_outline;
+    case 'Road Damage':
+      return Icons.construction;
+    case 'Water':
+      return Icons.water_drop;
+    case 'Drainage & Sewerage':
+      return Icons.water_damage_outlined;
+    default:
+      return Icons.report_problem;
+  }
+}
+
+// Voice note player widget
+class VoiceNotePlayer extends StatefulWidget {
+  final String path;
+  const VoiceNotePlayer({super.key, required this.path});
+
+  @override
+  State<VoiceNotePlayer> createState() => _VoiceNotePlayerState();
+}
+
+class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
+  final AudioPlayer _player = AudioPlayer();
+  bool _isPlaying = false;
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  void _togglePlay() async {
+    if (_isPlaying) {
+      await _player.pause();
+      setState(() => _isPlaying = false);
+    } else {
+      await _player.play(DeviceFileSource(widget.path));
+      setState(() => _isPlaying = true);
+      _player.onPlayerComplete.listen((_) {
+        setState(() => _isPlaying = false);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      icon: Icon(
+        _isPlaying ? Icons.pause : Icons.play_arrow,
+        color: Colors.blue,
+      ),
+      label: Text(
+        _isPlaying ? "Pause Voice Note" : "Play Voice Note",
+        style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue.withOpacity(0.08),
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      onPressed: _togglePlay,
+    );
+  }
+}
 
 class ReportDetailsPage extends StatelessWidget {
   final ReportData report;
@@ -23,7 +97,12 @@ class ReportDetailsPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => MyReportsPage()),
+              (route) => false,
+            );
+          },
         ),
         title: const Text(
           'Report Details',
@@ -64,8 +143,8 @@ class ReportDetailsPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               padding: const EdgeInsets.all(8),
-                              child: const Icon(
-                                Icons.directions_car,
+                              child: Icon(
+                                getCategoryIcon(report.category),
                                 color: mainBlue,
                                 size: 28,
                               ),
@@ -151,7 +230,7 @@ class ReportDetailsPage extends StatelessWidget {
                   ),
 
                   // Photos Submitted
-                  if (report.photoPaths.isNotEmpty)
+                  if (report.photos.isNotEmpty)
                     Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(bottom: 14),
@@ -173,21 +252,88 @@ class ReportDetailsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           SizedBox(
-                            height: 70,
+                            height: 90,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
-                              itemCount: report.photoPaths.length,
+                              itemCount: report.photos.length,
                               separatorBuilder: (_, __) =>
                                   const SizedBox(width: 10),
-                              itemBuilder: (context, i) => ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.file(
-                                  File(report.photoPaths[i]),
-                                  width: 70,
-                                  height: 70,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                              itemBuilder: (context, i) {
+                                final photo = report.photos[i];
+                                return GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => Dialog(
+                                        backgroundColor: Colors.black,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Image.file(File(photo.path)),
+                                            Padding(
+                                              padding: const EdgeInsets.all(
+                                                8.0,
+                                              ),
+                                              child: Text(
+                                                DateFormat(
+                                                  'dd MMM yyyy, hh:mm a',
+                                                ).format(photo.timestamp),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text(
+                                                "Close",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.file(
+                                          File(photo.path),
+                                          width: 70,
+                                          height: 70,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: 2,
+                                        left: 2,
+                                        child: Container(
+                                          color: Colors.black54,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 4,
+                                            vertical: 2,
+                                          ),
+                                          child: Text(
+                                            DateFormat(
+                                              'dd MMM, hh:mm a',
+                                            ).format(photo.timestamp),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ],
@@ -226,33 +372,7 @@ class ReportDetailsPage extends StatelessWidget {
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              ElevatedButton.icon(
-                                icon: const Icon(
-                                  Icons.play_arrow,
-                                  color: mainBlue,
-                                ),
-                                label: const Text(
-                                  "Play Voice Note",
-                                  style: TextStyle(
-                                    color: mainBlue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: mainBlue.withOpacity(0.08),
-                                  elevation: 0,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  // TODO: Play voice note using report.voiceNotePath
-                                },
-                              ),
+                              VoiceNotePlayer(path: report.voiceNotePath!),
                               const SizedBox(width: 10),
                               const Text(
                                 "Voice Note",
