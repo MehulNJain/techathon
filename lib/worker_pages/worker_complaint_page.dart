@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'worker_completionProof_page.dart'; // Import completion proof page
+import 'worker_completionProof_page.dart';
+import 'worker_reportIssue_page.dart'; // Import the report issue page
 
 class WorkerComplaintPage extends StatelessWidget {
   const WorkerComplaintPage({Key? key}) : super(key: key);
@@ -384,7 +385,15 @@ class WorkerComplaintPage extends StatelessWidget {
                 ),
                 padding: EdgeInsets.symmetric(vertical: 16),
               ),
-              onPressed: () {},
+              onPressed: () {
+                // Navigate to worker report issue page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WorkerReportIssuePage(),
+                  ),
+                );
+              },
               icon: Icon(Icons.report_problem, size: 20),
               label: Text('Report Issue', style: TextStyle(fontSize: 16)),
             ),
