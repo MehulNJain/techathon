@@ -1,3 +1,4 @@
+import 'package:CiTY/pages/report_details_page.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
@@ -187,7 +188,10 @@ class SubmittedPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // TODO: Navigate to track complaint page
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => ReportDetailsPage()),
+                      (route) => false,
+                    );
                   },
                 ),
               ),
