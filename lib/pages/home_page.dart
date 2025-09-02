@@ -267,11 +267,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () =>
-                              _openReportIssueWithCategory("Water Supply"),
+                          onTap: () => _openReportIssueWithCategory("Water"),
                           child: _quickReportCard(
                             Icons.water_drop,
-                            "Water Supply",
+                            "Water",
                             const Color(0xFFEAF4FF),
                             mainBlue,
                             width,
