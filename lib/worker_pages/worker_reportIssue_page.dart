@@ -8,7 +8,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
-import 'worker_workCompletion_page.dart'; // Import the work completion page
 
 class _PhotoWithTimestamp {
   final File file;
@@ -16,13 +15,14 @@ class _PhotoWithTimestamp {
   _PhotoWithTimestamp({required this.file, required this.timestamp});
 }
 
-class WorkerCompletionProofPage extends StatefulWidget {
+class WorkerReportIssuePage extends StatefulWidget {
+  const WorkerReportIssuePage({Key? key}) : super(key: key);
+
   @override
-  State<WorkerCompletionProofPage> createState() =>
-      _WorkerCompletionProofPageState();
+  State<WorkerReportIssuePage> createState() => _WorkerReportIssuePageState();
 }
 
-class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
+class _WorkerReportIssuePageState extends State<WorkerReportIssuePage> {
   List<_PhotoWithTimestamp> photos = [];
   String? gps;
   String? address;
@@ -72,7 +72,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
       });
       return;
     }
-    await _fetchLocation();
+    _fetchLocation();
   }
 
   Future<void> _fetchLocation() async {
@@ -219,7 +219,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          "Completion Proof",
+          "Report Issue",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -258,9 +258,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          const TextSpan(
-                            text: " (max 3) as proof of work completion.",
-                          ),
+                          const TextSpan(text: " (max 3) as proof of issue."),
                         ],
                       ),
                     ),
@@ -551,9 +549,9 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                icon: const Icon(Icons.check_circle, color: Colors.white),
+                icon: const Icon(Icons.report_problem, color: Colors.white),
                 label: const Text(
-                  'Mark Work Completed',
+                  'Submit Issue',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -561,7 +559,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade700,
+                  backgroundColor: Colors.red.shade700,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -571,18 +569,9 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                 ),
                 onPressed: photos.isNotEmpty
                     ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WorkerWorkCompletionSuccessPage(
-                              complaintId:
-                                  'CMP001234', // Replace with actual complaintId
-                              supervisorId:
-                                  'SUP001', // Replace with actual supervisorId
-                              citizenId:
-                                  'CIT001', // Replace with actual citizenId
-                            ),
-                          ),
+                        // Submit logic here
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Issue submitted!")),
                         );
                       }
                     : null,
