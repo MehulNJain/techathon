@@ -12,6 +12,7 @@ import 'package:geocoding/geocoding.dart';
 import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
+import 'submitted_page.dart';
 
 class _PhotoWithTimestamp {
   final File file;
@@ -317,7 +318,10 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      extendBodyBehindAppBar: true, // Make blue go to top
       appBar: AppBar(
+        backgroundColor: mainBlue,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).maybePop(),
@@ -327,11 +331,10 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        elevation: 0,
-        backgroundColor: mainBlue,
       ),
       body: Column(
         children: [
+          SizedBox(height: MediaQuery.of(context).padding.top + kToolbarHeight),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -372,7 +375,6 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     disabledHint: widget.prefilledCategory != null
                         ? Text(widget.prefilledCategory!)
                         : null,
-                    // Show a message if no category is selected
                     isExpanded: true,
                   ),
                   if (_isCategoryRequired && selectedCategory == null)
@@ -657,12 +659,54 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       const Icon(Icons.mic, color: Colors.grey),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: Text(
-                          _audioPath == null
-                              ? 'Record voice note (optional)'
-                              : 'Voice note recorded',
-                          style: TextStyle(color: Colors.grey.shade700),
-                        ),
+                        child: _isRecording
+                            ? Row(
+                                children: [
+                                  const Text(
+                                    'Recording...',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  SizedBox(
+                                    width: 18,
+                                    height: 18,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.red,
+                                      strokeWidth: 3,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : _isPlaying
+                            ? Row(
+                                children: [
+                                  const Text(
+                                    'Playing...',
+                                    style: TextStyle(
+                                      color: mainBlue,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  SizedBox(
+                                    width: 18,
+                                    height: 18,
+                                    child: CircularProgressIndicator(
+                                      color: mainBlue,
+                                      strokeWidth: 3,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                _audioPath == null
+                                    ? 'Record voice note (optional)'
+                                    : 'Voice note recorded',
+                                style: TextStyle(color: Colors.grey.shade700),
+                              ),
                       ),
                       if (!_isRecording && _audioPath == null)
                         IconButton(
@@ -721,7 +765,19 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       ),
                       onPressed: _isFormValid
                           ? () {
-                              // TODO: Submit logic
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (_) => SubmittedPage(
+                                    category: selectedCategory ?? "",
+                                    issueType: selectedSubcategory ?? "",
+                                    dateTime: DateFormat(
+                                      'dd MMM, hh:mm a',
+                                    ).format(DateTime.now()),
+                                    complaintId:
+                                        "CMP${DateTime.now().millisecondsSinceEpoch.toString().substring(5, 12)}",
+                                  ),
+                                ),
+                              );
                             }
                           : null,
                     ),
