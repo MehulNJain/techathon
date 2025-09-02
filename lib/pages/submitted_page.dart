@@ -1,26 +1,17 @@
-import 'package:CiTY/pages/report_details_page.dart';
 import 'package:flutter/material.dart';
+import '../models/report_data.dart';
+import 'report_details_page.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
 
 class SubmittedPage extends StatelessWidget {
-  final String category;
-  final String issueType;
-  final String dateTime;
-  final String complaintId;
+  final ReportData report;
+  const SubmittedPage({Key? key, required this.report}) : super(key: key);
 
-  const SubmittedPage({
-    Key? key,
-    required this.category,
-    required this.issueType,
-    required this.dateTime,
-    required this.complaintId,
-  }) : super(key: key);
+  static const mainBlue = Color(0xFF1746D1);
 
   @override
   Widget build(BuildContext context) {
-    const mainBlue = Color(0xFF1746D1);
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -107,9 +98,9 @@ class SubmittedPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    _summaryRow("Category", category),
-                    _summaryRow("Issue Type", issueType),
-                    _summaryRow("Date Submitted", dateTime),
+                    _summaryRow("Category", report.category),
+                    _summaryRow("Issue Type", report.subcategory),
+                    _summaryRow("Date Submitted", report.dateTime),
                     Row(
                       children: [
                         const Expanded(
@@ -154,7 +145,7 @@ class SubmittedPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "#$complaintId",
+                          "#${report.complaintId}",
                           style: const TextStyle(
                             color: mainBlue,
                             fontWeight: FontWeight.bold,
@@ -188,9 +179,10 @@ class SubmittedPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => ReportDetailsPage()),
-                      (route) => false,
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ReportDetailsPage(report: report),
+                      ),
                     );
                   },
                 ),
