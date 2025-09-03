@@ -14,11 +14,11 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
   final String citizenId;
 
   const WorkerWorkCompletionSuccessPage({
-    Key? key,
+    super.key,
     required this.complaintId,
     required this.supervisorId,
     required this.citizenId,
-  }) : super(key: key);
+  });
 
   Future<void> _downloadReport(BuildContext context) async {
     try {

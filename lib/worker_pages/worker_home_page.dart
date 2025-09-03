@@ -5,6 +5,8 @@ import 'worker_myTasks_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkerHomePage extends StatefulWidget {
+  const WorkerHomePage({super.key});
+
   @override
   _WorkerHomePageState createState() => _WorkerHomePageState();
 }
@@ -312,7 +314,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
 }
 
 class WorkerDashboardHeader extends StatelessWidget {
-  const WorkerDashboardHeader({Key? key}) : super(key: key);
+  const WorkerDashboardHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -398,12 +400,12 @@ class _InfoCard extends StatelessWidget {
   final String label;
 
   const _InfoCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.iconBg,
     required this.number,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

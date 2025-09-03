@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SubmittedPage extends StatelessWidget {
   final ReportData report;
-  const SubmittedPage({Key? key, required this.report}) : super(key: key);
+  const SubmittedPage({super.key, required this.report});
 
   static const mainBlue = Color(0xFF1746D1);
 

@@ -4,7 +4,7 @@ import 'worker_reportIssue_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkerComplaintPage extends StatelessWidget {
-  const WorkerComplaintPage({Key? key}) : super(key: key);
+  const WorkerComplaintPage({super.key});
 
   @override
   Widget build(BuildContext context) {

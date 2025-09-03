@@ -270,7 +270,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ),
                     trailing: Switch(
                       value: notificationsEnabled,
-                      activeColor: mainBlue,
+                      activeThumbColor: mainBlue,
                       onChanged: (val) {
                         setState(() => notificationsEnabled = val);
                       },

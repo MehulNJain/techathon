@@ -17,7 +17,7 @@ class _PhotoWithTimestamp {
 }
 
 class WorkerReportIssuePage extends StatefulWidget {
-  const WorkerReportIssuePage({Key? key}) : super(key: key);
+  const WorkerReportIssuePage({super.key});
 
   @override
   State<WorkerReportIssuePage> createState() => _WorkerReportIssuePageState();

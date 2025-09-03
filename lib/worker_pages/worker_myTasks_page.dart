@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkerMyTasksPage extends StatefulWidget {
+  const WorkerMyTasksPage({super.key});
+
   @override
   State<WorkerMyTasksPage> createState() => _WorkerMyTasksPageState();
 }

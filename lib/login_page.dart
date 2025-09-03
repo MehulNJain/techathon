@@ -307,7 +307,7 @@ class _LoginPageState extends State<LoginPage> {
                       Divider(height: 1, color: Colors.grey.shade200),
                       const SizedBox(height: 16),
                       const Text(
-                        "Government of India Initiative",
+                        "Government of Jharkhand Initiative",
                         style: TextStyle(color: Colors.black54, fontSize: 14),
                       ),
                       const SizedBox(height: 4),

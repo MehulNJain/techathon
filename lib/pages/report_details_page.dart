@@ -87,7 +87,7 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
 
 class ReportDetailsPage extends StatelessWidget {
   final ReportData report;
-  const ReportDetailsPage({Key? key, required this.report}) : super(key: key);
+  const ReportDetailsPage({super.key, required this.report});
 
   static const mainBlue = Color(0xFF1746D1);
   static const navBg = Color(0xFFF0F4FF);

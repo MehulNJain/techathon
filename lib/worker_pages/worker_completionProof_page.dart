@@ -18,6 +18,8 @@ class _PhotoWithTimestamp {
 }
 
 class WorkerCompletionProofPage extends StatefulWidget {
+  const WorkerCompletionProofPage({super.key});
+
   @override
   State<WorkerCompletionProofPage> createState() =>
       _WorkerCompletionProofPageState();

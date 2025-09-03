@@ -25,7 +25,7 @@ class _PhotoWithTimestamp {
 class ReportIssuePage extends StatefulWidget {
   final String? prefilledCategory;
 
-  const ReportIssuePage({Key? key, this.prefilledCategory}) : super(key: key);
+  const ReportIssuePage({super.key, this.prefilledCategory});
 
   @override
   State<ReportIssuePage> createState() => _ReportIssuePageState();
@@ -361,7 +361,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     // FIX: Enforce fixed height to prevent vertical jumping
                     height: 55.h,
                     child: DropdownButtonFormField<String>(
-                      value: selectedCategory,
+                      initialValue: selectedCategory,
                       hint: Text(
                         "Select category",
                         style: TextStyle(fontSize: 14.sp),
@@ -426,7 +426,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     // FIX: Enforce fixed height to prevent vertical jumping
                     height: 55.h,
                     child: DropdownButtonFormField<String>(
-                      value: selectedSubcategory,
+                      initialValue: selectedSubcategory,
                       hint: Text(
                         'Select specific issue',
                         style: TextStyle(fontSize: 14.sp),
