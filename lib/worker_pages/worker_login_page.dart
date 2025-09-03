@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'worker_home_page.dart'; // Import WorkerHomePage
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkerLoginPage extends StatefulWidget {
   const WorkerLoginPage({super.key});
@@ -46,11 +47,13 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Worker Login")),
+      appBar: AppBar(
+        title: Text("Worker Login", style: TextStyle(fontSize: 18.sp)),
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(
@@ -59,43 +62,43 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                   children: [
                     // Logo
                     CircleAvatar(
-                      radius: 40,
+                      radius: 40.r,
                       backgroundColor: Colors.orange.shade700,
-                      child: const Icon(
+                      child: Icon(
                         Icons.engineering,
-                        size: 40,
+                        size: 40.sp,
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
 
-                    const Text(
+                    Text(
                       "Worker Login",
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 22.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    const Text(
+                    SizedBox(height: 6.h),
+                    Text(
                       "Enter your credentials to access the Worker Dashboard",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                      style: TextStyle(fontSize: 14.sp, color: Colors.black54),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
 
                     // User ID field
                     TextField(
                       controller: _userIdController,
                       decoration: InputDecoration(
                         labelText: "User ID",
-                        prefixIcon: const Icon(Icons.person),
+                        prefixIcon: Icon(Icons.person, size: 20.sp),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
 
                     // Password field
                     TextField(
@@ -103,13 +106,13 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: "Password",
-                        prefixIcon: const Icon(Icons.lock),
+                        prefixIcon: Icon(Icons.lock, size: 20.sp),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
 
                     // Login Button
                     SizedBox(
@@ -117,45 +120,46 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange.shade700,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         onPressed: _isLoading ? null : _loginWorker,
                         child: _isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
+                            ? SizedBox(
+                                height: 20.h,
+                                width: 20.h,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
+                            : Text(
                                 "Login",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
 
                     // Back to Citizen Login
                     TextButton.icon(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_back,
-                        size: 18,
+                        size: 18.sp,
                         color: Colors.blue,
                       ),
-                      label: const Text(
+                      label: Text(
                         "Back to Citizen Login",
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14.sp,
                         ),
                       ),
                     ),

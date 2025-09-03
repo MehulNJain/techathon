@@ -8,7 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
-import 'worker_workCompletion_page.dart'; // Import the work completion page
+import 'worker_workCompletion_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class _PhotoWithTimestamp {
   final File file;
@@ -41,15 +42,19 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
     _requestAndFetchLocation();
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
-    _recorder!.openRecorder();
-    _player!.openPlayer();
+    Future.microtask(() async {
+      await _recorder!.openRecorder();
+      await _player!.openPlayer();
+    });
   }
 
   @override
   void dispose() {
     notesController.dispose();
-    _recorder?.closeRecorder();
-    _player?.closePlayer();
+    Future.microtask(() async {
+      await _recorder?.closeRecorder();
+      await _player?.closePlayer();
+    });
     super.dispose();
   }
 
@@ -147,15 +152,18 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
           children: [
             Image.file(photo.file),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.w),
               child: Text(
                 DateFormat('dd MMM yyyy, hh:mm a').format(photo.timestamp),
-                style: const TextStyle(color: Colors.white, fontSize: 15),
+                style: TextStyle(color: Colors.white, fontSize: 15.sp),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Close", style: TextStyle(color: Colors.white)),
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 14.sp),
+              ),
             ),
           ],
         ),
@@ -215,17 +223,17 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
         backgroundColor: Colors.blue.shade700,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           "Completion Proof",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontSize: 17.sp),
         ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -233,33 +241,39 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
             Container(
               decoration: BoxDecoration(
                 color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(14.r),
               ),
-              margin: const EdgeInsets.only(bottom: 18),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+              margin: EdgeInsets.only(bottom: 18.h),
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 13.h),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: Colors.blue.shade700),
-                  const SizedBox(width: 12),
+                  Icon(
+                    Icons.info_outline,
+                    color: Colors.blue.shade700,
+                    size: 22.sp,
+                  ),
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: RichText(
                       text: TextSpan(
                         style: TextStyle(
                           color: Colors.blue.shade900,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                         ),
                         children: [
-                          const TextSpan(text: "Upload at least "),
+                          TextSpan(text: "Upload at least "),
                           TextSpan(
                             text: "1 photo",
                             style: TextStyle(
                               color: Colors.blue.shade700,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
+                              fontSize: 15.sp,
                             ),
                           ),
-                          const TextSpan(
+                          TextSpan(
                             text: " (max 3) as proof of work completion.",
+                            style: TextStyle(fontSize: 15.sp),
                           ),
                         ],
                       ),
@@ -270,20 +284,26 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
             ),
             Row(
               children: [
-                const Text(
+                Text(
                   'Capture Photos',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                  ),
                 ),
-                const Text(' *', style: TextStyle(color: Colors.red)),
+                Text(
+                  ' *',
+                  style: TextStyle(color: Colors.red, fontSize: 15.sp),
+                ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             SizedBox(
-              height: 90,
+              height: 90.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: 3,
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                separatorBuilder: (_, __) => SizedBox(width: 10.w),
                 itemBuilder: (context, i) {
                   if (i < photos.length) {
                     final photo = photos[i];
@@ -292,48 +312,48 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                       child: Stack(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                             child: Image.file(
                               photo.file,
-                              width: 90,
-                              height: 90,
+                              width: 90.w,
+                              height: 90.w,
                               fit: BoxFit.cover,
                             ),
                           ),
                           Positioned(
-                            bottom: 2,
-                            left: 2,
+                            bottom: 2.h,
+                            left: 2.w,
                             child: Container(
                               color: Colors.black54,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                                vertical: 2,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                                vertical: 2.h,
                               ),
                               child: Text(
                                 DateFormat(
                                   'dd MMM, hh:mm a',
                                 ).format(photo.timestamp),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 10,
+                                  fontSize: 10.sp,
                                 ),
                               ),
                             ),
                           ),
                           Positioned(
-                            top: 2,
-                            right: 2,
+                            top: 2.h,
+                            right: 2.w,
                             child: GestureDetector(
                               onTap: () => setState(() => photos.removeAt(i)),
                               child: Container(
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   color: Colors.red,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.close,
                                   color: Colors.white,
-                                  size: 18,
+                                  size: 18.sp,
                                 ),
                               ),
                             ),
@@ -345,17 +365,17 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                     return GestureDetector(
                       onTap: _pickImage,
                       child: Container(
-                        width: 90,
-                        height: 90,
+                        width: 90.w,
+                        height: 90.w,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                           color: Colors.grey.shade100,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.camera_alt,
                           color: Colors.grey,
-                          size: 32,
+                          size: 32.sp,
                         ),
                       ),
                     );
@@ -363,124 +383,129 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                 },
               ),
             ),
-            const SizedBox(height: 6),
-            const Text(
+            SizedBox(height: 6.h),
+            Text(
               'At least 1 photo required. Up to 3 photos allowed.',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             // Location
-            const Text(
+            Text(
               'Location',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10.r),
                 color: Colors.grey.shade50,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    children: const [
-                      Icon(Icons.location_on, color: Colors.red, size: 20),
-                      SizedBox(width: 6),
+                    children: [
+                      Icon(Icons.location_on, color: Colors.red, size: 20.sp),
+                      SizedBox(width: 6.w),
                       Text(
                         'Auto-detected Location',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 8.h,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(6.r),
                       border: Border.all(color: Colors.grey.shade300),
                     ),
                     child: Text(
                       address ?? "Fetching address...",
-                      style: const TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15.sp),
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6.h),
                   Row(
                     children: [
-                      const Icon(Icons.gps_fixed, size: 16, color: Colors.grey),
-                      const SizedBox(width: 6),
+                      Icon(Icons.gps_fixed, size: 16.sp, color: Colors.grey),
+                      SizedBox(width: 6.w),
                       Text(
                         gps != null && gps!.isNotEmpty
                             ? "GPS coordinates: $gps"
                             : "Fetching GPS...",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: 14.sp,
                           color: Colors.black87,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6.h),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
-                      icon: const Icon(Icons.refresh, size: 16),
-                      label: const Text("Refresh"),
+                      icon: Icon(Icons.refresh, size: 16.sp),
+                      label: Text("Refresh", style: TextStyle(fontSize: 13.sp)),
                       onPressed: _requestAndFetchLocation,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             // Additional Information
-            const Text(
+            Text(
               "Additional Information",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             TextField(
               controller: notesController,
               maxLines: 3,
               decoration: InputDecoration(
                 hintText: "Add notes/remarks (optional)",
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                contentPadding: const EdgeInsets.all(12),
+                contentPadding: EdgeInsets.all(12.w),
               ),
+              style: TextStyle(fontSize: 14.sp),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
 
             // Voice Note
             Row(
               children: [
-                const Icon(Icons.mic, color: Colors.grey),
-                const SizedBox(width: 8),
+                Icon(Icons.mic, color: Colors.grey, size: 20.sp),
+                SizedBox(width: 8.w),
                 Expanded(
                   child: _isRecording
                       ? Row(
                           children: [
-                            const Text(
+                            Text(
                               'Recording...',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 14.sp,
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             SizedBox(
-                              width: 18,
-                              height: 18,
+                              width: 18.w,
+                              height: 18.w,
                               child: CircularProgressIndicator(
                                 color: Colors.red,
                                 strokeWidth: 3,
@@ -491,17 +516,18 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                       : _isPlaying
                       ? Row(
                           children: [
-                            const Text(
+                            Text(
                               'Playing...',
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 14.sp,
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             SizedBox(
-                              width: 18,
-                              height: 18,
+                              width: 18.w,
+                              height: 18.w,
                               child: CircularProgressIndicator(
                                 color: Colors.blue,
                                 strokeWidth: 3,
@@ -513,17 +539,20 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                           _audioPath == null
                               ? 'Record voice note (optional)'
                               : 'Voice note recorded',
-                          style: TextStyle(color: Colors.grey.shade700),
+                          style: TextStyle(
+                            color: Colors.grey.shade700,
+                            fontSize: 13.sp,
+                          ),
                         ),
                 ),
                 if (!_isRecording && _audioPath == null)
                   IconButton(
-                    icon: const Icon(Icons.mic, color: Colors.blue),
+                    icon: Icon(Icons.mic, color: Colors.blue, size: 22.sp),
                     onPressed: _startRecording,
                   ),
                 if (_isRecording)
                   IconButton(
-                    icon: const Icon(Icons.stop, color: Colors.red),
+                    icon: Icon(Icons.stop, color: Colors.red, size: 22.sp),
                     onPressed: _stopRecording,
                   ),
                 if (!_isRecording && _audioPath != null)
@@ -533,11 +562,16 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                         icon: Icon(
                           _isPlaying ? Icons.pause : Icons.play_arrow,
                           color: Colors.blue,
+                          size: 22.sp,
                         ),
                         onPressed: _isPlaying ? _stopAudio : _playAudio,
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 22.sp,
+                        ),
                         onPressed: _deleteVoiceNote,
                         tooltip: "Delete voice note",
                       ),
@@ -545,43 +579,45 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                   ),
               ],
             ),
-            const SizedBox(height: 28),
+            SizedBox(height: 28.h),
 
             // Submit Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                icon: const Icon(Icons.check_circle, color: Colors.white),
-                label: const Text(
+                icon: Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+                label: Text(
                   'Mark Work Completed',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade700,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
                   foregroundColor: Colors.white,
-                  textStyle: const TextStyle(color: Colors.white),
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.sp),
                 ),
                 onPressed: photos.isNotEmpty
                     ? () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => WorkerWorkCompletionSuccessPage(
-                              complaintId:
-                                  'CMP001234', // Replace with actual complaintId
-                              supervisorId:
-                                  'SUP001', // Replace with actual supervisorId
-                              citizenId:
-                                  'CIT001', // Replace with actual citizenId
-                            ),
+                            builder: (context) =>
+                                WorkerWorkCompletionSuccessPage(
+                                  complaintId: 'CMP001234',
+                                  supervisorId: 'SUP001',
+                                  citizenId: 'CIT001',
+                                ),
                           ),
                         );
                       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../login_page.dart';
 import 'worker_home_page.dart'; // import your worker home page
 
@@ -18,16 +19,16 @@ class WorkerProfilePage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          title: const Text(
+          title: Text(
             "Profile",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
           foregroundColor: Colors.black87,
           elevation: 1,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: Icon(Icons.arrow_back, size: 24.sp),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -37,31 +38,31 @@ class WorkerProfilePage extends StatelessWidget {
           ),
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.w),
           child: Column(
             children: [
               // Profile Card
               Card(
                 elevation: 2,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 24,
-                    horizontal: 16,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 24.h,
+                    horizontal: 16.w,
                   ),
                   child: Column(
                     children: [
                       Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          const CircleAvatar(
-                            radius: 50,
+                          CircleAvatar(
+                            radius: 50.r,
                             backgroundColor: Colors.blueAccent,
                             child: Icon(
                               Icons.person,
-                              size: 60,
+                              size: 60.sp,
                               color: Colors.white,
                             ),
                           ),
@@ -70,38 +71,41 @@ class WorkerProfilePage extends StatelessWidget {
                               color: Colors.green,
                               shape: BoxShape.circle,
                             ),
-                            padding: const EdgeInsets.all(4),
-                            child: const Icon(
+                            padding: EdgeInsets.all(4.w),
+                            child: Icon(
                               Icons.check,
                               color: Colors.white,
-                              size: 18,
+                              size: 18.sp,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      const Text(
+                      SizedBox(height: 12.h),
+                      Text(
                         "Rajesh Kumar",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      const Text(
+                      SizedBox(height: 4.h),
+                      Text(
                         "Worker ID: MW-2024-0156",
-                        style: TextStyle(color: Colors.black54, fontSize: 14),
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.sp,
+                        ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                       _infoTile(Icons.phone, "PHONE NUMBER", "+91 98765 43210"),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       _infoTile(
                         Icons.engineering,
                         "DEPARTMENT",
                         "Road Maintenance",
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       _infoTile(
                         Icons.location_on,
                         "ASSIGNED AREA",
@@ -111,57 +115,61 @@ class WorkerProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // Recognition & Progress
               Card(
                 elevation: 2,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                      Row(
                         children: [
-                          Icon(Icons.emoji_events, color: Colors.orange),
-                          SizedBox(width: 8),
+                          Icon(
+                            Icons.emoji_events,
+                            color: Colors.orange,
+                            size: 24.sp,
+                          ),
+                          SizedBox(width: 8.w),
                           Text(
                             "Recognition & Progress",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16.w),
                         decoration: BoxDecoration(
                           color: Colors.green[100],
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Row(
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     "Tasks Completed This Month",
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       color: Colors.black87,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
+                                  SizedBox(height: 4.h),
                                   Text(
                                     "15",
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 20.sp,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.green,
                                     ),
@@ -169,23 +177,23 @@ class WorkerProfilePage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.list_alt,
                               color: Colors.green,
-                              size: 32,
+                              size: 32.sp,
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      const Text(
+                      SizedBox(height: 16.h),
+                      Text(
                         "Earned Badges",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -210,11 +218,11 @@ class WorkerProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // Change Password
               _actionTile(Icons.lock, "Change Password", Colors.blue, () {}),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
 
               // Logout
               _actionTile(Icons.logout, "Logout", Colors.red, () {
@@ -234,29 +242,26 @@ class WorkerProfilePage extends StatelessWidget {
   // Info Tile Widget
   static Widget _infoTile(IconData icon, String title, String subtitle) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.blue),
-          const SizedBox(width: 12),
+          Icon(icon, color: Colors.blue, size: 24.sp),
+          SizedBox(width: 12.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 12, color: Colors.black54),
+                style: TextStyle(fontSize: 12.sp, color: Colors.black54),
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2.h),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -274,14 +279,14 @@ class WorkerProfilePage extends StatelessWidget {
     return Column(
       children: [
         CircleAvatar(
-          radius: 20,
+          radius: 20.r,
           backgroundColor: color.withOpacity(0.1),
-          child: Icon(icon, color: color, size: 20),
+          child: Icon(icon, color: color, size: 20.sp),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6.h),
         Text(
           text,
-          style: const TextStyle(fontSize: 12, color: Colors.black54),
+          style: TextStyle(fontSize: 12.sp, color: Colors.black54),
           textAlign: TextAlign.center,
         ),
       ],
@@ -298,29 +303,25 @@ class WorkerProfilePage extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
-            Icon(icon, color: color),
-            const SizedBox(width: 12),
+            Icon(icon, color: color, size: 24.sp),
+            SizedBox(width: 12.w),
             Text(
               text,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
                 color: color,
               ),
             ),
             const Spacer(),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 18,
-              color: Colors.black45,
-            ),
+            Icon(Icons.arrow_forward_ios, size: 18.sp, color: Colors.black45),
           ],
         ),
       ),

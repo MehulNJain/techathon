@@ -14,6 +14,7 @@ import 'reports_page.dart';
 import 'user_profile_page.dart';
 import 'submitted_page.dart';
 import '../models/report_data.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class _PhotoWithTimestamp {
   final File file;
@@ -66,9 +67,9 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
     ],
     'Road Damage': [
       'Pothole',
-      'Broken Manhole / Drain Cover',
+      'Broken Manhole / Drain',
       'Cracks in Road Surface',
-      'Damaged Speed Breaker / Missing Markings',
+      'Damaged Speed Breaker',
     ],
     'Water': ['Water Leakage', 'Water Contamination / Dirty Water'],
     'Drainage & Sewerage': [
@@ -89,16 +90,20 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
     _requestAndFetchLocation();
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
-    _recorder!.openRecorder();
-    _player!.openPlayer();
+    Future.microtask(() async {
+      await _recorder!.openRecorder();
+      await _player!.openPlayer();
+    });
   }
 
   @override
   void dispose() {
     detailsController.dispose();
     customSubcategoryController.dispose();
-    _recorder?.closeRecorder();
-    _player?.closePlayer();
+    Future.microtask(() async {
+      await _recorder?.closeRecorder();
+      await _player?.closePlayer();
+    });
     super.dispose();
   }
 
@@ -284,15 +289,18 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
           children: [
             Image.file(photo.file),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.w),
               child: Text(
                 DateFormat('dd MMM yyyy, hh:mm a').format(photo.timestamp),
-                style: const TextStyle(color: Colors.white, fontSize: 15),
+                style: TextStyle(color: Colors.white, fontSize: 15.sp),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Close", style: TextStyle(color: Colors.white)),
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 14.sp),
+              ),
             ),
           ],
         ),
@@ -312,24 +320,23 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     List<String> subcategories = selectedCategory != null
         ? [...categoryMap[selectedCategory!]!, 'Other']
         : [];
 
     return Scaffold(
       backgroundColor: Colors.white,
-      extendBodyBehindAppBar: true, // Make blue go to top
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: mainBlue,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: const Text(
+        title: Text(
           'Report an Issue',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontSize: 17.sp),
         ),
         centerTitle: true,
       ),
@@ -338,131 +345,174 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
           SizedBox(height: MediaQuery.of(context).padding.top + kToolbarHeight),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category
-                  const Text(
+                  Text(
                     'Select Category',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    value: selectedCategory,
-                    hint: const Text("Select category"),
-                    items: categoryMap.keys
-                        .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                        .toList(),
-                    onChanged: widget.prefilledCategory != null
-                        ? null
-                        : (v) {
-                            setState(() {
-                              selectedCategory = v;
-                              selectedSubcategory = null;
-                            });
-                          },
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 14,
-                      ),
-                      filled: widget.prefilledCategory != null,
-                      fillColor: widget.prefilledCategory != null
-                          ? Colors.grey.shade100
-                          : null,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.sp,
                     ),
-                    disabledHint: widget.prefilledCategory != null
-                        ? Text(widget.prefilledCategory!)
-                        : null,
-                    isExpanded: true,
+                  ),
+                  SizedBox(height: 8.h),
+                  SizedBox(
+                    // FIX: Enforce fixed height to prevent vertical jumping
+                    height: 55.h,
+                    child: DropdownButtonFormField<String>(
+                      value: selectedCategory,
+                      hint: Text(
+                        "Select category",
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                      items: categoryMap.keys
+                          .map(
+                            (c) => DropdownMenuItem(
+                              value: c,
+                              child: Text(c, style: TextStyle(fontSize: 14.sp)),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: widget.prefilledCategory != null
+                          ? null
+                          : (v) {
+                              setState(() {
+                                selectedCategory = v;
+                                selectedSubcategory = null;
+                              });
+                            },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 14.h,
+                        ),
+                        filled: widget.prefilledCategory != null,
+                        fillColor: widget.prefilledCategory != null
+                            ? Colors.grey.shade100
+                            : null,
+                      ),
+                      disabledHint: widget.prefilledCategory != null
+                          ? Text(
+                              widget.prefilledCategory!,
+                              style: TextStyle(fontSize: 14.sp),
+                            )
+                          : null,
+                      isExpanded: true,
+                    ),
                   ),
                   if (_isCategoryRequired && selectedCategory == null)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 4, left: 4),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4.h, left: 4.w),
                       child: Text(
                         "Please select a category",
-                        style: TextStyle(color: Colors.red, fontSize: 12),
+                        style: TextStyle(color: Colors.red, fontSize: 12.sp),
                       ),
                     ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
-                  // Subcategory
-                  const Text(
+                  Text(
                     'Subcategory',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.sp,
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    value: selectedSubcategory,
-                    hint: const Text('Select specific issue'),
-                    items: subcategories
-                        .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                        .toList(),
-                    onChanged: (v) {
-                      setState(() {
-                        selectedSubcategory = v;
-                        if (v != 'Other') customSubcategoryController.clear();
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 14,
+                  SizedBox(height: 8.h),
+                  SizedBox(
+                    // FIX: Enforce fixed height to prevent vertical jumping
+                    height: 55.h,
+                    child: DropdownButtonFormField<String>(
+                      value: selectedSubcategory,
+                      hint: Text(
+                        'Select specific issue',
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                      items: subcategories
+                          .map(
+                            (c) => DropdownMenuItem(
+                              value: c,
+                              child: Text(c, style: TextStyle(fontSize: 14.sp)),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) {
+                        setState(() {
+                          selectedSubcategory = v;
+                          if (v != 'Other') customSubcategoryController.clear();
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 14.h,
+                        ),
                       ),
                     ),
                   ),
                   if (selectedSubcategory == null ||
                       selectedSubcategory!.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 4, left: 4),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4.h, left: 4.w),
                       child: Text(
                         "Subcategory is required",
-                        style: TextStyle(color: Colors.red, fontSize: 12),
+                        style: TextStyle(color: Colors.red, fontSize: 12.sp),
                       ),
                     ),
                   if (_isOtherSelected)
                     Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
+                      padding: EdgeInsets.only(top: 12.h),
                       child: TextField(
                         controller: customSubcategoryController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: "Please specify",
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
                         ),
+                        style: TextStyle(fontSize: 14.sp),
                         onChanged: (_) => setState(() {}),
                       ),
                     ),
                   if (_isOtherSelected &&
                       customSubcategoryController.text.trim().isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 4, left: 4),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4.h, left: 4.w),
                       child: Text(
                         "Please specify the issue",
-                        style: TextStyle(color: Colors.red, fontSize: 12),
+                        style: TextStyle(color: Colors.red, fontSize: 12.sp),
                       ),
                     ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
-                  // Photos
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         'Capture Photos',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.sp,
+                        ),
                       ),
-                      const Text(' *', style: TextStyle(color: Colors.red)),
+                      Text(
+                        ' *',
+                        style: TextStyle(color: Colors.red, fontSize: 15.sp),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   SizedBox(
-                    height: 90,
+                    height: 90.h,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: 3,
-                      separatorBuilder: (_, __) => const SizedBox(width: 10),
+                      separatorBuilder: (_, __) => SizedBox(width: 10.w),
                       itemBuilder: (context, i) {
                         if (i < photos.length) {
                           final photo = photos[i];
@@ -471,49 +521,49 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                             child: Stack(
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(12.r),
                                   child: Image.file(
                                     photo.file,
-                                    width: 90,
-                                    height: 90,
+                                    width: 90.w,
+                                    height: 90.w,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                                 Positioned(
-                                  bottom: 2,
-                                  left: 2,
+                                  bottom: 2.h,
+                                  left: 2.w,
                                   child: Container(
                                     color: Colors.black54,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                      vertical: 2,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 4.w,
+                                      vertical: 2.h,
                                     ),
                                     child: Text(
                                       DateFormat(
                                         'dd MMM, hh:mm a',
                                       ).format(photo.timestamp),
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 10,
+                                        fontSize: 10.sp,
                                       ),
                                     ),
                                   ),
                                 ),
                                 Positioned(
-                                  top: 2,
-                                  right: 2,
+                                  top: 2.h,
+                                  right: 2.w,
                                   child: GestureDetector(
                                     onTap: () =>
                                         setState(() => photos.removeAt(i)),
                                     child: Container(
-                                      decoration: const BoxDecoration(
+                                      decoration: BoxDecoration(
                                         color: Colors.red,
                                         shape: BoxShape.circle,
                                       ),
-                                      child: const Icon(
+                                      child: Icon(
                                         Icons.close,
                                         color: Colors.white,
-                                        size: 18,
+                                        size: 18.sp,
                                       ),
                                     ),
                                   ),
@@ -525,17 +575,17 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                           return GestureDetector(
                             onTap: _pickImage,
                             child: Container(
-                              width: 90,
-                              height: 90,
+                              width: 90.w,
+                              height: 90.w,
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                                 color: Colors.grey.shade100,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.camera_alt,
                                 color: Colors.grey,
-                                size: 32,
+                                size: 32.sp,
                               ),
                             ),
                           );
@@ -543,52 +593,57 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  const Text(
+                  SizedBox(height: 6.h),
+                  Text(
                     'At least 1 photo required. Up to 3 photos allowed.',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
-                  // Location
-                  const Text(
+                  Text(
                     'Location',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.sp,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                       color: Colors.grey.shade50,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          children: const [
+                          children: [
                             Icon(
                               Icons.location_on,
                               color: Colors.red,
-                              size: 20,
+                              size: 20.sp,
                             ),
-                            SizedBox(width: 6),
+                            SizedBox(width: 6.w),
                             Text(
                               'Auto-detected Location',
-                              style: TextStyle(fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.sp,
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 8,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 8.h,
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(6.r),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
                           child: Text(
@@ -597,83 +652,88 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                                         location!.contains("Lat:"))
                                     ? "Fetching address..."
                                     : location!),
-                            style: const TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 15.sp),
                           ),
                         ),
-                        const SizedBox(height: 6),
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6.h),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.gps_fixed,
-                              size: 16,
+                              size: 16.sp,
                               color: Colors.grey,
                             ),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6.w),
                             Text(
                               gps != null && gps!.isNotEmpty
                                   ? "GPS coordinates: $gps"
                                   : "Fetching GPS...",
-                              style: const TextStyle(
-                                fontSize: 14,
+                              style: TextStyle(
+                                fontSize: 14.sp,
                                 color: Colors.black87,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6.h),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton.icon(
-                            icon: const Icon(Icons.refresh, size: 16),
-                            label: const Text("Refresh"),
+                            icon: Icon(Icons.refresh, size: 16.sp),
+                            label: Text(
+                              "Refresh",
+                              style: TextStyle(fontSize: 13.sp),
+                            ),
                             onPressed: _requestAndFetchLocation,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
-                  // Additional Details
-                  const Text(
+                  Text(
                     'Additional Details',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.sp,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   TextField(
                     controller: detailsController,
                     maxLines: 4,
                     decoration: InputDecoration(
                       hintText: 'Enter details...',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
-                      contentPadding: const EdgeInsets.all(12),
+                      contentPadding: EdgeInsets.all(12.w),
                     ),
+                    style: TextStyle(fontSize: 14.sp),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
 
-                  // Voice Note
                   Row(
                     children: [
-                      const Icon(Icons.mic, color: Colors.grey),
-                      const SizedBox(width: 8),
+                      Icon(Icons.mic, color: Colors.grey, size: 20.sp),
+                      SizedBox(width: 8.w),
                       Expanded(
                         child: _isRecording
                             ? Row(
                                 children: [
-                                  const Text(
+                                  Text(
                                     'Recording...',
                                     style: TextStyle(
                                       color: Colors.red,
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 14.sp,
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8.w),
                                   SizedBox(
-                                    width: 18,
-                                    height: 18,
+                                    width: 18.w,
+                                    height: 18.w,
                                     child: CircularProgressIndicator(
                                       color: Colors.red,
                                       strokeWidth: 3,
@@ -684,17 +744,18 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                             : _isPlaying
                             ? Row(
                                 children: [
-                                  const Text(
+                                  Text(
                                     'Playing...',
                                     style: TextStyle(
                                       color: mainBlue,
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 14.sp,
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8.w),
                                   SizedBox(
-                                    width: 18,
-                                    height: 18,
+                                    width: 18.w,
+                                    height: 18.w,
                                     child: CircularProgressIndicator(
                                       color: mainBlue,
                                       strokeWidth: 3,
@@ -706,17 +767,24 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                                 _audioPath == null
                                     ? 'Record voice note (optional)'
                                     : 'Voice note recorded',
-                                style: TextStyle(color: Colors.grey.shade700),
+                                style: TextStyle(
+                                  color: Colors.grey.shade700,
+                                  fontSize: 13.sp,
+                                ),
                               ),
                       ),
                       if (!_isRecording && _audioPath == null)
                         IconButton(
-                          icon: const Icon(Icons.mic, color: mainBlue),
+                          icon: Icon(Icons.mic, color: mainBlue, size: 22.sp),
                           onPressed: _startRecording,
                         ),
                       if (_isRecording)
                         IconButton(
-                          icon: const Icon(Icons.stop, color: Colors.red),
+                          icon: Icon(
+                            Icons.stop,
+                            color: Colors.red,
+                            size: 22.sp,
+                          ),
                           onPressed: _stopRecording,
                         ),
                       if (!_isRecording && _audioPath != null)
@@ -726,11 +794,16 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                               icon: Icon(
                                 _isPlaying ? Icons.pause : Icons.play_arrow,
                                 color: mainBlue,
+                                size: 22.sp,
                               ),
                               onPressed: _isPlaying ? _stopAudio : _playAudio,
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                                size: 22.sp,
+                              ),
                               onPressed: _deleteVoiceNote,
                               tooltip: "Delete voice note",
                             ),
@@ -738,17 +811,16 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                         ),
                     ],
                   ),
-                  const SizedBox(height: 28),
+                  SizedBox(height: 28.h),
 
-                  // Submit Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      icon: const Icon(Icons.send, color: Colors.white),
-                      label: const Text(
+                      icon: Icon(Icons.send, color: Colors.white, size: 20.sp),
+                      label: Text(
                         'Submit Report',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -757,12 +829,15 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                         backgroundColor: _isFormValid
                             ? mainBlue
                             : Colors.grey.shade300,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10.r),
                         ),
                         foregroundColor: Colors.white,
-                        textStyle: const TextStyle(color: Colors.white),
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                        ),
                       ),
                       onPressed: _isFormValid
                           ? () {
@@ -799,15 +874,14 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
               ),
             ),
           ),
-          // Bottom Navigation Bar (exactly as in home page)
           Container(
             decoration: BoxDecoration(
               color: navBg,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.04),
-                  blurRadius: 8,
-                  offset: const Offset(0, -2),
+                  blurRadius: 8.r,
+                  offset: Offset(0, -2.h),
                 ),
               ],
             ),
@@ -817,9 +891,9 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
               type: BottomNavigationBarType.fixed,
               selectedItemColor: mainBlue,
               unselectedItemColor: Colors.grey,
-              iconSize: width * 0.065,
-              selectedFontSize: width * 0.03,
-              unselectedFontSize: width * 0.028,
+              iconSize: 24.sp,
+              selectedFontSize: 14.sp,
+              unselectedFontSize: 13.sp,
               elevation: 0,
               showUnselectedLabels: true,
               onTap: (index) {
@@ -839,62 +913,69 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     MaterialPageRoute(builder: (context) => UserProfilePage()),
                   );
                 }
-                // index == 1 is current page, do nothing
               },
               items: [
                 BottomNavigationBarItem(
                   icon: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: 1 == 0 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.home, color: Colors.grey),
+                    child: Icon(Icons.home, color: Colors.grey, size: 24.sp),
                   ),
                   label: "Home",
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: mainBlue.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.add_circle_outline, color: mainBlue),
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      color: mainBlue,
+                      size: 24.sp,
+                    ),
                   ),
                   label: "Report",
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: 1 == 2 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.list_alt, color: Colors.grey),
+                    child: Icon(
+                      Icons.list_alt,
+                      color: Colors.grey,
+                      size: 24.sp,
+                    ),
                   ),
                   label: "Complaints",
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: 1 == 3 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.person, color: Colors.grey),
+                    child: Icon(Icons.person, color: Colors.grey, size: 24.sp),
                   ),
                   label: "Profile",
                 ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'worker_complaint_page.dart';
 import 'worker_profile_page.dart';
-import 'worker_myTasks_page.dart'; // Import the My Tasks page
+import 'worker_myTasks_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkerHomePage extends StatefulWidget {
   @override
@@ -74,27 +75,32 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
       },
       child: Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 16.w),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(12.w),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10.r),
                 child: SizedBox(
-                  width: 55,
-                  height: 55,
+                  width: 55.w,
+                  height: 55.w,
                   child: Image.asset(
                     complaint.imageUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.broken_image, size: 30, color: Colors.grey),
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.broken_image,
+                      size: 30.sp,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,43 +110,43 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                         Expanded(
                           child: Text(
                             complaint.title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 16.sp,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
                             color: complaint.priorityColor.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(18.r),
                           ),
                           child: Text(
                             complaint.priority,
                             style: TextStyle(
                               color: complaint.priorityColor,
                               fontWeight: FontWeight.w600,
-                              fontSize: 12,
+                              fontSize: 12.sp,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4.h),
                     Text(
                       complaint.location,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 13.sp,
                         color: Colors.grey.shade700,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6.h),
                     Row(
                       children: [
                         Flexible(
@@ -153,15 +159,15 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const Spacer(),
+                        Spacer(),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
                             color: complaint.statusColor,
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(18.r),
                           ),
                           child: Text(
                             complaint.status,
@@ -170,7 +176,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                                   ? Colors.green.shade900
                                   : Colors.orange.shade900,
                               fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                              fontSize: 12.sp,
                             ),
                           ),
                         ),
@@ -186,46 +192,52 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
     );
   }
 
-  // Home content widget with header, filters, and complaints list
   Widget _buildHomeContent() {
     return Column(
       children: [
-        const WorkerDashboardHeader(),
+        WorkerDashboardHeader(),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           alignment: Alignment.centerLeft,
-          child: Wrap(
-            spacing: 6,
-            children: filters.map((f) {
-              final isSelected = selectedFilter == f;
-              return ChoiceChip(
-                label: Text(f),
-                selected: isSelected,
-                selectedColor: Colors.orange.shade700,
-                labelStyle: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black87,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-                onSelected: (_) {
-                  setState(() => selectedFilter = f);
-                },
-              );
-            }).toList(),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: filters.map((f) {
+                final isSelected = selectedFilter == f;
+                return Padding(
+                  padding: EdgeInsets.only(right: 8.w),
+                  child: ChoiceChip(
+                    label: Text(f, style: TextStyle(fontSize: 13.sp)),
+                    selected: isSelected,
+                    selectedColor: Colors.orange.shade700,
+                    labelStyle: TextStyle(
+                      color: isSelected ? Colors.white : Colors.black87,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                    onSelected: (_) {
+                      setState(() => selectedFilter = f);
+                    },
+                  ),
+                );
+              }).toList(),
+            ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
               'Recent Complaints',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
           ),
         ),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 70),
+            padding: EdgeInsets.only(bottom: 70.h),
             itemCount: filteredComplaints.length,
             itemBuilder: (context, index) =>
                 buildComplaintCard(filteredComplaints[index]),
@@ -235,10 +247,8 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
     );
   }
 
-  // Navigate to MyTasksPage when "My Tasks" tab or button is selected
   void _onBottomNavTapped(int index) {
     if (index == 1) {
-      // Navigate to My Tasks page
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => WorkerMyTasksPage()),
@@ -251,7 +261,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
   }
 
   Widget _buildProfile() {
-    return const WorkerProfilePage();
+    return WorkerProfilePage();
   }
 
   @override
@@ -260,20 +270,41 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      body: SafeArea(child: pages[bottomSelectedIndex]),
+      body: Stack(
+        children: [
+          // This container makes the orange color go behind the status bar
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: MediaQuery.of(context).padding.top + 180.h,
+            child: Container(color: Colors.orange.shade700),
+          ),
+          SafeArea(child: pages[bottomSelectedIndex]),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: bottomSelectedIndex,
         onTap: _onBottomNavTapped,
         selectedItemColor: Colors.orange.shade700,
         unselectedItemColor: Colors.grey.shade500,
         showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        selectedFontSize: 13.sp,
+        unselectedFontSize: 12.sp,
+        iconSize: 22.sp,
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
+            icon: Icon(Icons.home, size: 22.sp),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt, size: 22.sp),
             label: "My Tasks",
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, size: 22.sp),
+            label: "Profile",
+          ),
         ],
       ),
     );
@@ -287,45 +318,45 @@ class WorkerDashboardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.orange.shade700,
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+      padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 16.h),
       child: Column(
         children: [
           Row(
             children: [
               CircleAvatar(
                 backgroundColor: Colors.white,
-                radius: 20,
+                radius: 20.r,
                 child: Icon(
                   Icons.account_balance,
                   color: Colors.orange.shade700,
-                  size: 22,
+                  size: 22.sp,
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     'Worker Dashboard',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 18.sp,
                     ),
                   ),
                   Text(
                     'Municipal Services',
-                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                    style: TextStyle(color: Colors.white70, fontSize: 13.sp),
                   ),
                 ],
               ),
-              const Spacer(),
-              Icon(Icons.notifications, color: Colors.white, size: 22),
+              Spacer(),
+              Icon(Icons.notifications, color: Colors.white, size: 22.sp),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           Row(
-            children: const [
+            children: [
               Expanded(
                 child: _InfoCard(
                   icon: Icons.access_time,
@@ -334,7 +365,7 @@ class WorkerDashboardHeader extends StatelessWidget {
                   label: 'Pending',
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 10.w),
               Expanded(
                 child: _InfoCard(
                   icon: Icons.build,
@@ -343,7 +374,7 @@ class WorkerDashboardHeader extends StatelessWidget {
                   label: 'In Progress',
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 10.w),
               Expanded(
                 child: _InfoCard(
                   icon: Icons.check_circle,
@@ -377,33 +408,33 @@ class _InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
       elevation: 3,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.symmetric(vertical: 10.h),
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
                 color: iconBg,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Icon(icon, color: Colors.black87, size: 20),
+              child: Icon(icon, color: Colors.black87, size: 20.sp),
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 6.h),
             Text(
               number,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 18.sp,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2.h),
             Text(
               label,
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade700),
             ),
           ],
         ),
@@ -439,6 +470,15 @@ void main() {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Worker Dashboard',
+      builder: (context, child) {
+        return ScreenUtilInit(
+          designSize: Size(375, 812),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) => child!,
+          child: child,
+        );
+      },
       home: WorkerHomePage(),
       theme: ThemeData(primarySwatch: Colors.orange),
     ),
