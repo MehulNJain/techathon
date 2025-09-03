@@ -316,7 +316,10 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       selectedSubcategory!.isNotEmpty &&
       (!_isOtherSelected ||
           (customSubcategoryController.text.trim().isNotEmpty)) &&
-      photos.isNotEmpty;
+      photos.isNotEmpty &&
+      address != null &&
+      address!.isNotEmpty &&
+      address != "Address not found";
 
   @override
   Widget build(BuildContext context) {
