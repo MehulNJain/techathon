@@ -67,9 +67,9 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
     ],
     'Road Damage': [
       'Pothole',
-      'Broken Manhole / Drain Cover',
+      'Broken Manhole / Drain',
       'Cracks in Road Surface',
-      'Damaged Speed Breaker / Missing Markings',
+      'Damaged Speed Breaker',
     ],
     'Water': ['Water Leakage', 'Water Contamination / Dirty Water'],
     'Drainage & Sewerage': [
@@ -320,7 +320,6 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     List<String> subcategories = selectedCategory != null
         ? [...categoryMap[selectedCategory!]!, 'Other']
         : [];
@@ -358,48 +357,52 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  DropdownButtonFormField<String>(
-                    value: selectedCategory,
-                    hint: Text(
-                      "Select category",
-                      style: TextStyle(fontSize: 14.sp),
-                    ),
-                    items: categoryMap.keys
-                        .map(
-                          (c) => DropdownMenuItem(
-                            value: c,
-                            child: Text(c, style: TextStyle(fontSize: 14.sp)),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: widget.prefilledCategory != null
-                        ? null
-                        : (v) {
-                            setState(() {
-                              selectedCategory = v;
-                              selectedSubcategory = null;
-                            });
-                          },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.r),
+                  SizedBox(
+                    // FIX: Enforce fixed height to prevent vertical jumping
+                    height: 55.h,
+                    child: DropdownButtonFormField<String>(
+                      value: selectedCategory,
+                      hint: Text(
+                        "Select category",
+                        style: TextStyle(fontSize: 14.sp),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 14.h,
-                      ),
-                      filled: widget.prefilledCategory != null,
-                      fillColor: widget.prefilledCategory != null
-                          ? Colors.grey.shade100
-                          : null,
-                    ),
-                    disabledHint: widget.prefilledCategory != null
-                        ? Text(
-                            widget.prefilledCategory!,
-                            style: TextStyle(fontSize: 14.sp),
+                      items: categoryMap.keys
+                          .map(
+                            (c) => DropdownMenuItem(
+                              value: c,
+                              child: Text(c, style: TextStyle(fontSize: 14.sp)),
+                            ),
                           )
-                        : null,
-                    isExpanded: true,
+                          .toList(),
+                      onChanged: widget.prefilledCategory != null
+                          ? null
+                          : (v) {
+                              setState(() {
+                                selectedCategory = v;
+                                selectedSubcategory = null;
+                              });
+                            },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 14.h,
+                        ),
+                        filled: widget.prefilledCategory != null,
+                        fillColor: widget.prefilledCategory != null
+                            ? Colors.grey.shade100
+                            : null,
+                      ),
+                      disabledHint: widget.prefilledCategory != null
+                          ? Text(
+                              widget.prefilledCategory!,
+                              style: TextStyle(fontSize: 14.sp),
+                            )
+                          : null,
+                      isExpanded: true,
+                    ),
                   ),
                   if (_isCategoryRequired && selectedCategory == null)
                     Padding(
@@ -419,33 +422,37 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  DropdownButtonFormField<String>(
-                    value: selectedSubcategory,
-                    hint: Text(
-                      'Select specific issue',
-                      style: TextStyle(fontSize: 14.sp),
-                    ),
-                    items: subcategories
-                        .map(
-                          (c) => DropdownMenuItem(
-                            value: c,
-                            child: Text(c, style: TextStyle(fontSize: 14.sp)),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (v) {
-                      setState(() {
-                        selectedSubcategory = v;
-                        if (v != 'Other') customSubcategoryController.clear();
-                      });
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.r),
+                  SizedBox(
+                    // FIX: Enforce fixed height to prevent vertical jumping
+                    height: 55.h,
+                    child: DropdownButtonFormField<String>(
+                      value: selectedSubcategory,
+                      hint: Text(
+                        'Select specific issue',
+                        style: TextStyle(fontSize: 14.sp),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 14.h,
+                      items: subcategories
+                          .map(
+                            (c) => DropdownMenuItem(
+                              value: c,
+                              child: Text(c, style: TextStyle(fontSize: 14.sp)),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) {
+                        setState(() {
+                          selectedSubcategory = v;
+                          if (v != 'Other') customSubcategoryController.clear();
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 14.h,
+                        ),
                       ),
                     ),
                   ),
