@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'home_page.dart';
+import 'reports_page.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -14,6 +16,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
     const mainBlue = Color(0xFF1746D1);
+    const navBg = Color(0xFFF0F4FF);
 
     return Scaffold(
       appBar: AppBar(
