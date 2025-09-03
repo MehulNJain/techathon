@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'reports_page.dart';
 import 'report_issue_page.dart';
 import 'user_profile_page.dart';
@@ -17,7 +18,6 @@ class _HomePageState extends State<HomePage> {
 
   void _onItemTapped(int index) async {
     if (index == 1) {
-      // Go to ReportIssuePage and reset to Home on return
       await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ReportIssuePage()),
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(builder: (context) => const MyReportsPage()),
       );
       setState(() {
-        _selectedIndex = 2;
+        _selectedIndex = 0; // Always reset to Home after returning
       });
     } else if (index == 3) {
       await Navigator.push(
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(builder: (context) => const UserProfilePage()),
       );
       setState(() {
-        _selectedIndex = 3;
+        _selectedIndex = 0;
       });
     } else {
       setState(() {
@@ -62,8 +62,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    final width = 1.sw;
+    final height = 1.sh;
     const mainBlue = Color(0xFF1746D1);
     const navBg = Color(0xFFF0F4FF);
 
@@ -87,12 +87,7 @@ class _HomePageState extends State<HomePage> {
                         bottomRight: Radius.circular(32),
                       ),
                     ),
-                    padding: EdgeInsets.fromLTRB(
-                      width * 0.04,
-                      width * 0.05,
-                      width * 0.04,
-                      height * 0.04,
-                    ),
+                    padding: EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 32.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -101,19 +96,21 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Row(
                               children: [
-                                const CircleAvatar(
+                                CircleAvatar(
                                   backgroundColor: Colors.white,
+                                  radius: 18.r,
                                   child: Icon(
                                     Icons.account_balance,
                                     color: mainBlue,
+                                    size: 22.sp,
                                   ),
                                 ),
-                                const SizedBox(width: 10),
+                                SizedBox(width: 10.w),
                                 Text(
                                   "Smart Civic Portal",
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: width * 0.045,
+                                    fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -121,23 +118,23 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Stack(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.notifications,
                                   color: Colors.white,
-                                  size: 28,
+                                  size: 28.sp,
                                 ),
                                 Positioned(
                                   right: 0,
-                                  top: 2,
+                                  top: 2.h,
                                   child: Container(
-                                    width: 10,
-                                    height: 10,
+                                    width: 10.w,
+                                    height: 10.w,
                                     decoration: BoxDecoration(
                                       color: Colors.red,
                                       shape: BoxShape.circle,
                                       border: Border.all(
                                         color: Colors.white,
-                                        width: 1,
+                                        width: 1.w,
                                       ),
                                     ),
                                   ),
@@ -146,31 +143,31 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: height * 0.012),
+                        SizedBox(height: 12.h),
                         Text(
                           "Good morning,",
                           style: TextStyle(
                             color: Colors.white70,
-                            fontSize: width * 0.032,
+                            fontSize: 14.sp,
                           ),
                         ),
                         Text(
                           widget.fullName,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: width * 0.045,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        SizedBox(height: height * 0.01),
+                        SizedBox(height: 10.h),
                       ],
                     ),
                   ),
-                  // Floating "Report an Issue" button (white with border, slightly smaller)
+                  // Floating "Report an Issue" button
                   Positioned(
-                    left: width * 0.12,
-                    right: width * 0.12,
-                    bottom: -height * 0.035,
+                    left: 48.w,
+                    right: 48.w,
+                    bottom: -28.h,
                     child: Center(
                       child: SizedBox(
                         width: double.infinity,
@@ -178,13 +175,11 @@ class _HomePageState extends State<HomePage> {
                           style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: mainBlue,
-                            side: BorderSide(color: mainBlue, width: 1.5),
+                            side: BorderSide(color: mainBlue, width: 1.5.w),
                             elevation: 2,
-                            padding: EdgeInsets.symmetric(
-                              vertical: height * 0.014,
-                            ),
+                            padding: EdgeInsets.symmetric(vertical: 14.h),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(14.r),
                             ),
                           ),
                           onPressed: () {
@@ -195,11 +190,11 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           },
-                          icon: Icon(Icons.add, size: width * 0.052),
+                          icon: Icon(Icons.add, size: 22.sp),
                           label: Text(
                             "Report an Issue",
                             style: TextStyle(
-                              fontSize: width * 0.035,
+                              fontSize: 15.sp,
                               fontWeight: FontWeight.bold,
                               color: mainBlue,
                             ),
@@ -210,28 +205,28 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              SizedBox(height: height * 0.065),
+              SizedBox(height: 40.h),
 
-              // Quick Report (card size same, icons/images bigger)
+              // Quick Report
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Quick Report",
                       style: TextStyle(
-                        fontSize: width * 0.038,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: height * 0.012),
+                    SizedBox(height: 12.h),
                     GridView.count(
                       crossAxisCount: 2,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      mainAxisSpacing: height * 0.012,
-                      crossAxisSpacing: width * 0.04,
+                      mainAxisSpacing: 12.h,
+                      crossAxisSpacing: 16.w,
                       childAspectRatio: 1.35,
                       children: [
                         GestureDetector(
@@ -241,7 +236,6 @@ class _HomePageState extends State<HomePage> {
                             "Garbage",
                             const Color(0xFFEAF8ED),
                             Colors.green,
-                            width,
                           ),
                         ),
                         GestureDetector(
@@ -252,7 +246,6 @@ class _HomePageState extends State<HomePage> {
                             "Street Light",
                             const Color(0xFFFFF9E5),
                             Colors.orange,
-                            width,
                           ),
                         ),
                         GestureDetector(
@@ -263,7 +256,6 @@ class _HomePageState extends State<HomePage> {
                             "Road Damage",
                             const Color(0xFFFFEAEA),
                             Colors.red,
-                            width,
                           ),
                         ),
                         GestureDetector(
@@ -273,7 +265,6 @@ class _HomePageState extends State<HomePage> {
                             "Water",
                             const Color(0xFFEAF4FF),
                             mainBlue,
-                            width,
                           ),
                         ),
                       ],
@@ -282,16 +273,16 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              SizedBox(height: height * 0.018),
+              SizedBox(height: 18.h),
 
-              // Badge Card (smaller)
+              // Badge Card
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(
-                    vertical: width * 0.045,
-                    horizontal: width * 0.04,
+                    vertical: 16.h,
+                    horizontal: 16.w,
                   ),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
@@ -299,7 +290,7 @@ class _HomePageState extends State<HomePage> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,31 +299,31 @@ class _HomePageState extends State<HomePage> {
                         "Current Badge",
                         style: TextStyle(
                           color: Colors.white70,
-                          fontSize: width * 0.028,
+                          fontSize: 13.sp,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Text(
                         "Civic Hero 🧑‍🤝‍🧑",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: width * 0.038,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: height * 0.01),
+                      SizedBox(height: 10.h),
                       LinearProgressIndicator(
                         value: 0.7,
                         backgroundColor: Colors.white24,
                         color: Colors.white,
-                        minHeight: height * 0.01,
+                        minHeight: 7.h,
                       ),
-                      SizedBox(height: height * 0.01),
+                      SizedBox(height: 10.h),
                       Text(
                         "2 more reports to reach Neighborhood Guardian 🦸‍♂️",
                         style: TextStyle(
                           color: Colors.white70,
-                          fontSize: width * 0.028,
+                          fontSize: 13.sp,
                         ),
                       ),
                     ],
@@ -340,22 +331,22 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              SizedBox(height: height * 0.018),
+              SizedBox(height: 18.h),
 
               // Report Summary
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Reports Summary",
                       style: TextStyle(
-                        fontSize: width * 0.038,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: height * 0.01),
+                    SizedBox(height: 10.h),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -368,22 +359,22 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.07),
-                              blurRadius: 8,
+                              blurRadius: 8.r,
                               offset: const Offset(0, 2),
                             ),
                           ],
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _summaryBox("12", "Total", mainBlue, width),
-                            _summaryBox("3", "Pending", Colors.orange, width),
-                            _summaryBox("9", "Resolved", Colors.green, width),
+                            _summaryBox("12", "Total", mainBlue),
+                            _summaryBox("3", "Pending", Colors.orange),
+                            _summaryBox("9", "Resolved", Colors.green),
                           ],
                         ),
                       ),
@@ -392,29 +383,28 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              SizedBox(height: height * 0.018),
+              SizedBox(height: 18.h),
 
               // Recent Reports
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Recent Reports",
                       style: TextStyle(
-                        fontSize: width * 0.038,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: height * 0.01),
+                    SizedBox(height: 10.h),
                     _reportItem(
                       "Broken Street Light",
                       "MG Road, Sector 14 • 2 days ago",
                       "Pending",
                       Colors.orange.shade700,
                       Colors.yellow.shade50,
-                      width,
                     ),
                     _reportItem(
                       "Garbage Collection",
@@ -422,7 +412,6 @@ class _HomePageState extends State<HomePage> {
                       "Resolved",
                       Colors.green.shade700,
                       Colors.green.shade50,
-                      width,
                     ),
                     _reportItem(
                       "Pothole Repair",
@@ -430,12 +419,11 @@ class _HomePageState extends State<HomePage> {
                       "Resolved",
                       Colors.green.shade700,
                       Colors.green.shade50,
-                      width,
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: height * 0.02),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -446,8 +434,8 @@ class _HomePageState extends State<HomePage> {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
+              blurRadius: 8.r,
+              offset: Offset(0, -2.h),
             ),
           ],
         ),
@@ -458,74 +446,78 @@ class _HomePageState extends State<HomePage> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: mainBlue,
           unselectedItemColor: Colors.grey,
-          iconSize: width * 0.065,
-          selectedFontSize: width * 0.03,
-          unselectedFontSize: width * 0.028,
+          iconSize: 24.sp,
+          selectedFontSize: 14.sp,
+          unselectedFontSize: 13.sp,
           elevation: 0,
           showUnselectedLabels: true,
           items: [
             BottomNavigationBarItem(
               icon: _selectedIndex == 0
                   ? Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
                       ),
                       decoration: BoxDecoration(
                         color: mainBlue.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(Icons.home, color: mainBlue),
+                      child: Icon(Icons.home, color: mainBlue, size: 24.sp),
                     )
-                  : const Icon(Icons.home),
+                  : Icon(Icons.home, size: 24.sp),
               label: "Home",
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 1
                   ? Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
                       ),
                       decoration: BoxDecoration(
                         color: mainBlue.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(Icons.add_circle_outline, color: mainBlue),
+                      child: Icon(
+                        Icons.add_circle_outline,
+                        color: mainBlue,
+                        size: 24.sp,
+                      ),
                     )
-                  : const Icon(Icons.add_circle_outline),
+                  : Icon(Icons.add_circle_outline, size: 24.sp),
               label: "Report",
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 2
                   ? Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
                       ),
                       decoration: BoxDecoration(
                         color: mainBlue.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(Icons.list_alt, color: mainBlue),
+                      child: Icon(Icons.list_alt, color: mainBlue, size: 24.sp),
                     )
-                  : const Icon(Icons.list_alt),
+                  : Icon(Icons.list_alt, size: 24.sp),
               label: "Complaints",
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 3
                   ? Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
                       ),
                       decoration: BoxDecoration(
                         color: mainBlue.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(Icons.person, color: mainBlue),
+                      child: Icon(Icons.person, color: mainBlue, size: 24.sp),
                     )
-                  : const Icon(Icons.person),
+                  : Icon(Icons.person, size: 24.sp),
               label: "Profile",
             ),
           ],
@@ -534,20 +526,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Quick Report Card (card size same, icons/images bigger, with border)
+  // Quick Report Card
   Widget _quickReportCard(
     IconData icon,
     String title,
     Color bgColor,
     Color iconColor,
-    double width,
   ) {
     return Container(
-      margin: const EdgeInsets.all(4),
+      margin: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300, width: 1.2),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Colors.grey.shade300, width: 1.2.w),
       ),
       child: Center(
         child: Column(
@@ -555,17 +546,14 @@ class _HomePageState extends State<HomePage> {
           children: [
             CircleAvatar(
               backgroundColor: Colors.white,
-              radius: width * 0.085,
-              child: Icon(icon, color: iconColor, size: width * 0.085),
+              radius: 32.r,
+              child: Icon(icon, color: iconColor, size: 32.sp),
             ),
-            SizedBox(height: width * 0.018),
+            SizedBox(height: 10.h),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: width * 0.032,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.sp),
             ),
           ],
         ),
@@ -573,20 +561,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Report Summary Box (bigger, colored numbers)
-  Widget _summaryBox(String value, String label, Color color, double width) {
+  // Report Summary Box
+  Widget _summaryBox(String value, String label, Color color) {
     return Column(
       children: [
         Text(
           value,
           style: TextStyle(
-            fontSize: width * 0.065,
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
             color: color,
           ),
         ),
-        SizedBox(height: width * 0.008),
-        Text(label, style: TextStyle(fontSize: width * 0.028)),
+        SizedBox(height: 2.h),
+        Text(label, style: TextStyle(fontSize: 13.sp)),
       ],
     );
   }
@@ -598,17 +586,16 @@ class _HomePageState extends State<HomePage> {
     String status,
     Color statusColor,
     Color chipBg,
-    double width,
   ) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: width * 0.008),
+      margin: EdgeInsets.symmetric(vertical: 4.h),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.06),
-            blurRadius: 4,
+            blurRadius: 4.r,
             offset: const Offset(0, 2),
           ),
         ],
@@ -616,27 +603,21 @@ class _HomePageState extends State<HomePage> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: width * 0.032,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.sp),
         ),
-        subtitle: Text(subtitle, style: TextStyle(fontSize: width * 0.026)),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12.sp)),
         trailing: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: width * 0.025,
-            vertical: width * 0.008,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
           decoration: BoxDecoration(
             color: chipBg,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: Text(
             status,
             style: TextStyle(
               color: statusColor,
               fontWeight: FontWeight.bold,
-              fontSize: width * 0.026,
+              fontSize: 12.sp,
             ),
           ),
         ),

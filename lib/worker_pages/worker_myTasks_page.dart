@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkerMyTasksPage extends StatefulWidget {
   @override
@@ -67,67 +68,61 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
           style: TextStyle(
             color: Colors.orange.shade700,
             fontWeight: FontWeight.bold,
-            fontSize: 22,
+            fontSize: 22.sp,
           ),
         ),
       ),
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            child: Row(
-              children: tabs.asMap().entries.map((entry) {
-                final idx = entry.key;
-                final tab = entry.value;
-                final selected = selectedTabIndex == idx;
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedTabIndex = idx;
-                      });
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: selected
-                            ? Colors.orange.shade700
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+            alignment: Alignment.centerLeft,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: tabs.asMap().entries.map((entry) {
+                  final idx = entry.key;
+                  final tab = entry.value;
+                  final selected = selectedTabIndex == idx;
+                  return Padding(
+                    padding: EdgeInsets.only(right: 8.w),
+                    child: ChoiceChip(
+                      label: Text(tab, style: TextStyle(fontSize: 13.sp)),
+                      selected: selected,
+                      selectedColor: Colors.orange.shade700,
+                      labelStyle: TextStyle(
+                        color: selected ? Colors.white : Colors.black87,
+                        fontWeight: selected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
-                      child: Text(
-                        tab,
-                        style: TextStyle(
-                          color: selected ? Colors.white : Colors.grey.shade600,
-                          fontWeight: selected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          fontSize: 15,
-                        ),
-                      ),
+                      onSelected: (_) {
+                        setState(() {
+                          selectedTabIndex = idx;
+                        });
+                      },
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           ),
           Expanded(
             child: ListView.separated(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.w),
               itemCount: filteredTasks.length,
-              separatorBuilder: (_, __) => SizedBox(height: 14),
+              separatorBuilder: (_, __) => SizedBox(height: 14.h),
               itemBuilder: (context, index) {
                 final task = filteredTasks[index];
                 return Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 18,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 18.h,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,37 +134,37 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                               style: TextStyle(
                                 color: Colors.grey.shade700,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                                fontSize: 15.sp,
                               ),
                             ),
                             Spacer(),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
+                                horizontal: 10.w,
+                                vertical: 4.h,
                               ),
                               decoration: BoxDecoration(
                                 color: task.priorityColor.withOpacity(0.13),
-                                borderRadius: BorderRadius.circular(13),
+                                borderRadius: BorderRadius.circular(13.r),
                               ),
                               child: Text(
                                 task.priority,
                                 style: TextStyle(
                                   color: task.priorityColor,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 11,
+                                  fontSize: 11.sp,
                                 ),
                               ),
                             ),
-                            SizedBox(width: 7),
+                            SizedBox(width: 7.w),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
+                                horizontal: 10.w,
+                                vertical: 4.h,
                               ),
                               decoration: BoxDecoration(
                                 color: task.statusColor,
-                                borderRadius: BorderRadius.circular(13),
+                                borderRadius: BorderRadius.circular(13.r),
                               ),
                               child: Text(
                                 task.status,
@@ -180,29 +175,29 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                                             ? Colors.orange.shade700
                                             : Colors.blue.shade700),
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 11,
+                                  fontSize: 11.sp,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 14),
+                        SizedBox(height: 14.h),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               decoration: BoxDecoration(
                                 color: task.iconBg,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(10.r),
                               ),
-                              padding: EdgeInsets.all(12),
+                              padding: EdgeInsets.all(12.w),
                               child: Icon(
                                 task.icon,
                                 color: Colors.orange.shade700,
-                                size: 28,
+                                size: 28.sp,
                               ),
                             ),
-                            SizedBox(width: 13),
+                            SizedBox(width: 13.w),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,7 +206,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                                     task.title,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 17,
+                                      fontSize: 17.sp,
                                       color: Colors.grey[900],
                                     ),
                                   ),
@@ -219,23 +214,23 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                                     task.subtitle,
                                     style: TextStyle(
                                       color: Colors.grey.shade600,
-                                      fontSize: 15,
+                                      fontSize: 15.sp,
                                     ),
                                   ),
-                                  SizedBox(height: 7),
+                                  SizedBox(height: 7.h),
                                   Row(
                                     children: [
                                       Icon(
                                         Icons.location_on,
                                         color: Colors.grey.shade400,
-                                        size: 15,
+                                        size: 15.sp,
                                       ),
-                                      SizedBox(width: 5),
+                                      SizedBox(width: 5.w),
                                       Expanded(
                                         child: Text(
                                           task.location,
                                           style: TextStyle(
-                                            fontSize: 13,
+                                            fontSize: 13.sp,
                                             color: Colors.grey.shade600,
                                           ),
                                           overflow: TextOverflow.ellipsis,
@@ -246,9 +241,9 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             CircleAvatar(
-                              radius: 21,
+                              radius: 21.r,
                               backgroundColor: Colors.grey.shade200,
                               backgroundImage: AssetImage(
                                 'assets/images/avatar${index + 1}.png',
@@ -256,16 +251,16 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orange.shade700,
                               foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(vertical: 13),
+                              padding: EdgeInsets.symmetric(vertical: 13.h),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                             ),
                             onPressed: () {},
@@ -273,7 +268,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                               "View Details",
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 15,
+                                fontSize: 15.sp,
                               ),
                             ),
                           ),

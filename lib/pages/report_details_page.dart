@@ -6,6 +6,7 @@ import '../models/report_data.dart';
 import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Icon selection based on complaint category
 IconData getCategoryIcon(String category) {
@@ -63,16 +64,21 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
       icon: Icon(
         _isPlaying ? Icons.pause : Icons.play_arrow,
         color: Colors.blue,
+        size: 22.sp,
       ),
       label: Text(
         _isPlaying ? "Pause Voice Note" : "Play Voice Note",
-        style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: Colors.blue,
+          fontWeight: FontWeight.bold,
+          fontSize: 14.sp,
+        ),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue.withOpacity(0.08),
         elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       ),
       onPressed: _togglePlay,
     );
@@ -96,7 +102,7 @@ class ReportDetailsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: Colors.black87, size: 24.sp),
           onPressed: () {
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (_) => MyReportsPage()),
@@ -104,12 +110,12 @@ class ReportDetailsPage extends StatelessWidget {
             );
           },
         ),
-        title: const Text(
+        title: Text(
           'Report Details',
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
-            fontSize: 19,
+            fontSize: 19.sp,
           ),
         ),
         centerTitle: false,
@@ -118,19 +124,19 @@ class ReportDetailsPage extends StatelessWidget {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Top Card
                   Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(16),
+                    margin: EdgeInsets.only(bottom: 14.h),
+                    padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(14.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,34 +146,34 @@ class ReportDetailsPage extends StatelessWidget {
                             Container(
                               decoration: BoxDecoration(
                                 color: mainBlue.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
-                              padding: const EdgeInsets.all(8),
+                              padding: EdgeInsets.all(8.w),
                               child: Icon(
                                 getCategoryIcon(report.category),
                                 color: mainBlue,
-                                size: 28,
+                                size: 28.sp,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            SizedBox(width: 10.w),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     "${report.category} - ${report.subcategory}",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                                      fontSize: 16.sp,
                                       color: Colors.black,
                                     ),
                                   ),
-                                  const SizedBox(height: 2),
+                                  SizedBox(height: 2.h),
                                   Text(
                                     report.dateTime,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.black54,
-                                      fontSize: 13,
+                                      fontSize: 13.sp,
                                     ),
                                   ),
                                 ],
@@ -175,52 +181,52 @@ class ReportDetailsPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.location_on,
                               color: mainBlue,
-                              size: 18,
+                              size: 18.sp,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4.w),
                             Expanded(
                               child: Text(
                                 report.location,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.black87,
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6.h),
                         Row(
                           children: [
-                            const Icon(Icons.tag, color: Colors.grey, size: 18),
-                            const SizedBox(width: 4),
+                            Icon(Icons.tag, color: Colors.grey, size: 18.sp),
+                            SizedBox(width: 4.w),
                             Text(
                               "REF: ${report.complaintId}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 13,
+                                fontSize: 13.sp,
                               ),
                             ),
                             const Spacer(),
-                            const Chip(
+                            Chip(
                               label: Text(
                                 "Pending Review",
                                 style: TextStyle(
                                   color: Color(0xFFB26A00),
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13,
+                                  fontSize: 13.sp,
                                 ),
                               ),
                               backgroundColor: Color(0xFFFFF6E0),
                               padding: EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 0,
+                                horizontal: 10.w,
+                                vertical: 0.h,
                               ),
                             ),
                           ],
@@ -233,31 +239,31 @@ class ReportDetailsPage extends StatelessWidget {
                   if (report.photos.isNotEmpty)
                     Container(
                       width: double.infinity,
-                      margin: const EdgeInsets.only(bottom: 14),
-                      padding: const EdgeInsets.all(14),
+                      margin: EdgeInsets.only(bottom: 14.h),
+                      padding: EdgeInsets.all(14.w),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(14.r),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "Photos Submitted",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: 15.sp,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           SizedBox(
-                            height: 90,
+                            height: 90.h,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: report.photos.length,
                               separatorBuilder: (_, __) =>
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: 10.w),
                               itemBuilder: (context, i) {
                                 final photo = report.photos[i];
                                 return GestureDetector(
@@ -271,26 +277,25 @@ class ReportDetailsPage extends StatelessWidget {
                                           children: [
                                             Image.file(File(photo.path)),
                                             Padding(
-                                              padding: const EdgeInsets.all(
-                                                8.0,
-                                              ),
+                                              padding: EdgeInsets.all(8.w),
                                               child: Text(
                                                 DateFormat(
                                                   'dd MMM yyyy, hh:mm a',
                                                 ).format(photo.timestamp),
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 15,
+                                                  fontSize: 15.sp,
                                                 ),
                                               ),
                                             ),
                                             TextButton(
                                               onPressed: () =>
                                                   Navigator.of(context).pop(),
-                                              child: const Text(
+                                              child: Text(
                                                 "Close",
                                                 style: TextStyle(
                                                   color: Colors.white,
+                                                  fontSize: 14.sp,
                                                 ),
                                               ),
                                             ),
@@ -302,30 +307,32 @@ class ReportDetailsPage extends StatelessWidget {
                                   child: Stack(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
                                         child: Image.file(
                                           File(photo.path),
-                                          width: 70,
-                                          height: 70,
+                                          width: 70.w,
+                                          height: 70.w,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
                                       Positioned(
-                                        bottom: 2,
-                                        left: 2,
+                                        bottom: 2.h,
+                                        left: 2.w,
                                         child: Container(
                                           color: Colors.black54,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 4,
-                                            vertical: 2,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 4.w,
+                                            vertical: 2.h,
                                           ),
                                           child: Text(
                                             DateFormat(
                                               'dd MMM, hh:mm a',
                                             ).format(photo.timestamp),
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 10,
+                                              fontSize: 10.sp,
                                             ),
                                           ),
                                         ),
@@ -343,42 +350,42 @@ class ReportDetailsPage extends StatelessWidget {
                   // Issue Description & Voice Note
                   Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(14),
+                    margin: EdgeInsets.only(bottom: 14.h),
+                    padding: EdgeInsets.all(14.w),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(14.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Issue Description",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: 15.sp,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         Text(
                           report.description,
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: 14.sp,
                             color: Colors.black87,
                           ),
                         ),
                         if (report.voiceNotePath != null) ...[
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12.h),
                           Row(
                             children: [
                               VoiceNotePlayer(path: report.voiceNotePath!),
-                              const SizedBox(width: 10),
-                              const Text(
+                              SizedBox(width: 10.w),
+                              Text(
                                 "Voice Note",
                                 style: TextStyle(
                                   color: Colors.black54,
-                                  fontSize: 13,
+                                  fontSize: 13.sp,
                                 ),
                               ),
                             ],
@@ -391,24 +398,24 @@ class ReportDetailsPage extends StatelessWidget {
                   // Status Timeline (dummy, you can add real status if you want)
                   Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(14),
+                    margin: EdgeInsets.only(bottom: 14.h),
+                    padding: EdgeInsets.all(14.w),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(14.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Status Timeline",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: 15.sp,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12.h),
                         _timelineTile(
                           icon: Icons.radio_button_unchecked,
                           color: Colors.grey,
@@ -430,8 +437,8 @@ class ReportDetailsPage extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.04),
-                  blurRadius: 8,
-                  offset: const Offset(0, -2),
+                  blurRadius: 8.r,
+                  offset: Offset(0, -2.h),
                 ),
               ],
             ),
@@ -441,9 +448,9 @@ class ReportDetailsPage extends StatelessWidget {
               type: BottomNavigationBarType.fixed,
               selectedItemColor: mainBlue,
               unselectedItemColor: Colors.grey,
-              iconSize: width * 0.065,
-              selectedFontSize: width * 0.03,
-              unselectedFontSize: width * 0.028,
+              iconSize: width * 0.065.w,
+              selectedFontSize: width * 0.03.sp,
+              unselectedFontSize: width * 0.028.sp,
               elevation: 0,
               showUnselectedLabels: true,
               onTap: (index) {
@@ -474,57 +481,61 @@ class ReportDetailsPage extends StatelessWidget {
               items: [
                 BottomNavigationBarItem(
                   icon: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: 2 == 0 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.home, color: Colors.grey),
+                    child: Icon(Icons.home, color: Colors.grey, size: 24.sp),
                   ),
                   label: "Home",
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: 2 == 1 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.add_circle_outline, color: Colors.grey),
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      color: Colors.grey,
+                      size: 24.sp,
+                    ),
                   ),
                   label: "Report",
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: mainBlue.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.list_alt, color: mainBlue),
+                    child: Icon(Icons.list_alt, color: mainBlue, size: 24.sp),
                   ),
                   label: "Complaints",
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: 2 == 3 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.person, color: Colors.grey),
+                    child: Icon(Icons.person, color: Colors.grey, size: 24.sp),
                   ),
                   label: "Profile",
                 ),
@@ -544,17 +555,17 @@ class ReportDetailsPage extends StatelessWidget {
     required String desc,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
+      padding: EdgeInsets.only(bottom: 14.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
             children: [
-              Icon(icon, color: color, size: 22),
-              Container(width: 2, height: 32, color: Colors.grey.shade200),
+              Icon(icon, color: color, size: 22.sp),
+              Container(width: 2.w, height: 32.h, color: Colors.grey.shade200),
             ],
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -564,16 +575,16 @@ class ReportDetailsPage extends StatelessWidget {
                   style: TextStyle(
                     color: color,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    fontSize: 15.sp,
                   ),
                 ),
                 Text(
                   date,
-                  style: const TextStyle(color: Colors.black54, fontSize: 13),
+                  style: TextStyle(color: Colors.black54, fontSize: 13.sp),
                 ),
                 Text(
                   desc,
-                  style: const TextStyle(color: Colors.black87, fontSize: 13),
+                  style: TextStyle(color: Colors.black87, fontSize: 13.sp),
                 ),
               ],
             ),

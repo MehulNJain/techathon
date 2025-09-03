@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyReportsPage extends StatefulWidget {
   const MyReportsPage({super.key});
@@ -74,9 +75,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Reports"),
+        title: Text("My Reports", style: TextStyle(fontSize: 18.sp)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, size: 22.sp),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -85,7 +86,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
           children: [
             // Summary Row
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: const [
@@ -115,7 +116,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
             // Tabs
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -134,7 +135,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
             // Reports List
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 16),
+                padding: EdgeInsets.only(bottom: 16.h),
                 itemCount: filteredReports.length,
                 itemBuilder: (context, index) {
                   final report = filteredReports[index];
@@ -142,60 +143,69 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       report["image"].toString().startsWith("http")
                       ? Image.network(
                           report["image"],
-                          width: 50,
-                          height: 50,
+                          width: 50.w,
+                          height: 50.w,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                                Icons.broken_image,
-                                size: 40,
-                                color: Colors.grey,
-                              ),
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            Icons.broken_image,
+                            size: 40.sp,
+                            color: Colors.grey,
+                          ),
                         )
                       : Image.asset(
                           report["image"],
-                          width: 50,
-                          height: 50,
+                          width: 50.w,
+                          height: 50.w,
                           fit: BoxFit.cover,
                         );
 
                   return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: ListTile(
                       leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(8.r),
                         child: imageWidget,
                       ),
-                      title: Text(report["title"]),
+                      title: Text(
+                        report["title"],
+                        style: TextStyle(fontSize: 15.sp),
+                      ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(report["location"]),
-                          Text(report["date"]),
+                          Text(
+                            report["location"],
+                            style: TextStyle(fontSize: 13.sp),
+                          ),
+                          Text(
+                            report["date"],
+                            style: TextStyle(fontSize: 12.sp),
+                          ),
                         ],
                       ),
                       trailing: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.h,
                         ),
                         decoration: BoxDecoration(
                           color: _getStatusColor(
                             report["status"],
                           ).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Text(
                           report["status"],
                           style: TextStyle(
                             color: _getStatusColor(report["status"]),
                             fontWeight: FontWeight.bold,
+                            fontSize: 13.sp,
                           ),
                         ),
                       ),
@@ -205,11 +215,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
               ),
             ),
 
-            const Padding(
-              padding: EdgeInsets.all(12.0),
+            Padding(
+              padding: EdgeInsets.all(12.w),
               child: Text(
                 "Government of Jharkhand Initiative – Secure & Verified",
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey),
               ),
             ),
           ],
@@ -238,12 +248,12 @@ class _SummaryItem extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
             color: color,
           ),
         ),
-        Text(title, style: const TextStyle(fontSize: 14)),
+        Text(title, style: TextStyle(fontSize: 14.sp)),
       ],
     );
   }
@@ -259,16 +269,17 @@ class _TabButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: selected ? Colors.blue : Colors.grey[200],
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Text(
         label,
         style: TextStyle(
           color: selected ? Colors.white : Colors.black,
           fontWeight: FontWeight.w500,
+          fontSize: 14.sp,
         ),
       ),
     );

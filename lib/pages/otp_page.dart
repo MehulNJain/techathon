@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'profile_page.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;
@@ -123,11 +124,11 @@ class _OtpPageState extends State<OtpPage> {
         builder: (context, constraints) {
           return Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minHeight: constraints.maxHeight,
-                  maxWidth: 420,
+                  maxWidth: 420.w,
                 ),
                 child: IntrinsicHeight(
                   child: Column(
@@ -137,41 +138,41 @@ class _OtpPageState extends State<OtpPage> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const SizedBox(height: 40),
+                              SizedBox(height: 40.h),
                               CircleAvatar(
-                                radius: 40,
+                                radius: 40.r,
                                 backgroundColor: mainBlue,
-                                child: const Icon(
+                                child: Icon(
                                   Icons.account_balance,
-                                  size: 40,
+                                  size: 40.r,
                                   color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(height: 20),
-                              const Text(
+                              SizedBox(height: 20.h),
+                              Text(
                                 "Verify OTP",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 20.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 6),
+                              SizedBox(height: 6.h),
                               Text(
                                 "Enter the 6-digit code sent to ${widget.phoneNumber}",
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 14,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
                                   color: Colors.black54,
                                 ),
                               ),
-                              const SizedBox(height: 30),
+                              SizedBox(height: 30.h),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: List.generate(6, (index) {
                                   return Container(
-                                    width: 45,
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 3,
+                                    width: 45.w,
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 3.w,
                                     ),
                                     child: Focus(
                                       onKey: (node, event) {
@@ -194,15 +195,15 @@ class _OtpPageState extends State<OtpPage> {
                                         maxLength: 1,
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
-                                        style: const TextStyle(fontSize: 18),
+                                        style: TextStyle(fontSize: 18.sp),
                                         decoration: InputDecoration(
                                           counterText: "",
                                           enabledBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(
+                                            borderSide: BorderSide(
                                               color: Colors.grey,
                                             ),
                                             borderRadius: BorderRadius.circular(
-                                              8,
+                                              8.r,
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
@@ -210,7 +211,7 @@ class _OtpPageState extends State<OtpPage> {
                                               color: mainBlue,
                                             ),
                                             borderRadius: BorderRadius.circular(
-                                              8,
+                                              8.r,
                                             ),
                                           ),
                                         ),
@@ -244,7 +245,7 @@ class _OtpPageState extends State<OtpPage> {
                                   );
                                 }),
                               ),
-                              const SizedBox(height: 30),
+                              SizedBox(height: 30.h),
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
@@ -252,71 +253,82 @@ class _OtpPageState extends State<OtpPage> {
                                     backgroundColor: _otp.length == 6
                                         ? mainBlue
                                         : Colors.grey.shade300,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 14,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 14.h,
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(8.r),
                                     ),
                                   ),
                                   onPressed: (_otp.length == 6 && !_isLoading)
                                       ? _verifyOtp
                                       : null,
                                   child: _isLoading
-                                      ? const CircularProgressIndicator(
+                                      ? CircularProgressIndicator(
                                           color: Colors.white,
                                         )
-                                      : const Text(
+                                      : Text(
                                           "Verify & Login",
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 16.sp,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
                                         ),
                                 ),
                               ),
-                              const SizedBox(height: 20),
-                              const Text(
+                              SizedBox(height: 20.h),
+                              Text(
                                 "Didn't receive OTP?",
-                                style: TextStyle(color: Colors.black54),
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 14.sp,
+                                ),
                               ),
                               TextButton(
                                 onPressed: _resendOtp,
                                 child: Text(
                                   "Resend",
-                                  style: TextStyle(color: mainBlue),
+                                  style: TextStyle(
+                                    color: mainBlue,
+                                    fontSize: 15.sp,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      // Footer (always at bottom)
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32.h),
                       Divider(height: 1, color: Colors.grey.shade200),
-                      const SizedBox(height: 16),
-                      const Text(
+                      SizedBox(height: 16.h),
+                      Text(
                         "Government of Jharkhand Initiative",
-                        style: TextStyle(color: Colors.black54, fontSize: 14),
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.sp,
+                        ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.verified_user,
-                            size: 16,
+                            size: 16.r,
                             color: Colors.grey,
                           ),
-                          SizedBox(width: 4),
+                          SizedBox(width: 4.w),
                           Text(
                             "Secure & Verified",
-                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13.sp,
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                     ],
                   ),
                 ),

@@ -5,6 +5,8 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'worker_home_page.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class WorkerWorkCompletionSuccessPage extends StatelessWidget {
   final String complaintId;
@@ -77,11 +79,13 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
       } else if (Platform.isIOS) {
         downloadsDir = await getApplicationDocumentsDirectory();
       }
-      if (downloadsDir == null)
+      if (downloadsDir == null) {
         throw Exception("Downloads directory not found");
+      }
 
+      final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
       final filePath =
-          '${downloadsDir.path}/work_completion_report_${complaintId}.pdf';
+          '${downloadsDir.path}/work_completion_report_${complaintId}_$timestamp.pdf';
       final file = File(filePath);
       await file.writeAsBytes(await pdf.save());
 
@@ -103,49 +107,56 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
         backgroundColor: Colors.blue.shade700,
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Text(
+        title: Text(
           "Work Completion",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontSize: 18.sp),
         ),
         centerTitle: true,
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.check_circle_outline, color: Colors.green, size: 80),
-              const SizedBox(height: 24),
-              const Text(
+              Icon(
+                Icons.check_circle_outline,
+                color: Colors.green,
+                size: 80.sp,
+              ),
+              SizedBox(height: 24.h),
+              Text(
                 "Work Marked as Completed!",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               Text(
                 "Your completion proof has been sent to the complaint owner and supervisor.",
-                style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  icon: const Icon(Icons.share, color: Colors.white),
-                  label: const Text(
+                  icon: Icon(Icons.share, color: Colors.white, size: 24.sp),
+                  label: Text(
                     "Share Status",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue.shade700,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   onPressed: () {
@@ -155,26 +166,29 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  icon: const Icon(Icons.download, color: Colors.white),
-                  label: const Text(
+                  icon: Icon(Icons.download, color: Colors.white, size: 24.sp),
+                  label: Text(
                     "Download Report",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green.shade600,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   onPressed: () => _downloadReport(context),
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: 32.h),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
@@ -182,9 +196,9 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
                     (route) => false,
                   );
                 },
-                child: const Text(
+                child: Text(
                   "Back to Home",
-                  style: TextStyle(fontSize: 15, color: Colors.blue),
+                  style: TextStyle(fontSize: 15.sp, color: Colors.blue),
                 ),
               ),
             ],
