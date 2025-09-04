@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get santhali => 'Santhali';
+
+  @override
   String get app_title => 'Smart Civic Portal';
 
   @override
@@ -46,7 +49,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enter_phone_number_message => 'Enter phone number';
 
   @override
-  String get verification_failed => 'Verification failed';
+  String get verification_failed => 'Verification Failed';
 
   @override
   String get error_message => 'Error';
@@ -112,7 +115,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get complaints => 'Complaints';
 
   @override
-  String get profile => 'My Profile';
+  String get profile => 'Profile';
 
   @override
   String get good_morning => 'Good Morning';
@@ -254,16 +257,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Government of Jharkhand Initiative – Secure & Verified';
 
   @override
-  String get reports => 'Reports';
-
-  @override
   String get settings => 'Settings';
 
   @override
   String get notifications => 'Notifications';
-
-  @override
-  String get selectLanguage => 'Select Language';
 
   @override
   String get privacyPolicy => 'Privacy Policy';
@@ -282,4 +279,119 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get workerLoginTitle => 'Worker Login';
+
+  @override
+  String get workerLoginSubtitle =>
+      'Enter your credentials to access the Worker Dashboard';
+
+  @override
+  String get userIdLabel => 'User ID';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get loginButton => 'Login';
+
+  @override
+  String get backToCitizenLoginButton => 'Back to Citizen Login';
+
+  @override
+  String get enterCredentialsError => 'Enter both User ID and Password';
+
+  @override
+  String get invalidCredentialsError => 'Invalid User ID or Password';
+
+  @override
+  String get workerDashboard => 'Worker Dashboard';
+
+  @override
+  String get municipalServices => 'Municipal Services';
+
+  @override
+  String get recentComplaints => 'Recent Complaints';
+
+  @override
+  String get myTasks => 'My Tasks';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterPending => 'Pending';
+
+  @override
+  String get filterInProgress => 'In Progress';
+
+  @override
+  String get filterCompleted => 'Completed';
+
+  @override
+  String get roadMaintenance => 'Road Maintenance';
+
+  @override
+  String get wasteManagement => 'Waste Management';
+
+  @override
+  String get streetLighting => 'Street Lighting';
+
+  @override
+  String get bulbReplacement => 'Bulb Replacement';
+
+  @override
+  String get priorityHigh => 'High';
+
+  @override
+  String get priorityMedium => 'Medium';
+
+  @override
+  String get priorityLow => 'Low';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get workerId => 'Worker ID';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get department => 'Department';
+
+  @override
+  String get assignedArea => 'Assigned Area';
+
+  @override
+  String get recognitionProgress => 'Recognition & Progress';
+
+  @override
+  String get tasksCompleted => 'Tasks Completed This Month';
+
+  @override
+  String get earnedBadges => 'Earned Badges';
+
+  @override
+  String get quickResponse => 'Quick Response';
+
+  @override
+  String get qualityWork => 'Quality Work';
+
+  @override
+  String get onTime => 'On Time';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get changeLanguage => 'Change Language';
+
+  @override
+  String get selectLanguage => 'Select Language';
 }

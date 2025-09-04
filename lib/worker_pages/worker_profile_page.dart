@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../login_page.dart';
-import 'worker_home_page.dart'; // import your worker home page
+import 'worker_home_page.dart';
+import '../l10n/app_localizations.dart';
+import '../main.dart';
+import '../locale_provider.dart';
 
 class WorkerProfilePage extends StatelessWidget {
   const WorkerProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => WorkerHomePage()),
+          MaterialPageRoute(builder: (context) => const WorkerHomePage()),
         );
-        return false; // prevent default back action
+        return false;
       },
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
           title: Text(
-            "Profile",
+            l10n.profile,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
           ),
           centerTitle: true,
@@ -32,7 +38,7 @@ class WorkerProfilePage extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => WorkerHomePage()),
+                MaterialPageRoute(builder: (context) => const WorkerHomePage()),
               );
             },
           ),
@@ -91,24 +97,28 @@ class WorkerProfilePage extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        "Worker ID: MW-2024-0156",
+                        "${l10n.workerId}: MW-2024-0156",
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14.sp,
                         ),
                       ),
                       SizedBox(height: 16.h),
-                      _infoTile(Icons.phone, "PHONE NUMBER", "+91 98765 43210"),
+                      _infoTile(
+                        Icons.phone,
+                        l10n.phoneNumber,
+                        "+91 98765 43210",
+                      ),
                       SizedBox(height: 10.h),
                       _infoTile(
                         Icons.engineering,
-                        "DEPARTMENT",
+                        l10n.department,
                         "Road Maintenance",
                       ),
                       SizedBox(height: 10.h),
                       _infoTile(
                         Icons.location_on,
-                        "ASSIGNED AREA",
+                        l10n.assignedArea,
                         "Zone 3 - Central District",
                       ),
                     ],
@@ -137,7 +147,7 @@ class WorkerProfilePage extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            "Recognition & Progress",
+                            l10n.recognitionProgress,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
@@ -159,7 +169,7 @@ class WorkerProfilePage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Tasks Completed This Month",
+                                    l10n.tasksCompleted,
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       color: Colors.black87,
@@ -187,7 +197,7 @@ class WorkerProfilePage extends StatelessWidget {
                       ),
                       SizedBox(height: 16.h),
                       Text(
-                        "Earned Badges",
+                        l10n.earnedBadges,
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -200,17 +210,17 @@ class WorkerProfilePage extends StatelessWidget {
                           _badge(
                             icon: Icons.star,
                             color: Colors.orange,
-                            text: "Quick Response",
+                            text: l10n.quickResponse,
                           ),
                           _badge(
                             icon: Icons.verified,
                             color: Colors.green,
-                            text: "Quality Work",
+                            text: l10n.qualityWork,
                           ),
                           _badge(
                             icon: Icons.access_time,
                             color: Colors.blue,
-                            text: "On Time",
+                            text: l10n.onTime,
                           ),
                         ],
                       ),
@@ -221,11 +231,17 @@ class WorkerProfilePage extends StatelessWidget {
               SizedBox(height: 20.h),
 
               // Change Password
-              _actionTile(Icons.lock, "Change Password", Colors.blue, () {}),
+              _actionTile(Icons.lock, l10n.changePassword, Colors.blue, () {}),
+              SizedBox(height: 12.h),
+
+              // Language Change
+              _actionTile(Icons.language, l10n.changeLanguage, Colors.teal, () {
+                _showLanguageDialog(context);
+              }),
               SizedBox(height: 12.h),
 
               // Logout
-              _actionTile(Icons.logout, "Logout", Colors.red, () {
+              _actionTile(Icons.logout, l10n.logout, Colors.red, () {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -239,7 +255,41 @@ class WorkerProfilePage extends StatelessWidget {
     );
   }
 
-  // Info Tile Widget
+  // 🔹 Language change dialog
+  void _showLanguageDialog(BuildContext context) {
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(l10n.selectLanguage),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(l10n.english),
+                onTap: () {
+                  localeProvider.setLocale(const Locale('en'));
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text(l10n.hindi),
+                onTap: () {
+                  localeProvider.setLocale(const Locale('hi'));
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Info Tile
   static Widget _infoTile(IconData icon, String title, String subtitle) {
     return Container(
       padding: EdgeInsets.all(12.w),
@@ -270,7 +320,7 @@ class WorkerProfilePage extends StatelessWidget {
     );
   }
 
-  // Badge Widget
+  // Badge
   static Widget _badge({
     required IconData icon,
     required Color color,

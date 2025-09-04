@@ -9,6 +9,9 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get santhali => 'ᱥᱟᱱᱛᱟᱲᱤ';
+
+  @override
   String get app_title => 'स्मार्ट नागरिक पोर्टल';
 
   @override
@@ -111,7 +114,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get complaints => 'शिकायतें';
 
   @override
-  String get profile => 'मेरा प्रोफ़ाइल';
+  String get profile => 'प्रोफ़ाइल';
 
   @override
   String get good_morning => 'सुप्रभात';
@@ -141,16 +144,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get badgeProgress => 'अगले बैज तक 70%';
 
   @override
-  String get reportsSummary => 'रिपोर्ट का सारांश';
+  String get reportsSummary => 'रिपोर्ट का हाल';
 
   @override
   String get total => 'कुल';
 
   @override
-  String get pending => 'लंबित';
+  String get pending => 'बाकी';
 
   @override
-  String get inProgress => 'प्रगति पर';
+  String get inProgress => 'चल रहा';
 
   @override
   String get resolved => 'सुलझा हुआ';
@@ -162,10 +165,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get brokenStreetLight => 'टूटी स्ट्रीट लाइट';
 
   @override
-  String get garbageCollection => 'कचरा उठाव';
+  String get garbageCollection => 'कचरा उठाना';
 
   @override
-  String get potholeRepair => 'गड्ढा मरम्मत';
+  String get potholeRepair => 'गड्ढा भराई';
 
   @override
   String get reportIssue => 'समस्या दर्ज करें';
@@ -252,16 +255,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get footerNote => 'झारखंड सरकार की पहल – सुरक्षित और प्रमाणित';
 
   @override
-  String get reports => 'रिपोर्टें';
-
-  @override
   String get settings => 'सेटिंग्स';
 
   @override
   String get notifications => 'सूचनाएँ';
-
-  @override
-  String get selectLanguage => 'भाषा चुनें';
 
   @override
   String get privacyPolicy => 'गोपनीयता नीति';
@@ -280,4 +277,119 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get logout => 'लॉगआउट';
+
+  @override
+  String get workerLoginTitle => 'कर्मचारी लॉगिन';
+
+  @override
+  String get workerLoginSubtitle =>
+      'कर्मचारी डैशबोर्ड तक पहुंचने के लिए अपनी जानकारी दर्ज करें';
+
+  @override
+  String get userIdLabel => 'यूज़र आईडी';
+
+  @override
+  String get passwordLabel => 'पासवर्ड';
+
+  @override
+  String get loginButton => 'लॉगिन करें';
+
+  @override
+  String get backToCitizenLoginButton => 'नागरिक लॉगिन पर वापस जाएं';
+
+  @override
+  String get enterCredentialsError => 'यूज़र आईडी और पासवर्ड दोनों दर्ज करें';
+
+  @override
+  String get invalidCredentialsError => 'गलत यूज़र आईडी या पासवर्ड';
+
+  @override
+  String get workerDashboard => 'कर्मचारी डैशबोर्ड';
+
+  @override
+  String get municipalServices => 'नगर सेवाएँ';
+
+  @override
+  String get recentComplaints => 'हाल की शिकायतें';
+
+  @override
+  String get myTasks => 'मेरे काम';
+
+  @override
+  String get completed => 'पूरा';
+
+  @override
+  String get filterAll => 'सब';
+
+  @override
+  String get filterPending => 'बाकी';
+
+  @override
+  String get filterInProgress => 'चल रहा';
+
+  @override
+  String get filterCompleted => 'पूरा';
+
+  @override
+  String get roadMaintenance => 'सड़क मरम्मत';
+
+  @override
+  String get wasteManagement => 'कचरा प्रबंधन';
+
+  @override
+  String get streetLighting => 'बत्ती लगाना';
+
+  @override
+  String get bulbReplacement => 'बल्ब बदलना';
+
+  @override
+  String get priorityHigh => 'ऊँची';
+
+  @override
+  String get priorityMedium => 'मध्यम';
+
+  @override
+  String get priorityLow => 'कम';
+
+  @override
+  String get viewDetails => 'विवरण देखें';
+
+  @override
+  String get workerId => 'वर्कर आईडी';
+
+  @override
+  String get phoneNumber => 'फ़ोन नंबर';
+
+  @override
+  String get department => 'विभाग';
+
+  @override
+  String get assignedArea => 'नियुक्त क्षेत्र';
+
+  @override
+  String get recognitionProgress => 'मान्यता और प्रगति';
+
+  @override
+  String get tasksCompleted => 'इस महीने पूरे किए गए कार्य';
+
+  @override
+  String get earnedBadges => 'प्राप्त बैज';
+
+  @override
+  String get quickResponse => 'तेज़ प्रतिक्रिया';
+
+  @override
+  String get qualityWork => 'गुणवत्ता कार्य';
+
+  @override
+  String get onTime => 'समय पर';
+
+  @override
+  String get changePassword => 'पासवर्ड बदलें';
+
+  @override
+  String get changeLanguage => 'भाषा बदलें';
+
+  @override
+  String get selectLanguage => 'भाषा चुनें';
 }

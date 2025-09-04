@@ -9,9 +9,14 @@ import 'package:provider/provider.dart';
 import 'pages/otp_page.dart';
 import 'worker_pages/worker_login_page.dart';
 import 'l10n/app_localizations.dart';
-import 'main.dart'; // For LocaleProvider
+import 'main.dart'; // LocaleProvider
+
+// ... other imports
+import 'l10n/app_localizations.dart';
+import 'locale_provider.dart'; // CORRECTED: Import from its own file
 
 class LoginPage extends StatefulWidget {
+  // ... rest of your LoginPage code is perfect and does not need changes.
   const LoginPage({super.key});
 
   @override
@@ -61,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
         await _auth.signInWithPhoneNumber(formattedPhone, verifier).then((
           confirmationResult,
         ) {
+          if (!mounted) return;
           setState(() => _isLoading = false);
           Navigator.push(
             context,
@@ -80,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
             await _auth.signInWithCredential(credential);
           },
           verificationFailed: (FirebaseAuthException e) {
+            if (!mounted) return;
             setState(() => _isLoading = false);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -88,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
           codeSent: (String verificationId, int? resendToken) {
+            if (!mounted) return;
             setState(() => _isLoading = false);
             Navigator.push(
               context,
@@ -100,11 +108,14 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
           codeAutoRetrievalTimeout: (String verificationId) {
-            setState(() => _isLoading = false);
+            if (mounted) {
+              setState(() => _isLoading = false);
+            }
           },
         );
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(
         context,
@@ -115,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
   void _showLanguageDialog() {
     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
     final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -137,6 +149,13 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.of(context).pop();
                 },
               ),
+              ListTile(
+                title: Text(l10n.santhali),
+                onTap: () {
+                  localeProvider.setLocale(const Locale('sat'));
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           ),
         );
@@ -148,7 +167,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     const mainBlue = Color(0xFF1746D1);
     final l10n = AppLocalizations.of(context)!;
-    final localeProvider = context.watch<LocaleProvider>();
+
+    final currentLocale =
+        Provider.of<LocaleProvider>(context).locale?.languageCode ?? 'en';
+
+    // Adjust font sizes for Santali (to avoid overflow)
+    double titleFontSize = currentLocale == 'sat' ? 20.sp : 24.sp;
+    double subtitleFontSize = currentLocale == 'sat' ? 14.sp : 15.sp;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -189,23 +214,27 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 28.h),
 
+                      // Title
                       Text(
                         l10n.app_title,
                         style: TextStyle(
-                          fontSize: 24.sp,
+                          fontSize: titleFontSize,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 8.h),
+
+                      // Subtitle
                       Text(
                         l10n.login_subtitle,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 15.sp,
+                          fontSize: subtitleFontSize,
                           color: Colors.black54,
                         ),
                       ),
+
                       SizedBox(height: 36.h),
 
                       Align(
@@ -220,6 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 10.h),
 
+                      // Phone number input
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.grey.shade50,
@@ -274,13 +304,17 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ),
+
                       SizedBox(height: 24.h),
 
+                      // Send OTP Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: _phoneController.text.length == 10
+                            backgroundColor:
+                                (_phoneController.text.length == 10 &&
+                                    !_isLoading)
                                 ? mainBlue
                                 : Colors.grey.shade300,
                             padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -323,6 +357,7 @@ class _LoginPageState extends State<LoginPage> {
 
                       SizedBox(height: 32.h),
 
+                      // Worker Login
                       TextButton.icon(
                         onPressed: () {
                           Navigator.push(
@@ -350,6 +385,8 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 32.h),
                       Divider(height: 1, color: Colors.grey.shade200),
                       SizedBox(height: 16.h),
+
+                      // Footer
                       Text(
                         l10n.government_initiative,
                         style: TextStyle(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
+
 import 'worker_complaint_page.dart';
 import 'worker_profile_page.dart';
 import 'worker_myTasks_page.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkerHomePage extends StatefulWidget {
   const WorkerHomePage({super.key});
@@ -24,8 +26,8 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
       location: 'Sector 15, Block A',
       priority: 'High',
       status: 'Pending',
-      statusColor: Colors.orange.shade100,
-      priorityColor: Colors.red.shade400,
+      statusColor: Colors.orange,
+      priorityColor: Colors.red,
       imageUrl: 'assets/images/garbage.png',
     ),
     ComplaintItem(
@@ -34,8 +36,8 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
       location: 'Main Road, Near Park',
       priority: 'Medium',
       status: 'In Progress',
-      statusColor: Colors.blue.shade100,
-      priorityColor: Colors.orange.shade400,
+      statusColor: Colors.blue,
+      priorityColor: Colors.orange,
       imageUrl: 'assets/images/streetlight.png',
     ),
     ComplaintItem(
@@ -44,8 +46,8 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
       location: 'Industrial Area Road',
       priority: 'High',
       status: 'Pending',
-      statusColor: Colors.orange.shade100,
-      priorityColor: Colors.red.shade400,
+      statusColor: Colors.orange,
+      priorityColor: Colors.red,
       imageUrl: 'assets/images/road-damage.png',
     ),
     ComplaintItem(
@@ -54,11 +56,28 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
       location: 'Residential Colony',
       priority: 'Low',
       status: 'Completed',
-      statusColor: Colors.green.shade100,
-      priorityColor: Colors.green.shade400,
+      statusColor: Colors.green,
+      priorityColor: Colors.green,
       imageUrl: 'assets/images/water-supply.png',
     ),
   ];
+
+  /// ✅ Map filter keys to localized labels
+  String getFilterLabel(String filterKey, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (filterKey) {
+      case 'All':
+        return l10n.filterAll;
+      case 'Pending':
+        return l10n.filterPending;
+      case 'In Progress':
+        return l10n.filterInProgress;
+      case 'Completed':
+        return l10n.filterCompleted;
+      default:
+        return filterKey;
+    }
+  }
 
   List<ComplaintItem> get filteredComplaints {
     if (selectedFilter == 'All') return complaints;
@@ -71,7 +90,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
         if (complaint.title == 'Garbage Collection') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => WorkerComplaintPage()),
+            MaterialPageRoute(builder: (_) => const WorkerComplaintPage()),
           );
         }
       },
@@ -161,14 +180,14 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 12.w,
                             vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
-                            color: complaint.statusColor,
+                            color: complaint.statusColor.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(18.r),
                           ),
                           child: Text(
@@ -195,9 +214,11 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
   }
 
   Widget _buildHomeContent() {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       children: [
-        WorkerDashboardHeader(),
+        const WorkerDashboardHeader(),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           alignment: Alignment.centerLeft,
@@ -209,7 +230,10 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                 return Padding(
                   padding: EdgeInsets.only(right: 8.w),
                   child: ChoiceChip(
-                    label: Text(f, style: TextStyle(fontSize: 13.sp)),
+                    label: Text(
+                      getFilterLabel(f, context),
+                      style: TextStyle(fontSize: 13.sp),
+                    ),
                     selected: isSelected,
                     selectedColor: Colors.orange.shade700,
                     labelStyle: TextStyle(
@@ -232,7 +256,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Recent Complaints',
+              loc.recentComplaints,
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
           ),
@@ -253,7 +277,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => WorkerMyTasksPage()),
+        MaterialPageRoute(builder: (_) => const WorkerMyTasksPage()),
       );
       return;
     }
@@ -263,18 +287,18 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
   }
 
   Widget _buildProfile() {
-    return WorkerProfilePage();
+    return const WorkerProfilePage();
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final pages = [_buildHomeContent(), Container(), _buildProfile()];
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: Stack(
         children: [
-          // This container makes the orange color go behind the status bar
           Positioned(
             top: 0,
             left: 0,
@@ -297,15 +321,15 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, size: 22.sp),
-            label: "Home",
+            label: loc.home,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt, size: 22.sp),
-            label: "My Tasks",
+            label: loc.myTasks,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person, size: 22.sp),
-            label: "Profile",
+            label: loc.profile,
           ),
         ],
       ),
@@ -318,6 +342,8 @@ class WorkerDashboardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Container(
       color: Colors.orange.shade700,
       padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 16.h),
@@ -339,7 +365,7 @@ class WorkerDashboardHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Worker Dashboard',
+                    loc.workerDashboard,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -347,12 +373,12 @@ class WorkerDashboardHeader extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Municipal Services',
+                    loc.municipalServices,
                     style: TextStyle(color: Colors.white70, fontSize: 13.sp),
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Icon(Icons.notifications, color: Colors.white, size: 22.sp),
             ],
           ),
@@ -364,7 +390,7 @@ class WorkerDashboardHeader extends StatelessWidget {
                   icon: Icons.access_time,
                   iconBg: Colors.yellowAccent,
                   number: '12',
-                  label: 'Pending',
+                  label: loc.pending,
                 ),
               ),
               SizedBox(width: 10.w),
@@ -373,7 +399,7 @@ class WorkerDashboardHeader extends StatelessWidget {
                   icon: Icons.build,
                   iconBg: Colors.lightBlueAccent,
                   number: '8',
-                  label: 'In Progress',
+                  label: loc.inProgress,
                 ),
               ),
               SizedBox(width: 10.w),
@@ -382,7 +408,7 @@ class WorkerDashboardHeader extends StatelessWidget {
                   icon: Icons.check_circle,
                   iconBg: Colors.lightGreenAccent,
                   number: '45',
-                  label: 'Completed',
+                  label: loc.completed,
                 ),
               ),
             ],
@@ -468,20 +494,20 @@ class ComplaintItem {
 
 void main() {
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Worker Dashboard',
+    ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) {
-        return ScreenUtilInit(
-          designSize: Size(375, 812),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) => child!,
-          child: child,
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Worker Dashboard',
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const WorkerHomePage(),
+          theme: ThemeData(primarySwatch: Colors.orange),
         );
       },
-      home: WorkerHomePage(),
-      theme: ThemeData(primarySwatch: Colors.orange),
     ),
   );
 }

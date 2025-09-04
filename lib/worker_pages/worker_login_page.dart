@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'worker_home_page.dart'; // Import WorkerHomePage
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+// Import the generated localization file
+import '../l10n/app_localizations.dart';
 
 class WorkerLoginPage extends StatefulWidget {
   const WorkerLoginPage({super.key});
@@ -15,12 +17,16 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
   bool _isLoading = false;
 
   void _loginWorker() {
+    // Get the localization instance
+    final l10n = AppLocalizations.of(context)!;
+
     String userId = _userIdController.text.trim();
     String password = _passwordController.text;
 
     if (userId.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Enter both UserID and Password")),
+        // Use the translated string
+        SnackBar(content: Text(l10n.enterCredentialsError)),
       );
       return;
     }
@@ -29,16 +35,18 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
 
     // Dummy authentication logic
     Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return; // Check if the widget is still in the tree
       setState(() => _isLoading = false);
 
       if (userId == "worker" && password == "1234") {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => WorkerHomePage()),
+          MaterialPageRoute(builder: (context) => const WorkerHomePage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Invalid UserID or Password")),
+          // Use the translated string
+          SnackBar(content: Text(l10n.invalidCredentialsError)),
         );
       }
     });
@@ -46,9 +54,13 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the localization instance for the build method
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Worker Login", style: TextStyle(fontSize: 18.sp)),
+        // Use the translated string
+        title: Text(l10n.workerLoginTitle, style: TextStyle(fontSize: 18.sp)),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -72,16 +84,18 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                     ),
                     SizedBox(height: 16.h),
 
+                    // Use the translated string
                     Text(
-                      "Worker Login",
+                      l10n.workerLoginTitle,
                       style: TextStyle(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 6.h),
+                    // Use the translated string
                     Text(
-                      "Enter your credentials to access the Worker Dashboard",
+                      l10n.workerLoginSubtitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 14.sp, color: Colors.black54),
                     ),
@@ -91,7 +105,8 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                     TextField(
                       controller: _userIdController,
                       decoration: InputDecoration(
-                        labelText: "User ID",
+                        // Use the translated string
+                        labelText: l10n.userIdLabel,
                         prefixIcon: Icon(Icons.person, size: 20.sp),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.r),
@@ -105,7 +120,8 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                       controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: "Password",
+                        // Use the translated string
+                        labelText: l10n.passwordLabel,
                         prefixIcon: Icon(Icons.lock, size: 20.sp),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.r),
@@ -130,13 +146,14 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                             ? SizedBox(
                                 height: 20.h,
                                 width: 20.h,
-                                child: CircularProgressIndicator(
+                                child: const CircularProgressIndicator(
                                   strokeWidth: 2,
                                   color: Colors.white,
                                 ),
                               )
                             : Text(
-                                "Login",
+                                // Use the translated string
+                                l10n.loginButton,
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
@@ -155,7 +172,8 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                         color: Colors.blue,
                       ),
                       label: Text(
-                        "Back to Citizen Login",
+                        // Use the translated string
+                        l10n.backToCitizenLoginButton,
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,

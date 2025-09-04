@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
 import 'app_localizations_hi.dart';
+import 'app_localizations_sat.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,7 +97,14 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('hi'),
+    Locale('sat'),
   ];
+
+  /// No description provided for @santhali.
+  ///
+  /// In en, this message translates to:
+  /// **'Santhali'**
+  String get santhali;
 
   /// No description provided for @app_title.
   ///
@@ -173,7 +181,7 @@ abstract class AppLocalizations {
   /// No description provided for @verification_failed.
   ///
   /// In en, this message translates to:
-  /// **'Verification failed'**
+  /// **'Verification Failed'**
   String get verification_failed;
 
   /// No description provided for @error_message.
@@ -305,7 +313,7 @@ abstract class AppLocalizations {
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
-  /// **'My Profile'**
+  /// **'Profile'**
   String get profile;
 
   /// No description provided for @good_morning.
@@ -584,12 +592,6 @@ abstract class AppLocalizations {
   /// **'Government of Jharkhand Initiative – Secure & Verified'**
   String get footerNote;
 
-  /// No description provided for @reports.
-  ///
-  /// In en, this message translates to:
-  /// **'Reports'**
-  String get reports;
-
   /// No description provided for @settings.
   ///
   /// In en, this message translates to:
@@ -601,12 +603,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications'**
   String get notifications;
-
-  /// No description provided for @selectLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Language'**
-  String get selectLanguage;
 
   /// No description provided for @privacyPolicy.
   ///
@@ -643,6 +639,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
+
+  /// No description provided for @workerLoginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Login'**
+  String get workerLoginTitle;
+
+  /// No description provided for @workerLoginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your credentials to access the Worker Dashboard'**
+  String get workerLoginSubtitle;
+
+  /// No description provided for @userIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'User ID'**
+  String get userIdLabel;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @loginButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginButton;
+
+  /// No description provided for @backToCitizenLoginButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Citizen Login'**
+  String get backToCitizenLoginButton;
+
+  /// No description provided for @enterCredentialsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter both User ID and Password'**
+  String get enterCredentialsError;
+
+  /// No description provided for @invalidCredentialsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid User ID or Password'**
+  String get invalidCredentialsError;
+
+  /// No description provided for @workerDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Dashboard'**
+  String get workerDashboard;
+
+  /// No description provided for @municipalServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Municipal Services'**
+  String get municipalServices;
+
+  /// No description provided for @recentComplaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Complaints'**
+  String get recentComplaints;
+
+  /// No description provided for @myTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'My Tasks'**
+  String get myTasks;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @filterPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get filterPending;
+
+  /// No description provided for @filterInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get filterInProgress;
+
+  /// No description provided for @filterCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get filterCompleted;
+
+  /// No description provided for @roadMaintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Road Maintenance'**
+  String get roadMaintenance;
+
+  /// No description provided for @wasteManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Waste Management'**
+  String get wasteManagement;
+
+  /// No description provided for @streetLighting.
+  ///
+  /// In en, this message translates to:
+  /// **'Street Lighting'**
+  String get streetLighting;
+
+  /// No description provided for @bulbReplacement.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulb Replacement'**
+  String get bulbReplacement;
+
+  /// No description provided for @priorityHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get priorityHigh;
+
+  /// No description provided for @priorityMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get priorityMedium;
+
+  /// No description provided for @priorityLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get priorityLow;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @workerId.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker ID'**
+  String get workerId;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @department.
+  ///
+  /// In en, this message translates to:
+  /// **'Department'**
+  String get department;
+
+  /// No description provided for @assignedArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned Area'**
+  String get assignedArea;
+
+  /// No description provided for @recognitionProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition & Progress'**
+  String get recognitionProgress;
+
+  /// No description provided for @tasksCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks Completed This Month'**
+  String get tasksCompleted;
+
+  /// No description provided for @earnedBadges.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned Badges'**
+  String get earnedBadges;
+
+  /// No description provided for @quickResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Response'**
+  String get quickResponse;
+
+  /// No description provided for @qualityWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality Work'**
+  String get qualityWork;
+
+  /// No description provided for @onTime.
+  ///
+  /// In en, this message translates to:
+  /// **'On Time'**
+  String get onTime;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @changeLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Language'**
+  String get changeLanguage;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
 }
 
 class _AppLocalizationsDelegate
@@ -656,7 +880,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'hi'].contains(locale.languageCode);
+      <String>['en', 'hi', 'sat'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -669,6 +893,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEn();
     case 'hi':
       return AppLocalizationsHi();
+    case 'sat':
+      return AppLocalizationsSat();
   }
 
   throw FlutterError(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
 
 class WorkerMyTasksPage extends StatefulWidget {
   const WorkerMyTasksPage({super.key});
@@ -10,55 +11,63 @@ class WorkerMyTasksPage extends StatefulWidget {
 
 class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
   int selectedTabIndex = 0;
-  final tabs = ['All', 'Pending', 'In Progress', 'Completed'];
-
-  final tasks = [
-    TaskItem(
-      id: '#CMP-2024-0892',
-      title: 'Road Maintenance',
-      subtitle: 'Pothole Repair',
-      location: 'MG Road, Near City Mall',
-      priority: 'High',
-      status: 'Pending',
-      statusColor: Colors.orange.shade100,
-      priorityColor: Colors.red.shade400,
-      iconBg: Colors.orange.shade50,
-      icon: Icons.construction,
-    ),
-    TaskItem(
-      id: '#CMP-2024-0891',
-      title: 'Waste Management',
-      subtitle: 'Garbage Collection',
-      location: 'Park Street, Block A',
-      priority: 'Medium',
-      status: 'In Progress',
-      statusColor: Colors.blue.shade100,
-      priorityColor: Colors.orange.shade400,
-      iconBg: Colors.green.shade50,
-      icon: Icons.delete,
-    ),
-    TaskItem(
-      id: '#CMP-2024-0890',
-      title: 'Street Lighting',
-      subtitle: 'Bulb Replacement',
-      location: 'Gandhi Nagar, Sector 5',
-      priority: 'Low',
-      status: 'Completed',
-      statusColor: Colors.green.shade100,
-      priorityColor: Colors.green.shade400,
-      iconBg: Colors.blue.shade50,
-      icon: Icons.lightbulb,
-    ),
-  ];
-
-  List<TaskItem> get filteredTasks {
-    if (selectedTabIndex == 0) return tasks;
-    String filter = tabs[selectedTabIndex];
-    return tasks.where((t) => t.status == filter).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    final tabs = [
+      l10n.filterAll,
+      l10n.filterPending,
+      l10n.filterInProgress,
+      l10n.filterCompleted,
+    ];
+
+    final tasks = [
+      TaskItem(
+        id: '#CMP-2024-0892',
+        title: l10n.roadMaintenance,
+        subtitle: l10n.potholeRepair,
+        location: 'MG Road, Near City Mall',
+        priority: l10n.priorityHigh,
+        status: l10n.filterPending,
+        statusColor: Colors.orange.shade100,
+        priorityColor: Colors.red.shade400,
+        iconBg: Colors.orange.shade50,
+        icon: Icons.construction,
+      ),
+      TaskItem(
+        id: '#CMP-2024-0891',
+        title: l10n.wasteManagement,
+        subtitle: l10n.garbageCollection,
+        location: 'Park Street, Block A',
+        priority: l10n.priorityMedium,
+        status: l10n.filterInProgress,
+        statusColor: Colors.blue.shade100,
+        priorityColor: Colors.orange.shade400,
+        iconBg: Colors.green.shade50,
+        icon: Icons.delete,
+      ),
+      TaskItem(
+        id: '#CMP-2024-0890',
+        title: l10n.streetLighting,
+        subtitle: l10n.bulbReplacement,
+        location: 'Gandhi Nagar, Sector 5',
+        priority: l10n.priorityLow,
+        status: l10n.filterCompleted,
+        statusColor: Colors.green.shade100,
+        priorityColor: Colors.green.shade400,
+        iconBg: Colors.blue.shade50,
+        icon: Icons.lightbulb,
+      ),
+    ];
+
+    List<TaskItem> getFilteredTasks() {
+      if (selectedTabIndex == 0) return tasks;
+      String filter = tabs[selectedTabIndex];
+      return tasks.where((t) => t.status == filter).toList();
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -66,7 +75,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          "My Tasks",
+          l10n.myTasks,
           style: TextStyle(
             color: Colors.orange.shade700,
             fontWeight: FontWeight.bold,
@@ -76,6 +85,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
       ),
       body: Column(
         children: [
+          // Tabs
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
             alignment: Alignment.centerLeft,
@@ -109,13 +119,14 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
               ),
             ),
           ),
+          // Task Cards
           Expanded(
             child: ListView.separated(
               padding: EdgeInsets.all(16.w),
-              itemCount: filteredTasks.length,
+              itemCount: getFilteredTasks().length,
               separatorBuilder: (_, __) => SizedBox(height: 14.h),
               itemBuilder: (context, index) {
-                final task = filteredTasks[index];
+                final task = getFilteredTasks()[index];
                 return Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -129,6 +140,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Task Header
                         Row(
                           children: [
                             Text(
@@ -140,6 +152,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                               ),
                             ),
                             Spacer(),
+                            // Priority
                             Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 10.w,
@@ -159,6 +172,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                               ),
                             ),
                             SizedBox(width: 7.w),
+                            // Status
                             Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 10.w,
@@ -171,9 +185,9 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                               child: Text(
                                 task.status,
                                 style: TextStyle(
-                                  color: task.status == 'Completed'
+                                  color: task.status == l10n.filterCompleted
                                       ? Colors.green.shade700
-                                      : (task.status == 'Pending'
+                                      : (task.status == l10n.filterPending
                                             ? Colors.orange.shade700
                                             : Colors.blue.shade700),
                                   fontWeight: FontWeight.w600,
@@ -184,6 +198,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                           ],
                         ),
                         SizedBox(height: 14.h),
+                        // Task Details
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -254,6 +269,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                           ],
                         ),
                         SizedBox(height: 20.h),
+                        // Button
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -267,7 +283,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                             ),
                             onPressed: () {},
                             child: Text(
-                              "View Details",
+                              l10n.viewDetails,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15.sp,

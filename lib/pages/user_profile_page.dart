@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
+import '../locale_provider.dart';
 import '../main.dart';
 import '../login_page.dart';
 
@@ -169,7 +170,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ),
                   ),
                   Text(
-                    loc.reports,
+                    loc.report,
                     style: TextStyle(color: Colors.white70, fontSize: 12.sp),
                   ),
                 ],
@@ -322,7 +323,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
           ListTile(
             leading: Icon(Icons.language, size: 22.sp),
-            title: Text(loc.selectLanguage, style: TextStyle(fontSize: 15.sp)),
+            title: Text(loc.select_language, style: TextStyle(fontSize: 15.sp)),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -413,7 +414,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(loc.selectLanguage),
+        title: Text(loc.select_language),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
