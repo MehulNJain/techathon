@@ -171,13 +171,23 @@ class _LoginPageState extends State<LoginPage> {
     final currentLocale =
         Provider.of<LocaleProvider>(context).locale?.languageCode ?? 'en';
 
-    // Adjust font sizes for Santali (to avoid overflow)
-    double titleFontSize = currentLocale == 'sat' ? 20.sp : 24.sp;
-    double subtitleFontSize = currentLocale == 'sat' ? 14.sp : 15.sp;
+    // Adjust font sizes and button height for Hindi/Santali to avoid overflow
+    double titleFontSize = (currentLocale == 'sat' || currentLocale == 'hi')
+        ? 20.sp
+        : 24.sp;
+    double subtitleFontSize = (currentLocale == 'sat' || currentLocale == 'hi')
+        ? 13.sp
+        : 15.sp;
+    double buttonFontSize = (currentLocale == 'sat' || currentLocale == 'hi')
+        ? 15.sp
+        : 17.sp;
+    double buttonPadding = (currentLocale == 'sat' || currentLocale == 'hi')
+        ? 18.h
+        : 15.h;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true, // <-- Important for keyboard scroll
+      resizeToAvoidBottomInset: true,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Center(
@@ -193,9 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          minHeight:
-                              constraints.maxHeight -
-                              120.h, // leave space for bottom
+                          minHeight: constraints.maxHeight - 120.h,
                         ),
                         child: IntrinsicHeight(
                           child: Stack(
@@ -232,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Text(
                                     l10n.app_title,
                                     style: TextStyle(
-                                      fontSize: 24.sp,
+                                      fontSize: titleFontSize,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     textAlign: TextAlign.center,
@@ -242,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                                     l10n.login_subtitle,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 15.sp,
+                                      fontSize: subtitleFontSize,
                                       color: Colors.black54,
                                     ),
                                   ),
@@ -328,7 +336,7 @@ class _LoginPageState extends State<LoginPage> {
                                             ? mainBlue
                                             : Colors.grey.shade300,
                                         padding: EdgeInsets.symmetric(
-                                          vertical: 15.h,
+                                          vertical: buttonPadding,
                                         ),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
@@ -354,10 +362,12 @@ class _LoginPageState extends State<LoginPage> {
                                           : Text(
                                               l10n.send_otp,
                                               style: TextStyle(
-                                                fontSize: 17.sp,
+                                                fontSize: buttonFontSize,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                               ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                     ),
                                   ),
@@ -403,7 +413,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  // --- Government of Jharkhand text and divider at the bottom, always visible ---
                   Divider(height: 1, color: Colors.grey.shade200),
                   SizedBox(height: 16.h),
                   Text(
