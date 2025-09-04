@@ -11,8 +11,6 @@ import 'worker_pages/worker_login_page.dart';
 import 'l10n/app_localizations.dart';
 import 'main.dart'; // LocaleProvider
 
-// ... other imports
-import 'l10n/app_localizations.dart';
 import 'locale_provider.dart'; // CORRECTED: Import from its own file
 
 class LoginPage extends StatefulWidget {
@@ -152,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               ListTile(
-                title: Text(l10n.santhali),
+                title: const Text('ᱥᱟᱱᱛᱟᱲᱤ'),
                 onTap: () {
                   localeProvider.setLocale(const Locale('sat'));
                   Navigator.of(context).pop();
