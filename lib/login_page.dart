@@ -124,14 +124,16 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                title: Text(l10n.english),
+                // Always show "English" in English
+                title: const Text('English'),
                 onTap: () {
                   localeProvider.setLocale(const Locale('en'));
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                title: Text(l10n.hindi),
+                // Always show "हिन्दी" in Hindi
+                title: const Text('हिन्दी'),
                 onTap: () {
                   localeProvider.setLocale(const Locale('hi'));
                   Navigator.of(context).pop();
@@ -148,242 +150,264 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     const mainBlue = Color(0xFF1746D1);
     final l10n = AppLocalizations.of(context)!;
-    final localeProvider = context.watch<LocaleProvider>();
 
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: EdgeInsets.all(8.w),
-                child: IconButton(
-                  icon: Icon(Icons.language, size: 28.sp, color: mainBlue),
-                  onPressed: _showLanguageDialog,
-                ),
-              ),
-            ),
-            Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 420.w),
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.w,
-                    vertical: 20.h,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 50.h),
-                      CircleAvatar(
-                        radius: 48.r,
-                        backgroundColor: mainBlue,
-                        child: Icon(
-                          Icons.account_balance,
-                          size: 44.sp,
-                          color: Colors.white,
-                        ),
+      resizeToAvoidBottomInset: true, // <-- Important for keyboard scroll
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 420.w),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24.w,
+                        vertical: 20.h,
                       ),
-                      SizedBox(height: 28.h),
-
-                      Text(
-                        l10n.app_title,
-                        style: TextStyle(
-                          fontSize: 24.sp,
-                          fontWeight: FontWeight.bold,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight:
+                              constraints.maxHeight -
+                              120.h, // leave space for bottom
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        l10n.login_subtitle,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          color: Colors.black54,
-                        ),
-                      ),
-                      SizedBox(height: 36.h),
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          l10n.phone_number,
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(width: 8.w),
-                            Icon(
-                              Icons.phone,
-                              color: Colors.grey.shade500,
-                              size: 22.sp,
-                            ),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "+91",
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(width: 6.w),
-                            Container(
-                              height: 36.h,
-                              width: 1.w,
-                              color: Colors.grey.shade300,
-                            ),
-                            SizedBox(width: 6.w),
-                            Expanded(
-                              child: TextField(
-                                controller: _phoneController,
-                                keyboardType: TextInputType.phone,
-                                maxLength: 10,
-                                decoration: InputDecoration(
-                                  counterText: "",
-                                  hintText: l10n.enter_phone_number,
-                                  border: InputBorder.none,
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 10.h,
+                        child: IntrinsicHeight(
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.w),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.language,
+                                      size: 28.sp,
+                                      color: mainBlue,
+                                    ),
+                                    onPressed: _showLanguageDialog,
                                   ),
                                 ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(10),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 50.h),
+                                  CircleAvatar(
+                                    radius: 48.r,
+                                    backgroundColor: mainBlue,
+                                    child: Icon(
+                                      Icons.account_balance,
+                                      size: 44.sp,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(height: 28.h),
+                                  Text(
+                                    l10n.app_title,
+                                    style: TextStyle(
+                                      fontSize: 24.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    l10n.login_subtitle,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  SizedBox(height: 18.h),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      l10n.phone_number,
+                                      style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade50,
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      border: Border.all(
+                                        color: Colors.grey.shade300,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: 8.w),
+                                        Icon(
+                                          Icons.phone,
+                                          color: Colors.grey.shade500,
+                                          size: 22.sp,
+                                        ),
+                                        SizedBox(width: 6.w),
+                                        Text(
+                                          "+91",
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        SizedBox(width: 6.w),
+                                        Container(
+                                          height: 36.h,
+                                          width: 1.w,
+                                          color: Colors.grey.shade300,
+                                        ),
+                                        SizedBox(width: 6.w),
+                                        Expanded(
+                                          child: TextField(
+                                            controller: _phoneController,
+                                            keyboardType: TextInputType.phone,
+                                            maxLength: 10,
+                                            decoration: InputDecoration(
+                                              counterText: "",
+                                              hintText: l10n.enter_phone_number,
+                                              border: InputBorder.none,
+                                              isDense: true,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                    vertical: 10.h,
+                                                  ),
+                                            ),
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                              LengthLimitingTextInputFormatter(
+                                                10,
+                                              ),
+                                            ],
+                                            onChanged: (_) => setState(() {}),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 24.h),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            _phoneController.text.length == 10
+                                            ? mainBlue
+                                            : Colors.grey.shade300,
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 16.h,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8.r,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed:
+                                          (_phoneController.text.length == 10 &&
+                                              !_isLoading)
+                                          ? _sendOtp
+                                          : null,
+                                      child: _isLoading
+                                          ? SizedBox(
+                                              height: 20.h,
+                                              width: 20.w,
+                                              child:
+                                                  const CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    color: Colors.white,
+                                                  ),
+                                            )
+                                          : Text(
+                                              l10n.send_otp,
+                                              style: TextStyle(
+                                                fontSize: 17.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                  if (kIsWeb) ...[
+                                    SizedBox(height: 20.h),
+                                    SizedBox(
+                                      height: 60.h,
+                                      child: const HtmlElementView(
+                                        viewType: 'recaptcha',
+                                      ),
+                                    ),
+                                  ],
+                                  SizedBox(height: 32.h),
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const WorkerLoginPage(),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.engineering,
+                                      size: 20.sp,
+                                      color: mainBlue,
+                                    ),
+                                    label: Text(
+                                      l10n.login_as_worker,
+                                      style: TextStyle(
+                                        fontSize: 15.sp,
+                                        color: mainBlue,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ],
-                                onChanged: (_) => setState(() {}),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 24.h),
-
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _phoneController.text.length == 10
-                                ? mainBlue
-                                : Colors.grey.shade300,
-                            padding: EdgeInsets.symmetric(vertical: 16.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                          ),
-                          onPressed:
-                              (_phoneController.text.length == 10 &&
-                                  !_isLoading)
-                              ? _sendOtp
-                              : null,
-                          child: _isLoading
-                              ? SizedBox(
-                                  height: 20.h,
-                                  width: 20.w,
-                                  child: const CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : Text(
-                                  l10n.send_otp,
-                                  style: TextStyle(
-                                    fontSize: 17.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                        ),
-                      ),
-
-                      if (kIsWeb) ...[
-                        SizedBox(height: 20.h),
-                        SizedBox(
-                          height: 60.h,
-                          child: const HtmlElementView(viewType: 'recaptcha'),
-                        ),
-                      ],
-
-                      SizedBox(height: 32.h),
-
-                      TextButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const WorkerLoginPage(),
-                            ),
-                          );
-                        },
-                        icon: Icon(
-                          Icons.engineering,
-                          size: 20.sp,
-                          color: mainBlue,
-                        ),
-                        label: Text(
-                          l10n.login_as_worker,
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            color: mainBlue,
-                            fontWeight: FontWeight.bold,
+                            ],
                           ),
                         ),
                       ),
-
-                      SizedBox(height: 32.h),
-                      Divider(height: 1, color: Colors.grey.shade200),
-                      SizedBox(height: 16.h),
+                    ),
+                  ),
+                  // --- Government of Jharkhand text and divider at the bottom, always visible ---
+                  Divider(height: 1, color: Colors.grey.shade200),
+                  SizedBox(height: 16.h),
+                  Text(
+                    l10n.government_initiative,
+                    style: TextStyle(color: Colors.black54, fontSize: 14.sp),
+                  ),
+                  SizedBox(height: 4.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.verified_user,
+                        size: 16.sp,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(width: 4.w),
                       Text(
-                        l10n.government_initiative,
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 14.sp,
-                        ),
+                        l10n.secure_and_verified,
+                        style: TextStyle(color: Colors.grey, fontSize: 13.sp),
                       ),
-                      SizedBox(height: 4.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.verified_user,
-                            size: 16.sp,
-                            color: Colors.grey[400],
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            l10n.secure_and_verified,
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 13.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16.h),
                     ],
                   ),
-                ),
+                  SizedBox(height: 16.h),
+                ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
