@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../l10n/app_localizations.dart'; // ✅ correct import
 import 'profile_page.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;
@@ -56,10 +57,30 @@ class _OtpPageState extends State<OtpPage> {
         await FirebaseAuth.instance.signInWithCredential(credential);
       }
       if (!mounted) return;
+
+      // Fetch profile data before navigation
+      final dbRef = FirebaseDatabase.instance.ref();
+      final snapshot = await dbRef
+          .child("users")
+          .child(widget.phoneNumber)
+          .get();
+      String name = "";
+      String email = "";
+      if (snapshot.exists) {
+        final data = Map<String, dynamic>.from(snapshot.value as Map);
+        name = data["fullName"] ?? "";
+        email = data["email"] ?? "";
+      }
+
+      // Now navigate and pass pre-fetched data
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(phoneNumber: widget.phoneNumber),
+          builder: (context) => ProfilePage(
+            phoneNumber: widget.phoneNumber,
+            initialName: name,
+            initialEmail: email,
+          ),
         ),
       );
     } catch (e) {

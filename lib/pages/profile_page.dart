@@ -7,8 +7,15 @@ import '../l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
   final String phoneNumber; // already verified from OTP
+  final String initialName;
+  final String initialEmail;
 
-  const ProfilePage({super.key, required this.phoneNumber});
+  const ProfilePage({
+    super.key,
+    required this.phoneNumber,
+    this.initialName = "",
+    this.initialEmail = "",
+  });
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -22,7 +29,6 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _nameTouched = false;
   bool _emailTouched = false;
   bool _isLoading = false;
-  bool _isFetching = true;
 
   bool get _isNameValid {
     final name = _nameController.text.trim();
@@ -38,23 +44,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _fetchProfile();
-  }
-
-  Future<void> _fetchProfile() async {
-    final dbRef = FirebaseDatabase.instance.ref();
-    final snapshot = await dbRef.child("users").child(widget.phoneNumber).get();
-    if (snapshot.exists) {
-      final data = Map<String, dynamic>.from(snapshot.value as Map);
-      final name = data["fullName"] ?? "";
-      final email = data["email"] ?? "";
-      // Pre-fill fields if data exists, but DO NOT auto-navigate
-      _nameController.text = name;
-      _emailController.text = email;
-    }
-    setState(() {
-      _isFetching = false;
-    });
+    // Use initial values passed from OTP page
+    _nameController.text = widget.initialName;
+    _emailController.text = widget.initialEmail;
   }
 
   Future<void> _saveProfile() async {
@@ -94,10 +86,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     const mainBlue = Color(0xFF1746D1);
     final l10n = AppLocalizations.of(context)!;
-
-    if (_isFetching) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
 
     return Scaffold(
       backgroundColor: Colors.white,
