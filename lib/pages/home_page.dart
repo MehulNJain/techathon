@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
 
             // Quick Report
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: 19.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -215,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 12.h),
+
                   GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,

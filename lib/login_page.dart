@@ -207,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: IconButton(
                                     icon: Icon(
                                       Icons.language,
-                                      size: 28.sp,
+                                      size: 40.sp,
                                       color: mainBlue,
                                     ),
                                     onPressed: _showLanguageDialog,
@@ -328,7 +328,7 @@ class _LoginPageState extends State<LoginPage> {
                                             ? mainBlue
                                             : Colors.grey.shade300,
                                         padding: EdgeInsets.symmetric(
-                                          vertical: 16.h,
+                                          vertical: 15.h,
                                         ),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(

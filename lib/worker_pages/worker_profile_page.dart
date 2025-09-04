@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../login_page.dart';
 import 'worker_home_page.dart';
 import '../l10n/app_localizations.dart';
-import '../main.dart';
 import '../locale_provider.dart';
 
 class WorkerProfilePage extends StatelessWidget {
@@ -88,7 +87,7 @@ class WorkerProfilePage extends StatelessWidget {
                       ),
                       SizedBox(height: 12.h),
                       Text(
-                        "Rajesh Kumar",
+                        "Rajesh Kumar", // Dummy Data
                         style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
@@ -97,7 +96,7 @@ class WorkerProfilePage extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        "${l10n.workerId}: MW-2024-0156",
+                        "${l10n.workerId}: MW-2024-0156", // Dummy Data
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14.sp,
@@ -107,19 +106,19 @@ class WorkerProfilePage extends StatelessWidget {
                       _infoTile(
                         Icons.phone,
                         l10n.phoneNumber,
-                        "+91 98765 43210",
+                        "+91 98765 43210", // Dummy Data
                       ),
                       SizedBox(height: 10.h),
                       _infoTile(
                         Icons.engineering,
                         l10n.department,
-                        "Road Maintenance",
+                        "Road Maintenance", // Dummy Data
                       ),
                       SizedBox(height: 10.h),
                       _infoTile(
                         Icons.location_on,
                         l10n.assignedArea,
-                        "Zone 3 - Central District",
+                        "Zone 3 - Central District", // Dummy Data
                       ),
                     ],
                   ),
@@ -177,7 +176,7 @@ class WorkerProfilePage extends StatelessWidget {
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    "15",
+                                    "15", // Dummy Data
                                     style: TextStyle(
                                       fontSize: 20.sp,
                                       fontWeight: FontWeight.bold,
@@ -230,17 +229,13 @@ class WorkerProfilePage extends StatelessWidget {
               ),
               SizedBox(height: 20.h),
 
-              // Change Password
+              // Action Tiles
               _actionTile(Icons.lock, l10n.changePassword, Colors.blue, () {}),
               SizedBox(height: 12.h),
-
-              // Language Change
               _actionTile(Icons.language, l10n.changeLanguage, Colors.teal, () {
                 _showLanguageDialog(context);
               }),
               SizedBox(height: 12.h),
-
-              // Logout
               _actionTile(Icons.logout, l10n.logout, Colors.red, () {
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -254,127 +249,143 @@ class WorkerProfilePage extends StatelessWidget {
       ),
     );
   }
+}
 
-  // 🔹 Language change dialog
-  void _showLanguageDialog(BuildContext context) {
-    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
-    final l10n = AppLocalizations.of(context)!;
+// 🔹 Helper function for the language change dialog
+void _showLanguageDialog(BuildContext context) {
+  final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+  final l10n = AppLocalizations.of(context)!;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.selectLanguage),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text(l10n.english),
-                onTap: () {
-                  localeProvider.setLocale(const Locale('en'));
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text(l10n.hindi),
-                onTap: () {
-                  localeProvider.setLocale(const Locale('hi'));
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(l10n.selectLanguage),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('English'),
+              onTap: () {
+                localeProvider.setLocale(const Locale('en'));
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: const Text('हिन्दी'),
+              onTap: () {
+                localeProvider.setLocale(const Locale('hi'));
+                Navigator.of(context).pop();
+              },
+            ),
+            // START: Added Santali Option
+            ListTile(
+              title: const Text('ᱥᱟᱱᱛᱟᱲᱤ'),
+              onTap: () {
+                localeProvider.setLocale(const Locale('sat'));
+                Navigator.of(context).pop();
+              },
+            ),
+            // END: Added Santali Option
+          ],
+        ),
+      );
+    },
+  );
+}
 
-  // Info Tile
-  static Widget _infoTile(IconData icon, String title, String subtitle) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12.r),
+// 🔹 Helper widget for info tiles
+Widget _infoTile(IconData icon, String title, String subtitle) {
+  return Container(
+    padding: EdgeInsets.all(12.w),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.r),
+    ),
+    child: Row(
+      children: [
+        Icon(icon, color: Colors.blue, size: 24.sp),
+        SizedBox(width: 12.w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 12.sp, color: Colors.black54),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              subtitle,
+              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+// 🔹 Helper widget for badges
+Widget _badge({
+  required IconData icon,
+  required Color color,
+  required String text,
+}) {
+  return Column(
+    children: [
+      CircleAvatar(
+        radius: 20.r,
+        backgroundColor: color.withOpacity(0.1),
+        child: Icon(icon, color: color, size: 20.sp),
       ),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.blue, size: 24.sp),
-          SizedBox(width: 12.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(fontSize: 12.sp, color: Colors.black54),
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                subtitle,
-                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
-              ),
-            ],
+      SizedBox(height: 6.h),
+      Text(
+        text,
+        style: TextStyle(fontSize: 12.sp, color: Colors.black54),
+        textAlign: TextAlign.center,
+      ),
+    ],
+  );
+}
+
+// 🔹 Helper widget for action tiles
+Widget _actionTile(
+  IconData icon,
+  String text,
+  Color color,
+  VoidCallback onTap,
+) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-    );
-  }
-
-  // Badge
-  static Widget _badge({
-    required IconData icon,
-    required Color color,
-    required String text,
-  }) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 20.r,
-          backgroundColor: color.withOpacity(0.1),
-          child: Icon(icon, color: color, size: 20.sp),
-        ),
-        SizedBox(height: 6.h),
-        Text(
-          text,
-          style: TextStyle(fontSize: 12.sp, color: Colors.black54),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  // Action Tile
-  static Widget _actionTile(
-    IconData icon,
-    String text,
-    Color color,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: color, size: 24.sp),
-            SizedBox(width: 12.w),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: color,
-              ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 24.sp),
+          SizedBox(width: 12.w),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+              color: color,
             ),
-            const Spacer(),
-            Icon(Icons.arrow_forward_ios, size: 18.sp, color: Colors.black45),
-          ],
-        ),
+          ),
+          const Spacer(),
+          Icon(Icons.arrow_forward_ios, size: 18.sp, color: Colors.black45),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }

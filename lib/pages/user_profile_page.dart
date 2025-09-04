@@ -3,10 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../locale_provider.dart';
-import '../main.dart';
 import '../login_page.dart';
 
-// ---------------- UserProfilePage ----------------
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
 
@@ -21,16 +19,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     const mainBlue = Color(0xFF1746D1);
-
-    // Access the LocaleProvider
-    final localeProvider = Provider.of<LocaleProvider>(context, listen: true);
+    final localeProvider = Provider.of<LocaleProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
-        title: Text(loc.profile, style: TextStyle(fontSize: 18.sp)),
+        title: Text(
+          loc.profile,
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        elevation: 0,
+        elevation: 1,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
@@ -38,9 +37,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _profileCard(mainBlue),
+            _profileCard(loc, mainBlue),
             SizedBox(height: 18.h),
             _badgeCard(loc),
             SizedBox(height: 18.h),
@@ -51,7 +50,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             _supportCard(loc),
             SizedBox(height: 18.h),
             _logoutButton(loc),
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
             Center(
               child: Text(
                 loc.footerNote,
@@ -65,11 +64,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  // ---------------- Widgets ----------------
+  // --- Helper Widgets ---
 
-  Widget _profileCard(Color mainBlue) {
+  Widget _profileCard(AppLocalizations loc, Color mainBlue) {
     return Container(
-      width: double.infinity,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -132,7 +130,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _badgeCard(AppLocalizations loc) {
     return Container(
-      width: double.infinity,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -209,7 +206,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
           SizedBox(height: 8.h),
           Text(
-            "2 more reports to reach next level!",
+            "3 more reports to reach next level!",
             style: TextStyle(color: Colors.white, fontSize: 13.sp),
           ),
         ],
@@ -219,8 +216,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _reportsSummary(AppLocalizations loc, Color mainBlue) {
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 8.w),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -228,13 +224,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            loc.reportsSummary,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+          Padding(
+            padding: EdgeInsets.only(left: 8.w, bottom: 14.h),
+            child: Text(
+              loc.reportsSummary,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+            ),
           ),
-          SizedBox(height: 14.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _summaryIconBox(
                 Icons.assignment,
@@ -288,7 +286,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
         ),
         SizedBox(height: 2.h),
-        Text(label, style: TextStyle(fontSize: 13.sp)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 13.sp, color: Colors.grey[700]),
+        ),
       ],
     );
   }
@@ -296,11 +297,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget _settingsCard(
     AppLocalizations loc,
     Color mainBlue,
-    dynamic localeProvider,
+    LocaleProvider localeProvider,
   ) {
+    // START: CORRECTED LOGIC
+    // This function correctly determines which language name to show.
+    String getCurrentLanguageName() {
+      switch (localeProvider.locale?.languageCode) {
+        case 'hi':
+          return loc.hindi;
+        case 'sat':
+          return loc.santhali;
+        case 'en':
+        default:
+          return loc.english;
+      }
+    }
+    // END: CORRECTED LOGIC
+
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -308,35 +323,43 @@ class _UserProfilePageState extends State<UserProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            loc.settings,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+          Padding(
+            padding: EdgeInsets.only(top: 8.h, bottom: 4.h),
+            child: Text(
+              loc.settings,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+            ),
           ),
           ListTile(
-            leading: Icon(Icons.notifications, size: 22.sp),
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(
+              Icons.notifications,
+              size: 22.sp,
+              color: Colors.grey[700],
+            ),
             title: Text(loc.notifications, style: TextStyle(fontSize: 15.sp)),
             trailing: Switch(
               value: notificationsEnabled,
-              activeThumbColor: mainBlue,
+              activeColor: mainBlue,
               onChanged: (val) => setState(() => notificationsEnabled = val),
             ),
           ),
           ListTile(
-            leading: Icon(Icons.language, size: 22.sp),
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(Icons.language, size: 22.sp, color: Colors.grey[700]),
             title: Text(loc.select_language, style: TextStyle(fontSize: 15.sp)),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  localeProvider.locale.languageCode == 'en'
-                      ? loc.english
-                      : loc.hindi,
+                  getCurrentLanguageName(), // Using the corrected function here
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14.sp,
+                    color: Colors.grey[700],
                   ),
                 ),
-                Icon(Icons.chevron_right, size: 18.sp),
+                Icon(Icons.chevron_right, size: 20.sp, color: Colors.grey),
               ],
             ),
             onTap: () => _showLanguageDialog(localeProvider),
@@ -348,8 +371,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _supportCard(AppLocalizations loc) {
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -357,20 +379,41 @@ class _UserProfilePageState extends State<UserProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            loc.support,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+          Padding(
+            padding: EdgeInsets.only(top: 8.h, bottom: 4.h),
+            child: Text(
+              loc.support,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+            ),
           ),
           ListTile(
-            leading: Icon(Icons.help_outline, size: 22.sp),
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(
+              Icons.help_outline,
+              size: 22.sp,
+              color: Colors.grey[700],
+            ),
             title: Text(loc.faq, style: TextStyle(fontSize: 15.sp)),
-            trailing: Icon(Icons.chevron_right, size: 18.sp),
+            trailing: Icon(
+              Icons.chevron_right,
+              size: 20.sp,
+              color: Colors.grey,
+            ),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.headset_mic_outlined, size: 22.sp),
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(
+              Icons.headset_mic_outlined,
+              size: 22.sp,
+              color: Colors.grey[700],
+            ),
             title: Text(loc.contactSupport, style: TextStyle(fontSize: 15.sp)),
-            trailing: Icon(Icons.chevron_right, size: 18.sp),
+            trailing: Icon(
+              Icons.chevron_right,
+              size: 20.sp,
+              color: Colors.grey,
+            ),
             onTap: () {},
           ),
         ],
@@ -393,23 +436,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
-          padding: EdgeInsets.symmetric(vertical: 16.h),
+          padding: EdgeInsets.symmetric(vertical: 14.h),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(12.r),
           ),
-          elevation: 0,
+          elevation: 2,
+          shadowColor: Colors.red.withOpacity(0.4),
         ),
         onPressed: () {
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (_) => const LoginPage()),
+            (route) => false,
           );
         },
       ),
     );
   }
 
-  void _showLanguageDialog(dynamic localeProvider) {
+  void _showLanguageDialog(LocaleProvider localeProvider) {
     final loc = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -419,19 +464,28 @@ class _UserProfilePageState extends State<UserProfilePage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: Text(loc.english),
+              title: const Text('English'),
               onTap: () {
                 localeProvider.setLocale(const Locale('en'));
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
-              title: Text(loc.hindi),
+              title: const Text('हिन्दी'),
               onTap: () {
                 localeProvider.setLocale(const Locale('hi'));
                 Navigator.of(context).pop();
               },
             ),
+            // START: ADDED SANTALI OPTION
+            ListTile(
+              title: const Text('ᱥᱟᱱᱛᱟᱲᱤ'),
+              onTap: () {
+                localeProvider.setLocale(const Locale('sat'));
+                Navigator.of(context).pop();
+              },
+            ),
+            // END: ADDED SANTALI OPTION
           ],
         ),
       ),
