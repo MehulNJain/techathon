@@ -215,13 +215,13 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   GridView.count(
+                    padding: EdgeInsets.only(top: 12.h),
                     crossAxisCount: 2,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     mainAxisSpacing: 12.h,
-                    crossAxisSpacing: 16.w,
+                    crossAxisSpacing: 12.w,
                     childAspectRatio: 1.35,
                     children: [
                       GestureDetector(
