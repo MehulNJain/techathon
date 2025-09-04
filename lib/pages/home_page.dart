@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
+
 import 'reports_page.dart';
 import 'report_issue_page.dart';
 import 'user_profile_page.dart';
@@ -50,13 +52,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     const mainBlue = Color(0xFF1746D1);
     const navBg = Color(0xFFF0F4FF);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
-      extendBodyBehindAppBar:
-          true, // Allow content to extend behind the status bar
+      extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,8 +79,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   padding: EdgeInsets.fromLTRB(
                     16.w,
-                    MediaQuery.of(context).padding.top +
-                        20.h, // Add top padding to clear status bar
+                    MediaQuery.of(context).padding.top + 20.h,
                     16.w,
                     32.h,
                   ),
@@ -100,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               SizedBox(width: 10.w),
                               Text(
-                                "Smart Civic Portal",
+                                loc.app_title,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.sp,
@@ -138,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 12.h),
                       Text(
-                        "Good morning,",
+                        loc.good_morning,
                         style: TextStyle(
                           color: Colors.white70,
                           fontSize: 14.sp,
@@ -185,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         icon: Icon(Icons.add, size: 22.sp),
                         label: Text(
-                          "Report an Issue",
+                          loc.reportIssue,
                           style: TextStyle(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.bold,
@@ -207,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Quick Report",
+                    loc.quickReport,
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
@@ -223,39 +225,39 @@ class _HomePageState extends State<HomePage> {
                     childAspectRatio: 1.35,
                     children: [
                       GestureDetector(
-                        onTap: () => _openReportIssueWithCategory("Garbage"),
+                        onTap: () => _openReportIssueWithCategory(loc.garbage),
                         child: _quickReportCard(
                           Icons.delete,
-                          "Garbage",
+                          loc.garbage,
                           const Color(0xFFEAF8ED),
                           Colors.green,
                         ),
                       ),
                       GestureDetector(
                         onTap: () =>
-                            _openReportIssueWithCategory("Street Light"),
+                            _openReportIssueWithCategory(loc.streetLight),
                         child: _quickReportCard(
                           Icons.lightbulb_outline,
-                          "Street Light",
+                          loc.streetLight,
                           const Color(0xFFFFF9E5),
                           Colors.orange,
                         ),
                       ),
                       GestureDetector(
                         onTap: () =>
-                            _openReportIssueWithCategory("Road Damage"),
+                            _openReportIssueWithCategory(loc.roadDamage),
                         child: _quickReportCard(
                           Icons.traffic,
-                          "Road Damage",
+                          loc.roadDamage,
                           const Color(0xFFFFEAEA),
                           Colors.red,
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => _openReportIssueWithCategory("Water"),
+                        onTap: () => _openReportIssueWithCategory(loc.water),
                         child: _quickReportCard(
                           Icons.water_drop,
-                          "Water",
+                          loc.water,
                           const Color(0xFFEAF4FF),
                           mainBlue,
                         ),
@@ -285,12 +287,12 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Current Badge",
+                      loc.currentBadge,
                       style: TextStyle(color: Colors.white70, fontSize: 13.sp),
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      "Civic Hero 🧑‍🤝‍🧑",
+                      loc.civicHero,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15.sp,
@@ -306,7 +308,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 10.h),
                     Text(
-                      "2 more reports to reach Neighborhood Guardian 🦸‍♂️",
+                      loc.badgeProgress,
                       style: TextStyle(color: Colors.white70, fontSize: 13.sp),
                     ),
                   ],
@@ -322,7 +324,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Reports Summary",
+                    loc.reportsSummary,
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
@@ -354,9 +356,9 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _summaryBox("12", "Total", mainBlue),
-                          _summaryBox("3", "Pending", Colors.orange),
-                          _summaryBox("9", "Resolved", Colors.green),
+                          _summaryBox("12", loc.total, mainBlue),
+                          _summaryBox("3", loc.pending, Colors.orange),
+                          _summaryBox("9", loc.resolved, Colors.green),
                         ],
                       ),
                     ),
@@ -373,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Recent Reports",
+                    loc.recentReports,
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
@@ -381,23 +383,23 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 10.h),
                   _reportItem(
-                    "Broken Street Light",
+                    loc.brokenStreetLight,
                     "MG Road, Sector 14 • 2 days ago",
-                    "Pending",
+                    loc.pending,
                     Colors.orange.shade700,
                     Colors.yellow.shade50,
                   ),
                   _reportItem(
-                    "Garbage Collection",
+                    loc.garbageCollection,
                     "Park Avenue, Block A • 5 days ago",
-                    "Resolved",
+                    loc.resolved,
                     Colors.green.shade700,
                     Colors.green.shade50,
                   ),
                   _reportItem(
-                    "Pothole Repair",
+                    loc.potholeRepair,
                     "Main Street, Near Mall • 1 week ago",
-                    "Resolved",
+                    loc.resolved,
                     Colors.green.shade700,
                     Colors.green.shade50,
                   ),
@@ -446,7 +448,7 @@ class _HomePageState extends State<HomePage> {
                       child: Icon(Icons.home, color: mainBlue, size: 24.sp),
                     )
                   : Icon(Icons.home, size: 24.sp),
-              label: "Home",
+              label: loc.home,
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 1
@@ -466,7 +468,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     )
                   : Icon(Icons.add_circle_outline, size: 24.sp),
-              label: "Report",
+              label: loc.report,
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 2
@@ -482,7 +484,7 @@ class _HomePageState extends State<HomePage> {
                       child: Icon(Icons.list_alt, color: mainBlue, size: 24.sp),
                     )
                   : Icon(Icons.list_alt, size: 24.sp),
-              label: "Complaints",
+              label: loc.complaints,
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 3
@@ -498,7 +500,7 @@ class _HomePageState extends State<HomePage> {
                       child: Icon(Icons.person, color: mainBlue, size: 24.sp),
                     )
                   : Icon(Icons.person, size: 24.sp),
-              label: "Profile",
+              label: loc.profile,
             ),
           ],
         ),

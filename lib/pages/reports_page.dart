@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart';
 
 class MyReportsPage extends StatefulWidget {
   const MyReportsPage({super.key});
@@ -15,7 +16,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       "location": "MG Road, Sector 14",
       "date": "Aug 31, 2:45 PM",
       "status": "Pending",
-      "icon": Icons.delete,
       "image": "https://img.icons8.com/fluency/96/trash.png",
     },
     {
@@ -23,7 +23,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       "location": "Park Street, Block A",
       "date": "Aug 30, 11:20 AM",
       "status": "In Progress",
-      "icon": Icons.lightbulb,
       "image": "assets/images/streetlight.png",
     },
     {
@@ -31,7 +30,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       "location": "Main Road, Near Mall",
       "date": "Aug 29, 4:15 PM",
       "status": "Resolved",
-      "icon": Icons.traffic,
       "image": "https://img.icons8.com/fluency/96/road-worker.png",
     },
     {
@@ -39,7 +37,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       "location": "Residential Area, B-12",
       "date": "Aug 28, 9:30 AM",
       "status": "In Progress",
-      "icon": Icons.water_drop,
       "image": "https://img.icons8.com/fluency/96/water.png",
     },
     {
@@ -47,7 +44,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       "location": "Market Road, Near Bus Stand",
       "date": "Aug 27, 6:45 PM",
       "status": "Resolved",
-      "icon": Icons.delete_forever,
       "image": "https://img.icons8.com/fluency/96/trash.png",
     },
   ];
@@ -69,13 +65,15 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     final filteredReports = selectedTab == "All"
         ? reports
         : reports.where((r) => r["status"] == selectedTab).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Reports", style: TextStyle(fontSize: 18.sp)),
+        title: Text(loc.myReports, style: TextStyle(fontSize: 18.sp)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, size: 22.sp),
           onPressed: () => Navigator.pop(context),
@@ -89,24 +87,24 @@ class _MyReportsPageState extends State<MyReportsPage> {
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
+                children: [
                   _SummaryItem(
-                    title: "Total",
+                    title: loc.total,
                     value: "12",
                     color: Colors.black,
                   ),
                   _SummaryItem(
-                    title: "Pending",
+                    title: loc.pending,
                     value: "3",
                     color: Colors.orange,
                   ),
                   _SummaryItem(
-                    title: "In Progress",
+                    title: loc.inProgress,
                     value: "4",
                     color: Colors.blue,
                   ),
                   _SummaryItem(
-                    title: "Resolved",
+                    title: loc.resolved,
                     value: "5",
                     color: Colors.green,
                   ),
@@ -124,8 +122,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     GestureDetector(
                       onTap: () => setState(() => selectedTab = tab),
                       child: _TabButton(
-                        label: tab,
-                        selected: selectedTab == tab,
+                        label: tab == "All"
+                            ? loc.all
+                            : tab == "Pending"
+                            ? loc.pending
+                            : tab == "In Progress"
+                            ? loc.inProgress
+                            : loc.resolved,
+                        selected: (tab == selectedTab),
                       ),
                     ),
                 ],
@@ -201,7 +205,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Text(
-                          report["status"],
+                          report["status"] == "Pending"
+                              ? loc.pending
+                              : report["status"] == "In Progress"
+                              ? loc.inProgress
+                              : loc.resolved,
                           style: TextStyle(
                             color: _getStatusColor(report["status"]),
                             fontWeight: FontWeight.bold,
@@ -218,7 +226,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
             Padding(
               padding: EdgeInsets.all(12.w),
               child: Text(
-                "Government of Jharkhand Initiative – Secure & Verified",
+                loc.footerNote,
                 style: TextStyle(fontSize: 12.sp, color: Colors.grey),
               ),
             ),

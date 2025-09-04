@@ -400,7 +400,6 @@ class _InfoCard extends StatelessWidget {
   final String label;
 
   const _InfoCard({
-    super.key,
     required this.icon,
     required this.iconBg,
     required this.number,

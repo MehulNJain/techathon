@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'home_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'home_page.dart';
+import '../l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
   final String phoneNumber; // already verified from OTP
@@ -56,6 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _saveProfile() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isLoading = true;
     });
@@ -81,15 +84,16 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Failed to save profile: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${l10n.profile_save_failed}: $e")),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     const mainBlue = Color(0xFF1746D1);
+    final l10n = AppLocalizations.of(context)!;
 
     if (_isFetching) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -102,10 +106,10 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (context, constraints) {
           return Center(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(24.w),
+              padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 20.h),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
+                  minHeight: constraints.maxHeight - 40.h,
                   maxWidth: 420.w,
                 ),
                 child: IntrinsicHeight(
@@ -130,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 SizedBox(height: 20.h),
                                 Text(
-                                  "Complete Your Profile",
+                                  l10n.complete_profile,
                                   style: TextStyle(
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
@@ -138,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 SizedBox(height: 6.h),
                                 Text(
-                                  "Please provide your details to continue",
+                                  l10n.profile_subtitle,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 14.sp,
@@ -155,12 +159,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Icons.person_outline,
                                       size: 22.sp,
                                     ),
-                                    hintText: "Full Name *",
+                                    hintText: l10n.full_name,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8.r),
                                     ),
                                     errorText: _nameTouched && !_isNameValid
-                                        ? "Name is required and cannot contain numbers"
+                                        ? l10n.name_validation_message
                                         : null,
                                   ),
                                   style: TextStyle(fontSize: 15.sp),
@@ -197,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      "Verified",
+                                      l10n.verified,
                                       style: TextStyle(
                                         color: Colors.green,
                                         fontSize: 12.sp,
@@ -215,12 +219,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Icons.email_outlined,
                                       size: 22.sp,
                                     ),
-                                    hintText: "Email Address (Optional)",
+                                    hintText: l10n.email_optional,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8.r),
                                     ),
                                     errorText: _emailTouched && !_isEmailValid
-                                        ? "Enter a valid email address"
+                                        ? l10n.email_validation_message
                                         : null,
                                   ),
                                   keyboardType: TextInputType.emailAddress,
@@ -270,7 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ),
                                           )
                                         : Text(
-                                            "Continue",
+                                            l10n.continue_text,
                                             style: TextStyle(
                                               fontSize: 16.sp,
                                               fontWeight: FontWeight.bold,
@@ -289,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Divider(height: 1.h, color: Colors.grey),
                       SizedBox(height: 16.h),
                       Text(
-                        "Government of Jharkhand Initiative",
+                        l10n.government_initiative,
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14.sp,
@@ -306,7 +310,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            "Secure & Verified",
+                            l10n.secure_and_verified,
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 13.sp,

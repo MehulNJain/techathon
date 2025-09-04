@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'profile_page.dart';
-import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../l10n/app_localizations.dart'; // ✅ correct import
+import 'profile_page.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;
@@ -62,9 +63,13 @@ class _OtpPageState extends State<OtpPage> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Invalid OTP: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "${AppLocalizations.of(context)!.verification_failed}: $e",
+          ),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -84,7 +89,7 @@ class _OtpPageState extends State<OtpPage> {
           verifier,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OTP resent successfully (Web)")),
+          SnackBar(content: Text(AppLocalizations.of(context)!.otp_resent_web)),
         );
       } else {
         await FirebaseAuth.instance.verifyPhoneNumber(
@@ -93,28 +98,37 @@ class _OtpPageState extends State<OtpPage> {
             await FirebaseAuth.instance.signInWithCredential(credential);
           },
           verificationFailed: (FirebaseAuthException e) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Failed: ${e.message}")));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "${AppLocalizations.of(context)!.error_message}: ${e.message}",
+                ),
+              ),
+            );
           },
           codeSent: (String verificationId, int? resendToken) {
             setState(() => widget.verificationId = verificationId);
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("OTP resent successfully (Mobile)")),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.otp_resent_mobile),
+              ),
             );
           },
           codeAutoRetrievalTimeout: (String verificationId) {},
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("${AppLocalizations.of(context)!.error_message}: $e"),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     const mainBlue = Color(0xFF1746D1);
 
     return Scaffold(
@@ -150,7 +164,7 @@ class _OtpPageState extends State<OtpPage> {
                               ),
                               SizedBox(height: 20.h),
                               Text(
-                                "Verify OTP",
+                                loc.verify_otp,
                                 style: TextStyle(
                                   fontSize: 20.sp,
                                   fontWeight: FontWeight.bold,
@@ -158,7 +172,7 @@ class _OtpPageState extends State<OtpPage> {
                               ),
                               SizedBox(height: 6.h),
                               Text(
-                                "Enter the 6-digit code sent to ${widget.phoneNumber}",
+                                "${loc.enter_otp_code} ${widget.phoneNumber}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 14.sp,
@@ -199,7 +213,7 @@ class _OtpPageState extends State<OtpPage> {
                                         decoration: InputDecoration(
                                           counterText: "",
                                           enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
+                                            borderSide: const BorderSide(
                                               color: Colors.grey,
                                             ),
                                             borderRadius: BorderRadius.circular(
@@ -207,7 +221,7 @@ class _OtpPageState extends State<OtpPage> {
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
+                                            borderSide: const BorderSide(
                                               color: mainBlue,
                                             ),
                                             borderRadius: BorderRadius.circular(
@@ -264,11 +278,11 @@ class _OtpPageState extends State<OtpPage> {
                                       ? _verifyOtp
                                       : null,
                                   child: _isLoading
-                                      ? CircularProgressIndicator(
+                                      ? const CircularProgressIndicator(
                                           color: Colors.white,
                                         )
                                       : Text(
-                                          "Verify & Login",
+                                          loc.verify_and_login,
                                           style: TextStyle(
                                             fontSize: 16.sp,
                                             fontWeight: FontWeight.bold,
@@ -279,7 +293,7 @@ class _OtpPageState extends State<OtpPage> {
                               ),
                               SizedBox(height: 20.h),
                               Text(
-                                "Didn't receive OTP?",
+                                loc.didnt_receive_otp,
                                 style: TextStyle(
                                   color: Colors.black54,
                                   fontSize: 14.sp,
@@ -288,7 +302,7 @@ class _OtpPageState extends State<OtpPage> {
                               TextButton(
                                 onPressed: _resendOtp,
                                 child: Text(
-                                  "Resend",
+                                  loc.resend,
                                   style: TextStyle(
                                     color: mainBlue,
                                     fontSize: 15.sp,
@@ -303,7 +317,7 @@ class _OtpPageState extends State<OtpPage> {
                       Divider(height: 1, color: Colors.grey.shade200),
                       SizedBox(height: 16.h),
                       Text(
-                        "Government of Jharkhand Initiative",
+                        loc.government_initiative,
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14.sp,
@@ -320,7 +334,7 @@ class _OtpPageState extends State<OtpPage> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            "Secure & Verified",
+                            loc.secure_and_verified,
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 13.sp,

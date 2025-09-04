@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
 import 'pages/otp_page.dart';
-import 'worker_pages/worker_login_page.dart'; // Make sure to create this page
+import 'worker_pages/worker_login_page.dart';
+import 'l10n/app_localizations.dart';
+import 'main.dart'; // For LocaleProvider
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,17 +30,18 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _sendOtp() async {
+    final l10n = AppLocalizations.of(context)!;
     String phone = _phoneController.text.trim();
 
     if (phone.isEmpty) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Enter phone number")));
+      ).showSnackBar(SnackBar(content: Text(l10n.enter_phone_number_message)));
       return;
     } else if (phone.length != 10 || !RegExp(r'^[0-9]+$').hasMatch(phone)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Enter a valid 10-digit phone number")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.enter_valid_phone)));
       return;
     }
 
@@ -76,7 +82,9 @@ class _LoginPageState extends State<LoginPage> {
           verificationFailed: (FirebaseAuthException e) {
             setState(() => _isLoading = false);
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Verification failed: ${e.message}")),
+              SnackBar(
+                content: Text("${l10n.verification_failed}: ${e.message}"),
+              ),
             );
           },
           codeSent: (String verificationId, int? resendToken) {
@@ -100,240 +108,282 @@ class _LoginPageState extends State<LoginPage> {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ).showSnackBar(SnackBar(content: Text("${l10n.error_message}: $e")));
     }
+  }
+
+  void _showLanguageDialog() {
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(l10n.select_language),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                title: Text(l10n.english),
+                onTap: () {
+                  localeProvider.setLocale(const Locale('en'));
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text(l10n.hindi),
+                onTap: () {
+                  localeProvider.setLocale(const Locale('hi'));
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     const mainBlue = Color(0xFF1746D1);
+    final l10n = AppLocalizations.of(context)!;
+    final localeProvider = context.watch<LocaleProvider>();
 
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                  maxWidth: 420,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: EdgeInsets.all(8.w),
+                child: IconButton(
+                  icon: Icon(Icons.language, size: 28.sp, color: mainBlue),
+                  onPressed: _showLanguageDialog,
                 ),
-                child: IntrinsicHeight(
+              ),
+            ),
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 420.w),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 20.h,
+                  ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SizedBox(height: 40),
-                              CircleAvatar(
-                                radius: 48,
-                                backgroundColor: mainBlue,
-                                child: const Icon(
-                                  Icons.account_balance,
-                                  size: 44,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 28),
-                              const Text(
-                                "Smart Civic Portal",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                "Report civic issues and connect with your local government",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                              const SizedBox(height: 36),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Phone Number",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade50,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 8),
-                                    Icon(
-                                      Icons.phone,
-                                      color: Colors.grey.shade500,
-                                      size: 22,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    const Text(
-                                      "+91",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Container(
-                                      height: 36,
-                                      width: 1,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _phoneController,
-                                        keyboardType: TextInputType.phone,
-                                        maxLength: 10,
-                                        decoration: const InputDecoration(
-                                          counterText: "",
-                                          hintText: "Enter your phone number",
-                                          border: InputBorder.none,
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10,
-                                          ),
-                                        ),
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter
-                                              .digitsOnly,
-                                          LengthLimitingTextInputFormatter(10),
-                                        ],
-                                        onChanged: (_) => setState(() {}),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        _phoneController.text.length == 10
-                                        ? mainBlue
-                                        : Colors.grey.shade300,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed:
-                                      (_phoneController.text.length == 10 &&
-                                          !_isLoading)
-                                      ? _sendOtp
-                                      : null,
-                                  child: _isLoading
-                                      ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      : const Text(
-                                          "Send OTP",
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                ),
-                              ),
-                              if (kIsWeb) ...[
-                                const SizedBox(height: 20),
-                                const SizedBox(
-                                  height: 60,
-                                  child: HtmlElementView(viewType: 'recaptcha'),
-                                ),
-                              ],
-                              const SizedBox(height: 32),
-                              TextButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const WorkerLoginPage(),
-                                    ),
-                                  );
-                                },
-                                icon: Icon(
-                                  Icons.engineering,
-                                  size: 20,
-                                  color: mainBlue,
-                                ),
-                                label: Text(
-                                  "Login as Worker",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: mainBlue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
+                      SizedBox(height: 50.h),
+                      CircleAvatar(
+                        radius: 48.r,
+                        backgroundColor: mainBlue,
+                        child: Icon(
+                          Icons.account_balance,
+                          size: 44.sp,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 28.h),
+
+                      Text(
+                        l10n.app_title,
+                        style: TextStyle(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        l10n.login_subtitle,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          color: Colors.black54,
+                        ),
+                      ),
+                      SizedBox(height: 36.h),
+
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          l10n.phone_number,
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      // Footer
-                      const SizedBox(height: 32),
-                      Divider(height: 1, color: Colors.grey.shade200),
-                      const SizedBox(height: 16),
-                      const Text(
-                        "Government of Jharkhand Initiative",
-                        style: TextStyle(color: Colors.black54, fontSize: 14),
+                      SizedBox(height: 10.h),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(width: 8.w),
+                            Icon(
+                              Icons.phone,
+                              color: Colors.grey.shade500,
+                              size: 22.sp,
+                            ),
+                            SizedBox(width: 6.w),
+                            Text(
+                              "+91",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            Container(
+                              height: 36.h,
+                              width: 1.w,
+                              color: Colors.grey.shade300,
+                            ),
+                            SizedBox(width: 6.w),
+                            Expanded(
+                              child: TextField(
+                                controller: _phoneController,
+                                keyboardType: TextInputType.phone,
+                                maxLength: 10,
+                                decoration: InputDecoration(
+                                  counterText: "",
+                                  hintText: l10n.enter_phone_number,
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10.h,
+                                  ),
+                                ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(10),
+                                ],
+                                onChanged: (_) => setState(() {}),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 24.h),
+
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _phoneController.text.length == 10
+                                ? mainBlue
+                                : Colors.grey.shade300,
+                            padding: EdgeInsets.symmetric(vertical: 16.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                          ),
+                          onPressed:
+                              (_phoneController.text.length == 10 &&
+                                  !_isLoading)
+                              ? _sendOtp
+                              : null,
+                          child: _isLoading
+                              ? SizedBox(
+                                  height: 20.h,
+                                  width: 20.w,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  l10n.send_otp,
+                                  style: TextStyle(
+                                    fontSize: 17.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
+                      ),
+
+                      if (kIsWeb) ...[
+                        SizedBox(height: 20.h),
+                        SizedBox(
+                          height: 60.h,
+                          child: const HtmlElementView(viewType: 'recaptcha'),
+                        ),
+                      ],
+
+                      SizedBox(height: 32.h),
+
+                      TextButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const WorkerLoginPage(),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.engineering,
+                          size: 20.sp,
+                          color: mainBlue,
+                        ),
+                        label: Text(
+                          l10n.login_as_worker,
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            color: mainBlue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 32.h),
+                      Divider(height: 1, color: Colors.grey.shade200),
+                      SizedBox(height: 16.h),
+                      Text(
+                        l10n.government_initiative,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.verified_user,
-                            size: 16,
-                            color: Colors.grey,
+                            size: 16.sp,
+                            color: Colors.grey[400],
                           ),
-                          SizedBox(width: 4),
+                          SizedBox(width: 4.w),
                           Text(
-                            "Secure & Verified",
-                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                            l10n.secure_and_verified,
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 13.sp,
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                     ],
                   ),
                 ),
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
