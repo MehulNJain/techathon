@@ -64,7 +64,17 @@ class _ProfilePageState extends State<ProfilePage> {
       "createdAt": DateTime.now().toIso8601String(),
     };
     try {
-      await dbRef.child("users").child(widget.phoneNumber).set(userData);
+      final userRef = dbRef.child("users").child(widget.phoneNumber);
+      final snapshot = await userRef.get();
+      if (!snapshot.exists) {
+        await userRef.set(userData);
+      } else {
+        await userRef.update({
+          "fullName": _nameController.text.trim(),
+          "email": _emailController.text.trim(),
+          // Do NOT overwrite complaints or other data!
+        });
+      }
 
       // Update global state
       Provider.of<UserProvider>(
