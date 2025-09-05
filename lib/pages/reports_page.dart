@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../l10n/app_localizations.dart';
+import 'home_page.dart';
+import 'report_issue_page.dart';
+import 'user_profile_page.dart';
 
 class MyReportsPage extends StatefulWidget {
   const MyReportsPage({super.key});
@@ -73,12 +76,17 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(loc.myReports, style: TextStyle(fontSize: 18.sp)),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, size: 22.sp),
-          onPressed: () => Navigator.pop(context),
+        title: Text(
+          loc.myReports,
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
         ),
+        centerTitle: true,
+        elevation: 1,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        automaticallyImplyLeading: false,
       ),
+      backgroundColor: const Color(0xFFF6F6F6),
       body: SafeArea(
         child: Column(
           children: [
@@ -229,6 +237,134 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 loc.footerNote,
                 style: TextStyle(fontSize: 12.sp, color: Colors.grey),
               ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFF0F4FF),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8.r,
+              offset: Offset(0, -2.h),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: const Color(0xFFF0F4FF),
+          currentIndex: 2,
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            } else if (index == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ReportIssuePage(),
+                ),
+              );
+            } else if (index == 3) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserProfilePage(),
+                ),
+              );
+            }
+          },
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: const Color(0xFF1746D1),
+          unselectedItemColor: Colors.grey,
+          iconSize: 24.sp,
+          selectedFontSize: 14.sp,
+          unselectedFontSize: 13.sp,
+          elevation: 0,
+          showUnselectedLabels: true,
+          items: [
+            BottomNavigationBarItem(
+              icon: 2 == 0
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1746D1).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.home,
+                        color: const Color(0xFF1746D1),
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.home, size: 24.sp),
+              label: loc.home,
+            ),
+            BottomNavigationBarItem(
+              icon: 2 == 1
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1746D1).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.add_circle_outline,
+                        color: const Color(0xFF1746D1),
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.add_circle_outline, size: 24.sp),
+              label: loc.report,
+            ),
+            BottomNavigationBarItem(
+              icon: 2 == 2
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1746D1).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.list_alt,
+                        color: const Color(0xFF1746D1),
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.list_alt, size: 24.sp),
+              label: loc.complaints,
+            ),
+            BottomNavigationBarItem(
+              icon: 2 == 3
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1746D1).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.person,
+                        color: const Color(0xFF1746D1),
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.person, size: 24.sp),
+              label: loc.profile,
             ),
           ],
         ),
