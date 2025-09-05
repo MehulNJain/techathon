@@ -9,6 +9,7 @@ import 'login_page.dart';
 import 'locale_provider.dart'; // Separated for clarity
 import 'fallback_material_localizations_delegate.dart'; // The new fallback delegate
 import 'firebase_options.dart';
+import 'providers/user_provider.dart';
 
 // Localization
 import 'l10n/app_localizations.dart';
@@ -22,7 +23,16 @@ Future<void> main() async {
   await localeProvider.fetchLocale();
 
   runApp(
-    ChangeNotifierProvider.value(value: localeProvider, child: const MyApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        // ...other providers if any...
+      ],
+      child: ChangeNotifierProvider.value(
+        value: localeProvider,
+        child: const MyApp(),
+      ),
+    ),
   );
 }
 

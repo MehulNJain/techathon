@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'package:CiTY/pages/report_issue_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:provider/provider.dart';
 import '../models/report_data.dart';
+import '../providers/user_provider.dart';
 import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
@@ -456,14 +459,14 @@ class ReportDetailsPage extends StatelessWidget {
               onTap: (index) {
                 if (index == 0) {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => HomePage(fullName: ""),
-                    ),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                     (route) => false,
                   );
                 } else if (index == 1) {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => HomePage(fullName: "")),
+                    MaterialPageRoute(
+                      builder: (context) => const ReportIssuePage(),
+                    ),
                     (route) => false,
                   );
                 } else if (index == 2) {

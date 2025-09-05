@@ -1,28 +1,97 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 import '../models/report_data.dart';
 import 'report_details_page.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
-class SubmittedPage extends StatelessWidget {
-  final ReportData report;
-  const SubmittedPage({super.key, required this.report});
+class SubmittedPage extends StatefulWidget {
+  final String complaintId;
+  const SubmittedPage({super.key, required this.complaintId});
 
   static const mainBlue = Color(0xFF1746D1);
 
   @override
+  State<SubmittedPage> createState() => _SubmittedPageState();
+}
+
+class _SubmittedPageState extends State<SubmittedPage> {
+  ReportData? report;
+  bool _loading = true;
+  String formattedDate = '';
+  String formattedTime = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchComplaint();
+  }
+
+  Future<void> _fetchComplaint() async {
+    final dbRef = FirebaseDatabase.instance.ref();
+    final snapshot = await dbRef
+        .child('complaints')
+        .child(widget.complaintId)
+        .get();
+    if (snapshot.exists) {
+      final data = Map<String, dynamic>.from(snapshot.value as Map);
+      DateTime? dt = DateTime.tryParse(data['dateTime'] ?? '');
+      if (dt != null) {
+        formattedDate = DateFormat('dd MMM yyyy').format(dt);
+        formattedTime = DateFormat('hh:mm a').format(dt);
+      }
+      setState(() {
+        report = ReportData(
+          category: data['category'] ?? '',
+          subcategory: data['subcategory'] ?? '',
+          description: data['description'] ?? '',
+          photos: (data['photos'] as List<dynamic>? ?? [])
+              .map(
+                (url) =>
+                    ReportPhoto(path: url, timestamp: dt ?? DateTime.now()),
+              )
+              .toList(),
+          location: data['location'] ?? '',
+          dateTime: data['dateTime'] ?? '',
+          complaintId: data['complaintId'] ?? '',
+          voiceNotePath: data['voiceNote'],
+        );
+        _loading = false;
+      });
+    } else {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (report == null) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: Text("Complaint not found.")),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: mainBlue,
+        backgroundColor: SubmittedPage.mainBlue,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
           onPressed: () {
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => HomePage(fullName: "")),
+              MaterialPageRoute(builder: (_) => HomePage()),
               (route) => false,
             );
           },
@@ -99,9 +168,10 @@ class SubmittedPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 14.h),
-                    _summaryRow("Category", report.category),
-                    _summaryRow("Issue Type", report.subcategory),
-                    _summaryRow("Date Submitted", report.dateTime),
+                    _summaryRow("Category", report!.category),
+                    _summaryRow("Issue Type", report!.subcategory),
+                    _summaryRow("Date Submitted", formattedDate),
+                    _summaryRow("Time Submitted", formattedTime),
                     Row(
                       children: [
                         Expanded(
@@ -146,9 +216,9 @@ class SubmittedPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "#${report.complaintId}",
+                          "#${report!.complaintId}",
                           style: TextStyle(
-                            color: mainBlue,
+                            color: SubmittedPage.mainBlue,
                             fontWeight: FontWeight.bold,
                             fontSize: 15.sp,
                             decoration: TextDecoration.underline,
@@ -173,7 +243,7 @@ class SubmittedPage extends StatelessWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: mainBlue,
+                    backgroundColor: SubmittedPage.mainBlue,
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r),
@@ -182,7 +252,7 @@ class SubmittedPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => ReportDetailsPage(report: report),
+                        builder: (_) => ReportDetailsPage(report: report!),
                       ),
                     );
                   },
@@ -192,17 +262,24 @@ class SubmittedPage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  icon: Icon(Icons.add, color: mainBlue, size: 20.sp),
+                  icon: Icon(
+                    Icons.add,
+                    color: SubmittedPage.mainBlue,
+                    size: 20.sp,
+                  ),
                   label: Text(
                     "Report Another Issue",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.sp,
-                      color: mainBlue,
+                      color: SubmittedPage.mainBlue,
                     ),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: mainBlue, width: 1.5),
+                    side: const BorderSide(
+                      color: SubmittedPage.mainBlue,
+                      width: 1.5,
+                    ),
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r),
@@ -226,12 +303,19 @@ class SubmittedPage extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: mainBlue, size: 22.sp),
+                    Icon(
+                      Icons.info_outline,
+                      color: SubmittedPage.mainBlue,
+                      size: 22.sp,
+                    ),
                     SizedBox(width: 10.w),
                     Expanded(
                       child: Text(
                         "Your complaint will be reviewed by our team within 24 hours and assigned to the relevant department for resolution.",
-                        style: TextStyle(color: mainBlue, fontSize: 14.sp),
+                        style: TextStyle(
+                          color: SubmittedPage.mainBlue,
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
                   ],
