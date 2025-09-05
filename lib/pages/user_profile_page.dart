@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../locale_provider.dart';
 import '../login_page.dart';
+import 'home_page.dart';
+import 'report_issue_page.dart';
+import 'reports_page.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -23,15 +26,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
         title: Text(
           loc.profile,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         elevation: 1,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: const Color(0xFFF6F6F6),
       body: SingleChildScrollView(
@@ -58,6 +61,132 @@ class _UserProfilePageState extends State<UserProfilePage> {
               ),
             ),
             SizedBox(height: 10.h),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFF0F4FF),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8.r,
+              offset: Offset(0, -2.h),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: const Color(0xFFF0F4FF),
+          currentIndex: 3,
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            } else if (index == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ReportIssuePage(),
+                ),
+              );
+            } else if (index == 2) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyReportsPage()),
+              );
+            }
+          },
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: const Color(0xFF1746D1),
+          unselectedItemColor: Colors.grey,
+          iconSize: 24.sp,
+          selectedFontSize: 14.sp,
+          unselectedFontSize: 13.sp,
+          elevation: 0,
+          showUnselectedLabels: true,
+          items: [
+            BottomNavigationBarItem(
+              icon: 3 == 0
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1746D1).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.home,
+                        color: const Color(0xFF1746D1),
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.home, size: 24.sp),
+              label: loc.home,
+            ),
+            BottomNavigationBarItem(
+              icon: 3 == 1
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1746D1).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.add_circle_outline,
+                        color: const Color(0xFF1746D1),
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.add_circle_outline, size: 24.sp),
+              label: loc.report,
+            ),
+            BottomNavigationBarItem(
+              icon: 3 == 2
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1746D1).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.list_alt,
+                        color: const Color(0xFF1746D1),
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.list_alt, size: 24.sp),
+              label: loc.complaints,
+            ),
+            BottomNavigationBarItem(
+              icon: 3 == 3
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1746D1).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.person,
+                        color: const Color(0xFF1746D1),
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.person, size: 24.sp),
+              label: loc.profile,
+            ),
           ],
         ),
       ),
