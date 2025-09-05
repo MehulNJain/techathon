@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -12,8 +14,9 @@ import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
 import 'submitted_page.dart';
-import '../models/report_data.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 
 class _PhotoWithTimestamp {
   final File file;
@@ -50,6 +53,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
   String? _audioPath;
   bool _isRecording = false;
   bool _isPlaying = false;
+  bool _isSubmitting = false;
 
   final Map<String, List<String>> categoryMap = {
     'Garbage': [
@@ -319,6 +323,94 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       address != null &&
       address!.isNotEmpty &&
       address != "Address not found";
+
+  // Upload images to Firebase Storage with timestamp in filename
+  Future<List<String>> _uploadPhotosToStorage(String complaintId) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    List<String> photoUrls = [];
+    for (var i = 0; i < photos.length; i++) {
+      final photo = photos[i];
+      final timestampStr = photo.timestamp.toIso8601String().replaceAll(
+        ':',
+        '-',
+      );
+      final fileName = 'photo_${i + 1}_$timestampStr.jpg';
+      final ref = storageRef.child('complaints/$complaintId/$fileName');
+      final uploadTask = await ref.putFile(photo.file);
+      final url = await uploadTask.ref.getDownloadURL();
+      photoUrls.add(url);
+    }
+    return photoUrls;
+  }
+
+  // Upload audio to Firebase Storage (optional)
+  Future<String?> _uploadAudioToStorage(String complaintId) async {
+    if (_audioPath == null) return null;
+    final storageRef = FirebaseStorage.instance.ref();
+    final fileName =
+        'voice_note_${DateTime.now().toIso8601String().replaceAll(':', '-')}.aac';
+    final ref = storageRef.child('complaints/$complaintId/$fileName');
+    final uploadTask = await ref.putFile(File(_audioPath!));
+    return await uploadTask.ref.getDownloadURL();
+  }
+
+  Future<void> _submitReport() async {
+    setState(() => _isSubmitting = true);
+    try {
+      final dbRef = FirebaseDatabase.instance.ref();
+      // TODO: Replace with actual user phone number from auth
+      final phoneNumber = "+911234567890";
+      final complaintId = dbRef
+          .child('users')
+          .child(phoneNumber)
+          .child('complaints')
+          .push()
+          .key!;
+
+      // Upload images and audio
+      final photoUrls = await _uploadPhotosToStorage(complaintId);
+      final audioUrl = await _uploadAudioToStorage(complaintId);
+
+      // Prepare complaint data
+      final complaintData = {
+        "complaintId": complaintId,
+        "category": selectedCategory,
+        "subcategory": _isOtherSelected
+            ? customSubcategoryController.text.trim()
+            : selectedSubcategory,
+        "description": detailsController.text.trim(),
+        "photos": photoUrls,
+        "voiceNote": audioUrl,
+        "location": address,
+        "gps": gps,
+        "dateTime": DateTime.now().toIso8601String(),
+      };
+
+      // Save under user node
+      await dbRef
+          .child('users')
+          .child(phoneNumber)
+          .child('complaints')
+          .child(complaintId)
+          .set(complaintData);
+
+      // Save under global complaints node (no user info)
+      await dbRef.child('complaints').child(complaintId).set(complaintData);
+
+      if (!mounted) return;
+      setState(() => _isSubmitting = false);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => SubmittedPage(complaintId: complaintId),
+        ),
+      );
+    } catch (e) {
+      setState(() => _isSubmitting = false);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to submit report: $e")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -819,14 +911,23 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       icon: Icon(Icons.send, color: Colors.white, size: 20.sp),
-                      label: Text(
-                        'Submit Report',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      label: _isSubmitting
+                          ? SizedBox(
+                              height: 20.h,
+                              width: 20.w,
+                              child: const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Submit Report',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _isFormValid
                             ? mainBlue
@@ -841,34 +942,8 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                           fontSize: 16.sp,
                         ),
                       ),
-                      onPressed: _isFormValid
-                          ? () {
-                              final report = ReportData(
-                                category: selectedCategory ?? "",
-                                subcategory: selectedSubcategory ?? "",
-                                description: detailsController.text,
-                                photos: photos
-                                    .map(
-                                      (p) => ReportPhoto(
-                                        path: p.file.path,
-                                        timestamp: p.timestamp,
-                                      ),
-                                    )
-                                    .toList(),
-                                location: address ?? "",
-                                dateTime: DateFormat(
-                                  'dd MMM, hh:mm a',
-                                ).format(DateTime.now()),
-                                complaintId:
-                                    "CMP${DateTime.now().millisecondsSinceEpoch.toString().substring(5, 12)}",
-                                voiceNotePath: _audioPath,
-                              );
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (_) => SubmittedPage(report: report),
-                                ),
-                              );
-                            }
+                      onPressed: _isFormValid && !_isSubmitting
+                          ? _submitReport
                           : null,
                     ),
                   ),
@@ -900,10 +975,13 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
               showUnselectedLabels: true,
               onTap: (index) {
                 if (index == 0) {
+                  // Use Provider to get the user's name
+                  final fullName = Provider.of<UserProvider>(
+                    context,
+                    listen: false,
+                  ).fullName;
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => HomePage(fullName: ""),
-                    ),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                     (route) => false,
                   );
                 } else if (index == 2) {

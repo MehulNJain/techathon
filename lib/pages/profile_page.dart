@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
 import 'report_issue_page.dart';
 import 'reports_page.dart';
 import 'home_page.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/user_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   final String phoneNumber;
@@ -67,14 +70,19 @@ class _ProfilePageState extends State<ProfilePage> {
     };
     try {
       await dbRef.child("users").child(widget.phoneNumber).set(userData);
+
+      // Update global state
+      Provider.of<UserProvider>(
+        context,
+        listen: false,
+      ).setFullName(_nameController.text.trim());
+
       setState(() {
         _isLoading = false;
       });
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(fullName: _nameController.text.trim()),
-        ),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     } catch (e) {
       setState(() {

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/user_provider.dart';
 
 import 'reports_page.dart';
 import 'report_issue_page.dart';
 import 'user_profile_page.dart';
 
 class HomePage extends StatefulWidget {
-  final String fullName;
-
-  const HomePage({super.key, required this.fullName});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -53,6 +53,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final fullName = Provider.of<UserProvider>(context).fullName;
 
     const mainBlue = Color(0xFF1746D1);
     const navBg = Color(0xFFF0F4FF);
@@ -147,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Text(
-                        widget.fullName,
+                        fullName,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.sp,
