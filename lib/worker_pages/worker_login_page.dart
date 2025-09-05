@@ -3,6 +3,7 @@ import 'worker_home_page.dart'; // Import WorkerHomePage
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Import the generated localization file
 import '../l10n/app_localizations.dart';
+import 'worker_main_page.dart';
 
 class WorkerLoginPage extends StatefulWidget {
   const WorkerLoginPage({super.key});
@@ -41,7 +42,7 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
       if (userId == "worker" && password == "1234") {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const WorkerHomePage()),
+          MaterialPageRoute(builder: (context) => const WorkerMainPage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

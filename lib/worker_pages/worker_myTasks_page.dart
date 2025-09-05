@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../l10n/app_localizations.dart';
-import 'worker_home_page.dart';
-import 'worker_profile_page.dart';
 
 class WorkerMyTasksPage extends StatefulWidget {
   const WorkerMyTasksPage({super.key});
@@ -17,14 +15,12 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     final tabs = [
       l10n.filterAll,
       l10n.filterPending,
       l10n.filterInProgress,
       l10n.filterCompleted,
     ];
-
     final tasks = [
       TaskItem(
         id: '#CMP-2024-0892',
@@ -49,18 +45,6 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
         priorityColor: Colors.orange.shade400,
         iconBg: Colors.green.shade50,
         icon: Icons.delete,
-      ),
-      TaskItem(
-        id: '#CMP-2024-0890',
-        title: l10n.streetLighting,
-        subtitle: l10n.bulbReplacement,
-        location: 'Gandhi Nagar, Sector 5',
-        priority: l10n.priorityLow,
-        status: l10n.filterCompleted,
-        statusColor: Colors.green.shade100,
-        priorityColor: Colors.green.shade400,
-        iconBg: Colors.blue.shade50,
-        icon: Icons.lightbulb,
       ),
     ];
 
@@ -298,48 +282,11 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1, // My Tasks tab is selected
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const WorkerHomePage()),
-            );
-          } else if (index == 2) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const WorkerProfilePage()),
-            );
-          }
-          // index == 1 is current page, do nothing
-        },
-        selectedItemColor: Colors.orange.shade700,
-        unselectedItemColor: Colors.grey.shade500,
-        showUnselectedLabels: true,
-        selectedFontSize: 13.sp,
-        unselectedFontSize: 12.sp,
-        iconSize: 22.sp,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 22.sp),
-            label: l10n.home,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt, size: 22.sp),
-            label: l10n.myTasks,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 22.sp),
-            label: l10n.profile,
-          ),
-        ],
-      ),
+      // ❌ NO BottomNavigationBar HERE
     );
   }
 }
 
-// Your TaskItem data model class.
 class TaskItem {
   final String id;
   final String title;
