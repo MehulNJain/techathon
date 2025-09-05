@@ -11,6 +11,7 @@ class SubmittedPage extends StatefulWidget {
   const SubmittedPage({super.key, required this.complaintId});
 
   static const mainBlue = Color(0xFF1746D1);
+  static const bgGrey = Color(0xFFF6F6F6); // Same as HomePage
 
   @override
   State<SubmittedPage> createState() => _SubmittedPageState();
@@ -56,19 +57,19 @@ class _SubmittedPageState extends State<SubmittedPage> {
   Widget build(BuildContext context) {
     if (_loading) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: SubmittedPage.bgGrey,
         body: Center(child: CircularProgressIndicator()),
       );
     }
     if (complaintData == null) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: SubmittedPage.bgGrey,
         body: Center(child: Text("Complaint not found.")),
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: SubmittedPage.bgGrey,
       appBar: AppBar(
         backgroundColor: SubmittedPage.mainBlue,
         elevation: 0,
@@ -81,6 +82,8 @@ class _SubmittedPageState extends State<SubmittedPage> {
             );
           },
         ),
+        title: null, // Remove the title from the AppBar
+        centerTitle: true,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -89,11 +92,12 @@ class _SubmittedPageState extends State<SubmittedPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 12.h),
+              // Add "Complaint Submitted" back here
               Text(
                 "Complaint Submitted",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 22.sp,
+                  fontSize: 18.sp,
                   color: Colors.black,
                 ),
               ),
@@ -107,7 +111,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                 child: Icon(
                   Icons.check,
                   color: const Color(0xFF12B76A),
-                  size: 48.sp,
+                  size: 46.sp,
                 ),
               ),
               SizedBox(height: 18.h),
@@ -115,7 +119,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                 "Success!",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20.sp,
+                  fontSize: 18.sp,
                   color: Colors.black,
                 ),
               ),
@@ -123,12 +127,12 @@ class _SubmittedPageState extends State<SubmittedPage> {
               Text(
                 "Your complaint has been submitted\nsuccessfully!",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black87, fontSize: 15.sp),
+                style: TextStyle(color: Colors.black87, fontSize: 13.sp),
               ),
               SizedBox(height: 24.h),
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(18.w),
+                padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade200),
                   borderRadius: BorderRadius.circular(14.r),
@@ -148,11 +152,11 @@ class _SubmittedPageState extends State<SubmittedPage> {
                       "Complaint Summary",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16.sp,
+                        fontSize: 13.sp, // Slightly smaller
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: 14.h),
+                    SizedBox(height: 12.h),
                     _summaryRow("Category", complaintData!['category'] ?? ''),
                     _summaryRow(
                       "Issue Type",
@@ -169,7 +173,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                             "Status",
                             style: TextStyle(
                               color: Colors.black54,
-                              fontSize: 15.sp,
+                              fontSize: 12.sp, // Slightly smaller
                             ),
                           ),
                         ),
@@ -187,7 +191,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                             style: TextStyle(
                               color: const Color(0xFFB26A00),
                               fontWeight: FontWeight.w600,
-                              fontSize: 13.sp,
+                              fontSize: 12.sp, // Slightly smaller
                             ),
                           ),
                         ),
@@ -201,7 +205,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                             "Complaint ID",
                             style: TextStyle(
                               color: Colors.black54,
-                              fontSize: 15.sp,
+                              fontSize: 13.sp, // Slightly smaller
                             ),
                           ),
                         ),
@@ -210,7 +214,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                           style: TextStyle(
                             color: SubmittedPage.mainBlue,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15.sp,
+                            fontSize: 13.sp, // Slightly smaller
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -306,7 +310,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                         "Your complaint will be reviewed by our team within 24 hours and assigned to the relevant department for resolution.",
                         style: TextStyle(
                           color: SubmittedPage.mainBlue,
-                          fontSize: 14.sp,
+                          fontSize: 12.sp,
                         ),
                       ),
                     ),
@@ -329,7 +333,10 @@ class _SubmittedPageState extends State<SubmittedPage> {
           Expanded(
             child: Text(
               label,
-              style: TextStyle(color: Colors.black54, fontSize: 15.sp),
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 13.sp,
+              ), // Slightly smaller
             ),
           ),
           Text(
@@ -337,7 +344,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w600,
-              fontSize: 15.sp,
+              fontSize: 13.sp, // Slightly smaller
             ),
           ),
         ],

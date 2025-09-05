@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -74,13 +75,21 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       'Cracks in Road Surface',
       'Damaged Speed Breaker',
     ],
-    'Water': ['Water Leakage', 'Water Contamination / Dirty Water'],
+    'Water': ['Water Leakage', 'Water Contamination'],
     'Drainage & Sewerage': [
       'Blocked Drain',
       'Flooding / Waterlogging',
       'Open Sewer / Foul Smell',
       'Broken Drain Cover',
     ],
+  };
+
+  final Map<String, String> categoryShortCodes = {
+    'Garbage': 'GBG',
+    'Street Light': 'SLT',
+    'Road Damage': 'RDG',
+    'Water': 'WTR',
+    'Drainage & Sewerage': 'DRN',
   };
 
   @override
@@ -354,24 +363,47 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
     return await uploadTask.ref.getDownloadURL();
   }
 
+  Future<String> _generateComplaintId(String category) async {
+    final dbRef = FirebaseDatabase.instance.ref();
+    final now = DateTime.now();
+    final dateStr = DateFormat('yyMMdd').format(now); // Short date: yyMMdd
+    final catShort =
+        categoryShortCodes[category] ?? category.substring(0, 3).toUpperCase();
+
+    // Query all complaints for this category and date
+    final snapshot = await dbRef
+        .child('complaints')
+        .orderByChild('category_date')
+        .equalTo('$catShort-$dateStr')
+        .get();
+
+    int count = 1;
+    if (snapshot.exists) {
+      count = snapshot.children.length + 1;
+    }
+
+    // Format: GBG-250905-001
+    return '$catShort-$dateStr-${count.toString().padLeft(3, '0')}';
+  }
+
   Future<void> _submitReport() async {
     setState(() => _isSubmitting = true);
     try {
       final dbRef = FirebaseDatabase.instance.ref();
-      // TODO: Replace with actual user phone number from auth
-      final phoneNumber = "+911234567890";
-      final complaintId = dbRef
-          .child('users')
-          .child(phoneNumber)
-          .child('complaints')
-          .push()
-          .key!;
+      // Get the actual user's phone number from Firebase Auth
+      final phoneNumber =
+          FirebaseAuth.instance.currentUser?.phoneNumber ?? "unknown";
+      final complaintId = await _generateComplaintId(selectedCategory!);
 
       // Upload images and audio
       final photoUrls = await _uploadPhotosToStorage(complaintId);
       final audioUrl = await _uploadAudioToStorage(complaintId);
 
       // Prepare complaint data
+      final catShort =
+          categoryShortCodes[selectedCategory!] ??
+          selectedCategory!.substring(0, 3).toUpperCase();
+      final dateStr = DateFormat('yyMMdd').format(DateTime.now());
       final complaintData = {
         "complaintId": complaintId,
         "category": selectedCategory,
@@ -384,6 +416,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
         "location": address,
         "gps": gps,
         "dateTime": DateTime.now().toIso8601String(),
+        "category_date": "$catShort-$dateStr", // For unique ID generation
       };
 
       // Save under user node
@@ -408,7 +441,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       setState(() => _isSubmitting = false);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Failed to submit report: $e")));
+      ).showSnackBar(SnackBar(content: Text("Failed to submit: $e")));
     }
   }
 
@@ -948,7 +981,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                                 ),
                                 SizedBox(width: 8.w),
                                 Text(
-                                  'Submit Report',
+                                  'Submit',
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
