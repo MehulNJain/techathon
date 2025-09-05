@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'pages/otp_page.dart';
 import 'worker_pages/worker_login_page.dart';
 import 'l10n/app_localizations.dart';
-import 'main.dart'; // LocaleProvider
 
 import 'locale_provider.dart'; // CORRECTED: Import from its own file
 

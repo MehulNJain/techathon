@@ -1,14 +1,12 @@
 import 'dart:io';
-import 'package:CiTY/pages/report_issue_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:provider/provider.dart';
-import '../models/report_data.dart';
-import '../providers/user_provider.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
+import 'report_issue_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Icon selection based on complaint category
@@ -88,16 +86,72 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
   }
 }
 
-class ReportDetailsPage extends StatelessWidget {
-  final ReportData report;
-  const ReportDetailsPage({super.key, required this.report});
+class ReportDetailsPage extends StatefulWidget {
+  final String complaintId;
+  const ReportDetailsPage({super.key, required this.complaintId});
 
   static const mainBlue = Color(0xFF1746D1);
   static const navBg = Color(0xFFF0F4FF);
 
   @override
+  State<ReportDetailsPage> createState() => _ReportDetailsPageState();
+}
+
+class _ReportDetailsPageState extends State<ReportDetailsPage> {
+  Map<String, dynamic>? complaintData;
+  bool _loading = true;
+  String formattedDate = '';
+  String formattedTime = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchComplaint();
+  }
+
+  Future<void> _fetchComplaint() async {
+    final dbRef = FirebaseDatabase.instance.ref();
+    final snapshot = await dbRef
+        .child('complaints')
+        .child(widget.complaintId)
+        .get();
+    if (snapshot.exists) {
+      final data = Map<String, dynamic>.from(snapshot.value as Map);
+      DateTime? dt = DateTime.tryParse(data['dateTime'] ?? '');
+      if (dt != null) {
+        formattedDate = DateFormat('dd MMM yyyy').format(dt);
+        formattedTime = DateFormat('hh:mm a').format(dt);
+      }
+      setState(() {
+        complaintData = data;
+        _loading = false;
+      });
+    } else {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+
+    if (_loading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (complaintData == null) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: Text("Complaint not found.")),
+      );
+    }
+
+    final photos = (complaintData!['photos'] as List<dynamic>? ?? []);
+    final voiceNotePath = complaintData!['voiceNote'];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -148,13 +202,17 @@ class ReportDetailsPage extends StatelessWidget {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: mainBlue.withOpacity(0.08),
+                                color: ReportDetailsPage.mainBlue.withOpacity(
+                                  0.08,
+                                ),
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               padding: EdgeInsets.all(8.w),
                               child: Icon(
-                                getCategoryIcon(report.category),
-                                color: mainBlue,
+                                getCategoryIcon(
+                                  complaintData!['category'] ?? '',
+                                ),
+                                color: ReportDetailsPage.mainBlue,
                                 size: 28.sp,
                               ),
                             ),
@@ -164,7 +222,7 @@ class ReportDetailsPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "${report.category} - ${report.subcategory}",
+                                    "${complaintData!['category'] ?? ''} - ${complaintData!['subcategory'] ?? ''}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16.sp,
@@ -173,7 +231,7 @@ class ReportDetailsPage extends StatelessWidget {
                                   ),
                                   SizedBox(height: 2.h),
                                   Text(
-                                    report.dateTime,
+                                    "$formattedDate, $formattedTime",
                                     style: TextStyle(
                                       color: Colors.black54,
                                       fontSize: 13.sp,
@@ -189,13 +247,13 @@ class ReportDetailsPage extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.location_on,
-                              color: mainBlue,
+                              color: ReportDetailsPage.mainBlue,
                               size: 18.sp,
                             ),
                             SizedBox(width: 4.w),
                             Expanded(
                               child: Text(
-                                report.location,
+                                complaintData!['location'] ?? '',
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14.sp,
@@ -210,7 +268,7 @@ class ReportDetailsPage extends StatelessWidget {
                             Icon(Icons.tag, color: Colors.grey, size: 18.sp),
                             SizedBox(width: 4.w),
                             Text(
-                              "REF: ${report.complaintId}",
+                              "REF: ${complaintData!['complaintId'] ?? ''}",
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 13.sp,
@@ -239,7 +297,7 @@ class ReportDetailsPage extends StatelessWidget {
                   ),
 
                   // Photos Submitted
-                  if (report.photos.isNotEmpty)
+                  if (photos.isNotEmpty)
                     Container(
                       width: double.infinity,
                       margin: EdgeInsets.only(bottom: 14.h),
@@ -264,11 +322,11 @@ class ReportDetailsPage extends StatelessWidget {
                             height: 90.h,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
-                              itemCount: report.photos.length,
+                              itemCount: photos.length,
                               separatorBuilder: (_, __) =>
                                   SizedBox(width: 10.w),
                               itemBuilder: (context, i) {
-                                final photo = report.photos[i];
+                                final photoUrl = photos[i];
                                 return GestureDetector(
                                   onTap: () {
                                     showDialog(
@@ -278,13 +336,11 @@ class ReportDetailsPage extends StatelessWidget {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Image.file(File(photo.path)),
+                                            Image.network(photoUrl),
                                             Padding(
                                               padding: EdgeInsets.all(8.w),
                                               child: Text(
-                                                DateFormat(
-                                                  'dd MMM yyyy, hh:mm a',
-                                                ).format(photo.timestamp),
+                                                "$formattedDate, $formattedTime",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 15.sp,
@@ -313,8 +369,8 @@ class ReportDetailsPage extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(
                                           10.r,
                                         ),
-                                        child: Image.file(
-                                          File(photo.path),
+                                        child: Image.network(
+                                          photoUrl,
                                           width: 70.w,
                                           height: 70.w,
                                           fit: BoxFit.cover,
@@ -330,9 +386,7 @@ class ReportDetailsPage extends StatelessWidget {
                                             vertical: 2.h,
                                           ),
                                           child: Text(
-                                            DateFormat(
-                                              'dd MMM, hh:mm a',
-                                            ).format(photo.timestamp),
+                                            "$formattedDate, $formattedTime",
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 10.sp,
@@ -372,17 +426,17 @@ class ReportDetailsPage extends StatelessWidget {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          report.description,
+                          complaintData!['description'] ?? '',
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.black87,
                           ),
                         ),
-                        if (report.voiceNotePath != null) ...[
+                        if (voiceNotePath != null && voiceNotePath != "") ...[
                           SizedBox(height: 12.h),
                           Row(
                             children: [
-                              VoiceNotePlayer(path: report.voiceNotePath!),
+                              VoiceNotePlayer(path: voiceNotePath),
                               SizedBox(width: 10.w),
                               Text(
                                 "Voice Note",
@@ -423,7 +477,7 @@ class ReportDetailsPage extends StatelessWidget {
                           icon: Icons.radio_button_unchecked,
                           color: Colors.grey,
                           title: "Submitted",
-                          date: report.dateTime,
+                          date: "$formattedDate, $formattedTime",
                           desc: "Report submitted by citizen",
                         ),
                       ],
@@ -436,7 +490,7 @@ class ReportDetailsPage extends StatelessWidget {
           // Bottom Navigation Bar (same as before)
           Container(
             decoration: BoxDecoration(
-              color: navBg,
+              color: ReportDetailsPage.navBg,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.04),
@@ -446,10 +500,10 @@ class ReportDetailsPage extends StatelessWidget {
               ],
             ),
             child: BottomNavigationBar(
-              backgroundColor: navBg,
+              backgroundColor: ReportDetailsPage.navBg,
               currentIndex: 2,
               type: BottomNavigationBarType.fixed,
-              selectedItemColor: mainBlue,
+              selectedItemColor: ReportDetailsPage.mainBlue,
               unselectedItemColor: Colors.grey,
               iconSize: width * 0.065.w,
               selectedFontSize: width * 0.03.sp,
@@ -489,7 +543,9 @@ class ReportDetailsPage extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
-                      color: 2 == 0 ? mainBlue.withOpacity(0.12) : null,
+                      color: 2 == 0
+                          ? ReportDetailsPage.mainBlue.withOpacity(0.12)
+                          : null,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(Icons.home, color: Colors.grey, size: 24.sp),
@@ -503,7 +559,9 @@ class ReportDetailsPage extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
-                      color: 2 == 1 ? mainBlue.withOpacity(0.12) : null,
+                      color: 2 == 1
+                          ? ReportDetailsPage.mainBlue.withOpacity(0.12)
+                          : null,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(
@@ -521,10 +579,14 @@ class ReportDetailsPage extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
-                      color: mainBlue.withOpacity(0.12),
+                      color: ReportDetailsPage.mainBlue.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(Icons.list_alt, color: mainBlue, size: 24.sp),
+                    child: Icon(
+                      Icons.list_alt,
+                      color: ReportDetailsPage.mainBlue,
+                      size: 24.sp,
+                    ),
                   ),
                   label: "Complaints",
                 ),
@@ -535,7 +597,9 @@ class ReportDetailsPage extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
-                      color: 2 == 3 ? mainBlue.withOpacity(0.12) : null,
+                      color: 2 == 3
+                          ? ReportDetailsPage.mainBlue.withOpacity(0.12)
+                          : null,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(Icons.person, color: Colors.grey, size: 24.sp),

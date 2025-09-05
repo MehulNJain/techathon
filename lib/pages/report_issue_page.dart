@@ -14,7 +14,6 @@ import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
 import 'submitted_page.dart';
-import '../models/report_data.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';

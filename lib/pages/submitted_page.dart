@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import '../models/report_data.dart';
 import 'report_details_page.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
@@ -18,7 +17,7 @@ class SubmittedPage extends StatefulWidget {
 }
 
 class _SubmittedPageState extends State<SubmittedPage> {
-  ReportData? report;
+  Map<String, dynamic>? complaintData;
   bool _loading = true;
   String formattedDate = '';
   String formattedTime = '';
@@ -43,21 +42,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
         formattedTime = DateFormat('hh:mm a').format(dt);
       }
       setState(() {
-        report = ReportData(
-          category: data['category'] ?? '',
-          subcategory: data['subcategory'] ?? '',
-          description: data['description'] ?? '',
-          photos: (data['photos'] as List<dynamic>? ?? [])
-              .map(
-                (url) =>
-                    ReportPhoto(path: url, timestamp: dt ?? DateTime.now()),
-              )
-              .toList(),
-          location: data['location'] ?? '',
-          dateTime: data['dateTime'] ?? '',
-          complaintId: data['complaintId'] ?? '',
-          voiceNotePath: data['voiceNote'],
-        );
+        complaintData = data;
         _loading = false;
       });
     } else {
@@ -75,7 +60,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    if (report == null) {
+    if (complaintData == null) {
       return Scaffold(
         backgroundColor: Colors.white,
         body: Center(child: Text("Complaint not found.")),
@@ -168,10 +153,15 @@ class _SubmittedPageState extends State<SubmittedPage> {
                       ),
                     ),
                     SizedBox(height: 14.h),
-                    _summaryRow("Category", report!.category),
-                    _summaryRow("Issue Type", report!.subcategory),
-                    _summaryRow("Date Submitted", formattedDate),
-                    _summaryRow("Time Submitted", formattedTime),
+                    _summaryRow("Category", complaintData!['category'] ?? ''),
+                    _summaryRow(
+                      "Issue Type",
+                      complaintData!['subcategory'] ?? '',
+                    ),
+                    _summaryRow(
+                      "Date Submitted",
+                      "$formattedDate, $formattedTime",
+                    ),
                     Row(
                       children: [
                         Expanded(
@@ -216,7 +206,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                           ),
                         ),
                         Text(
-                          "#${report!.complaintId}",
+                          "#${complaintData!['complaintId'] ?? ''}",
                           style: TextStyle(
                             color: SubmittedPage.mainBlue,
                             fontWeight: FontWeight.bold,
@@ -252,7 +242,9 @@ class _SubmittedPageState extends State<SubmittedPage> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => ReportDetailsPage(report: report!),
+                        builder: (_) => ReportDetailsPage(
+                          complaintId: complaintData!['complaintId'],
+                        ),
                       ),
                     );
                   },
