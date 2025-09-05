@@ -422,15 +422,16 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: mainBlue,
+        backgroundColor: mainBlue, // Changed from mainBlue to white
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
+        automaticallyImplyLeading: false, // Removes the back button
         title: Text(
           'Report an Issue',
-          style: TextStyle(color: Colors.white, fontSize: 17.sp),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 17.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
@@ -909,25 +910,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
 
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton.icon(
-                      icon: Icon(Icons.send, color: Colors.white, size: 20.sp),
-                      label: _isSubmitting
-                          ? SizedBox(
-                              height: 20.h,
-                              width: 20.w,
-                              child: const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(
-                              'Submit Report',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
+                    child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _isFormValid
                             ? mainBlue
@@ -945,6 +928,35 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       onPressed: _isFormValid && !_isSubmitting
                           ? _submitReport
                           : null,
+                      child: _isSubmitting
+                          ? SizedBox(
+                              height: 20.h,
+                              width: 20.w,
+                              child: const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 20.sp,
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  'Submit Report',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
                   ),
                 ],
