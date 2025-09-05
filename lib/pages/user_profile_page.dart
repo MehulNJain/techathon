@@ -340,7 +340,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             title: Text(loc.notifications, style: TextStyle(fontSize: 15.sp)),
             trailing: Switch(
               value: notificationsEnabled,
-              activeColor: mainBlue,
+              activeThumbColor: mainBlue,
               onChanged: (val) => setState(() => notificationsEnabled = val),
             ),
           ),
