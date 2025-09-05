@@ -3,12 +3,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import 'report_issue_page.dart';
+import 'reports_page.dart';
 import 'home_page.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/user_provider.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String phoneNumber; // already verified from OTP
+  final String phoneNumber;
   final String initialName;
   final String initialEmail;
 
@@ -31,6 +33,10 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _nameTouched = false;
   bool _emailTouched = false;
   bool _isLoading = false;
+  int _selectedIndex = 3; // Profile tab
+
+  static const mainBlue = Color(0xFF1746D1);
+  static const navBg = Color(0xFFF0F4FF);
 
   bool get _isNameValid {
     final name = _nameController.text.trim();
@@ -39,14 +45,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   bool get _isEmailValid {
     final email = _emailController.text.trim();
-    if (email.isEmpty) return true; // Optional
+    if (email.isEmpty) return true;
     return RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email);
   }
 
   @override
   void initState() {
     super.initState();
-    // Use initial values passed from OTP page
     _nameController.text = widget.initialName;
     _emailController.text = widget.initialEmail;
   }
@@ -89,9 +94,34 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    final l10n = AppLocalizations.of(context)!;
+    if (index == 0) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(fullName: _nameController.text.trim()),
+        ),
+      );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ReportIssuePage()),
+      );
+    } else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MyReportsPage()),
+      );
+    }
+    // index == 3 is Profile, stay on this page
+  }
+
   @override
   Widget build(BuildContext context) {
-    const mainBlue = Color(0xFF1746D1);
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -321,6 +351,101 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
         },
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: navBg,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8.r,
+              offset: Offset(0, -2.h),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: navBg,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: mainBlue,
+          unselectedItemColor: Colors.grey,
+          iconSize: 24.sp,
+          selectedFontSize: 14.sp,
+          unselectedFontSize: 13.sp,
+          elevation: 0,
+          showUnselectedLabels: true,
+          items: [
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 0
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: mainBlue.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(Icons.home, color: mainBlue, size: 24.sp),
+                    )
+                  : Icon(Icons.home, size: 24.sp),
+              label: l10n.home,
+            ),
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 1
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: mainBlue.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.add_circle_outline,
+                        color: mainBlue,
+                        size: 24.sp,
+                      ),
+                    )
+                  : Icon(Icons.add_circle_outline, size: 24.sp),
+              label: l10n.report,
+            ),
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 2
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: mainBlue.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(Icons.list_alt, color: mainBlue, size: 24.sp),
+                    )
+                  : Icon(Icons.list_alt, size: 24.sp),
+              label: l10n.complaints,
+            ),
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 3
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: mainBlue.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(Icons.person, color: mainBlue, size: 24.sp),
+                    )
+                  : Icon(Icons.person, size: 24.sp),
+              label: l10n.profile,
+            ),
+          ],
+        ),
       ),
     );
   }

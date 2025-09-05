@@ -5,15 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import '../locale_provider.dart'; // For LocaleProvider
 import 'pages/otp_page.dart';
 import 'worker_pages/worker_login_page.dart';
 import 'l10n/app_localizations.dart';
-
-import 'locale_provider.dart'; // CORRECTED: Import from its own file
+import 'main.dart'; // For LocaleProvider
 
 class LoginPage extends StatefulWidget {
-  // ... rest of your LoginPage code is perfect and does not need changes.
   const LoginPage({super.key});
 
   @override
@@ -63,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
         await _auth.signInWithPhoneNumber(formattedPhone, verifier).then((
           confirmationResult,
         ) {
-          if (!mounted) return;
           setState(() => _isLoading = false);
           Navigator.push(
             context,
@@ -83,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
             await _auth.signInWithCredential(credential);
           },
           verificationFailed: (FirebaseAuthException e) {
-            if (!mounted) return;
             setState(() => _isLoading = false);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -92,7 +88,6 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
           codeSent: (String verificationId, int? resendToken) {
-            if (!mounted) return;
             setState(() => _isLoading = false);
             Navigator.push(
               context,
@@ -105,14 +100,11 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
           codeAutoRetrievalTimeout: (String verificationId) {
-            if (mounted) {
-              setState(() => _isLoading = false);
-            }
+            setState(() => _isLoading = false);
           },
         );
       }
     } catch (e) {
-      if (!mounted) return;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(
         context,
@@ -123,7 +115,6 @@ class _LoginPageState extends State<LoginPage> {
   void _showLanguageDialog() {
     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
     final l10n = AppLocalizations.of(context)!;
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -148,13 +139,6 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.of(context).pop();
                 },
               ),
-              ListTile(
-                title: const Text('ᱥᱟᱱᱛᱟᱲᱤ'),
-                onTap: () {
-                  localeProvider.setLocale(const Locale('sat'));
-                  Navigator.of(context).pop();
-                },
-              ),
             ],
           ),
         );
@@ -167,26 +151,9 @@ class _LoginPageState extends State<LoginPage> {
     const mainBlue = Color(0xFF1746D1);
     final l10n = AppLocalizations.of(context)!;
 
-    final currentLocale =
-        Provider.of<LocaleProvider>(context).locale?.languageCode ?? 'en';
-
-    // Adjust font sizes and button height for Hindi/Santali to avoid overflow
-    double titleFontSize = (currentLocale == 'sat' || currentLocale == 'hi')
-        ? 20.sp
-        : 24.sp;
-    double subtitleFontSize = (currentLocale == 'sat' || currentLocale == 'hi')
-        ? 13.sp
-        : 15.sp;
-    double buttonFontSize = (currentLocale == 'sat' || currentLocale == 'hi')
-        ? 15.sp
-        : 17.sp;
-    double buttonPadding = (currentLocale == 'sat' || currentLocale == 'hi')
-        ? 18.h
-        : 15.h;
-
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: true, // <-- Important for keyboard scroll
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Center(
@@ -202,7 +169,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          minHeight: constraints.maxHeight - 120.h,
+                          minHeight:
+                              constraints.maxHeight -
+                              120.h, // leave space for bottom
                         ),
                         child: IntrinsicHeight(
                           child: Stack(
@@ -214,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: IconButton(
                                     icon: Icon(
                                       Icons.language,
-                                      size: 40.sp,
+                                      size: 28.sp,
                                       color: mainBlue,
                                     ),
                                     onPressed: _showLanguageDialog,
@@ -239,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Text(
                                     l10n.app_title,
                                     style: TextStyle(
-                                      fontSize: titleFontSize,
+                                      fontSize: 24.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     textAlign: TextAlign.center,
@@ -249,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                                     l10n.login_subtitle,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: subtitleFontSize,
+                                      fontSize: 15.sp,
                                       color: Colors.black54,
                                     ),
                                   ),
@@ -335,7 +304,7 @@ class _LoginPageState extends State<LoginPage> {
                                             ? mainBlue
                                             : Colors.grey.shade300,
                                         padding: EdgeInsets.symmetric(
-                                          vertical: buttonPadding,
+                                          vertical: 16.h,
                                         ),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
@@ -361,12 +330,10 @@ class _LoginPageState extends State<LoginPage> {
                                           : Text(
                                               l10n.send_otp,
                                               style: TextStyle(
-                                                fontSize: buttonFontSize,
+                                                fontSize: 17.sp,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                               ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
                                             ),
                                     ),
                                   ),
@@ -412,6 +379,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                  // --- Government of Jharkhand text and divider at the bottom, always visible ---
                   Divider(height: 1, color: Colors.grey.shade200),
                   SizedBox(height: 16.h),
                   Text(
