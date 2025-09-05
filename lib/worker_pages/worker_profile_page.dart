@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../login_page.dart';
-import 'worker_home_page.dart';
 import '../l10n/app_localizations.dart';
 import '../locale_provider.dart';
 
@@ -13,245 +12,227 @@ class WorkerProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WorkerHomePage()),
-        );
-        return false;
-      },
-      child: Scaffold(
-        backgroundColor: Colors.grey[100],
-        appBar: AppBar(
-          title: Text(
-            l10n.profile,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black87,
-          elevation: 1,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, size: 24.sp),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const WorkerHomePage()),
-              );
-            },
+    return Scaffold(
+      backgroundColor: const Color(0xFFF6F6F6),
+      appBar: AppBar(
+        title: Text(
+          l10n.profile,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18.sp,
+            color: Colors.white,
           ),
         ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            children: [
-              // Profile Card
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 24.h,
-                    horizontal: 16.w,
-                  ),
-                  child: Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          CircleAvatar(
-                            radius: 50.r,
-                            backgroundColor: Colors.blueAccent,
-                            child: Icon(
-                              Icons.person,
-                              size: 60.sp,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.green,
-                              shape: BoxShape.circle,
-                            ),
-                            padding: EdgeInsets.all(4.w),
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 18.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        "Rajesh Kumar", // Dummy Data
-                        style: TextStyle(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        "${l10n.workerId}: MW-2024-0156", // Dummy Data
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      _infoTile(
-                        Icons.phone,
-                        l10n.phoneNumber,
-                        "+91 98765 43210", // Dummy Data
-                      ),
-                      SizedBox(height: 10.h),
-                      _infoTile(
-                        Icons.engineering,
-                        l10n.department,
-                        "Road Maintenance", // Dummy Data
-                      ),
-                      SizedBox(height: 10.h),
-                      _infoTile(
-                        Icons.location_on,
-                        l10n.assignedArea,
-                        "Zone 3 - Central District", // Dummy Data
-                      ),
-                    ],
-                  ),
-                ),
+        centerTitle: true,
+        backgroundColor: Colors.orange.shade700,
+        elevation: 1,
+        automaticallyImplyLeading: false,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          children: [
+            // Profile Card
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.r),
               ),
-              SizedBox(height: 20.h),
-
-              // Recognition & Progress
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.emoji_events,
-                            color: Colors.orange,
-                            size: 24.sp,
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        CircleAvatar(
+                          radius: 50.r,
+                          backgroundColor: Colors.orange.shade700,
+                          child: Icon(
+                            Icons.person,
+                            size: 60.sp,
+                            color: Colors.white,
                           ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            l10n.recognitionProgress,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16.h),
-                      Container(
-                        padding: EdgeInsets.all(16.w),
-                        decoration: BoxDecoration(
-                          color: Colors.green[100],
-                          borderRadius: BorderRadius.circular(12.r),
                         ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.tasksCompleted,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    "15", // Dummy Data
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Icon(
-                              Icons.list_alt,
-                              color: Colors.green,
-                              size: 32.sp,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        l10n.earnedBadges,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _badge(
-                            icon: Icons.star,
-                            color: Colors.orange,
-                            text: l10n.quickResponse,
-                          ),
-                          _badge(
-                            icon: Icons.verified,
+                        Container(
+                          decoration: const BoxDecoration(
                             color: Colors.green,
-                            text: l10n.qualityWork,
+                            shape: BoxShape.circle,
                           ),
-                          _badge(
-                            icon: Icons.access_time,
-                            color: Colors.blue,
-                            text: l10n.onTime,
+                          padding: EdgeInsets.all(4.w),
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 18.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      "Rajesh Kumar", // Dummy Data
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      "${l10n.workerId}: MW-2024-0156", // Dummy Data
+                      style: TextStyle(color: Colors.black54, fontSize: 14.sp),
+                    ),
+                    SizedBox(height: 16.h),
+                    _infoTile(
+                      Icons.phone,
+                      l10n.phoneNumber,
+                      "+91 98765 43210", // Dummy Data
+                    ),
+                    SizedBox(height: 10.h),
+                    _infoTile(
+                      Icons.engineering,
+                      l10n.department,
+                      "Road Maintenance", // Dummy Data
+                    ),
+                    SizedBox(height: 10.h),
+                    _infoTile(
+                      Icons.location_on,
+                      l10n.assignedArea,
+                      "Zone 3 - Central District", // Dummy Data
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20.h),
+
+            // Recognition & Progress
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.emoji_events,
+                          color: Colors.orange.shade700,
+                          size: 24.sp,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          l10n.recognitionProgress,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Container(
+                      padding: EdgeInsets.all(16.w),
+                      decoration: BoxDecoration(
+                        color: Colors.green[100],
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.tasksCompleted,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  "15", // Dummy Data
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.list_alt,
+                            color: Colors.green,
+                            size: 32.sp,
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      l10n.earnedBadges,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _badge(
+                          icon: Icons.star,
+                          color: Colors.orange.shade700,
+                          text: l10n.quickResponse,
+                        ),
+                        _badge(
+                          icon: Icons.verified,
+                          color: Colors.green,
+                          text: l10n.qualityWork,
+                        ),
+                        _badge(
+                          icon: Icons.access_time,
+                          color: Colors.blue,
+                          text: l10n.onTime,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 20.h),
+            ),
+            SizedBox(height: 20.h),
 
-              // Action Tiles
-              _actionTile(Icons.lock, l10n.changePassword, Colors.blue, () {}),
-              SizedBox(height: 12.h),
-              _actionTile(Icons.language, l10n.changeLanguage, Colors.teal, () {
-                _showLanguageDialog(context);
-              }),
-              SizedBox(height: 12.h),
-              _actionTile(Icons.logout, l10n.logout, Colors.red, () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                  (Route<dynamic> route) => false,
-                );
-              }),
-            ],
-          ),
+            // Action Tiles
+            _actionTile(Icons.lock, l10n.changePassword, Colors.blue, () {}),
+            SizedBox(height: 12.h),
+            _actionTile(Icons.language, l10n.changeLanguage, Colors.teal, () {
+              _showLanguageDialog(context);
+            }),
+            SizedBox(height: 12.h),
+            _actionTile(Icons.logout, l10n.logout, Colors.red, () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (Route<dynamic> route) => false,
+              );
+            }),
+          ],
         ),
       ),
     );
   }
 }
 
-// 🔹 Helper function for the language change dialog
+// Helper function for the language change dialog
 void _showLanguageDialog(BuildContext context) {
   final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
   final l10n = AppLocalizations.of(context)!;
@@ -278,7 +259,6 @@ void _showLanguageDialog(BuildContext context) {
                 Navigator.of(context).pop();
               },
             ),
-            // START: Added Santali Option
             ListTile(
               title: const Text('ᱥᱟᱱᱛᱟᱲᱤ'),
               onTap: () {
@@ -286,7 +266,6 @@ void _showLanguageDialog(BuildContext context) {
                 Navigator.of(context).pop();
               },
             ),
-            // END: Added Santali Option
           ],
         ),
       );
@@ -294,7 +273,7 @@ void _showLanguageDialog(BuildContext context) {
   );
 }
 
-// 🔹 Helper widget for info tiles
+// Helper widget for info tiles
 Widget _infoTile(IconData icon, String title, String subtitle) {
   return Container(
     padding: EdgeInsets.all(12.w),
@@ -304,7 +283,7 @@ Widget _infoTile(IconData icon, String title, String subtitle) {
     ),
     child: Row(
       children: [
-        Icon(icon, color: Colors.blue, size: 24.sp),
+        Icon(icon, color: Colors.orange.shade700, size: 24.sp),
         SizedBox(width: 12.w),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -325,7 +304,7 @@ Widget _infoTile(IconData icon, String title, String subtitle) {
   );
 }
 
-// 🔹 Helper widget for badges
+// Helper widget for badges
 Widget _badge({
   required IconData icon,
   required Color color,
@@ -348,7 +327,7 @@ Widget _badge({
   );
 }
 
-// 🔹 Helper widget for action tiles
+// Helper widget for action tiles
 Widget _actionTile(
   IconData icon,
   String text,

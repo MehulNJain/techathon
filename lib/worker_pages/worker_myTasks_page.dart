@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../l10n/app_localizations.dart';
+import 'worker_home_page.dart';
+import 'worker_profile_page.dart';
 
 class WorkerMyTasksPage extends StatefulWidget {
   const WorkerMyTasksPage({super.key});
@@ -69,15 +71,16 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color(0xFFF6F6F6),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.orange.shade700,
         centerTitle: true,
+        automaticallyImplyLeading: false,
         title: Text(
           l10n.myTasks,
           style: TextStyle(
-            color: Colors.orange.shade700,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 22.sp,
           ),
@@ -102,8 +105,9 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                       label: Text(tab, style: TextStyle(fontSize: 13.sp)),
                       selected: selected,
                       selectedColor: Colors.orange.shade700,
+                      backgroundColor: Colors.white,
                       labelStyle: TextStyle(
-                        color: selected ? Colors.white : Colors.black87,
+                        color: selected ? Colors.white : Colors.black,
                         fontWeight: selected
                             ? FontWeight.bold
                             : FontWeight.normal,
@@ -129,6 +133,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                 final task = getFilteredTasks()[index];
                 return Card(
                   elevation: 2,
+                  color: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14.r),
                   ),
@@ -151,7 +156,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                                 fontSize: 15.sp,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             // Priority
                             Container(
                               padding: EdgeInsets.symmetric(
@@ -259,13 +264,6 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                               ),
                             ),
                             SizedBox(width: 8.w),
-                            CircleAvatar(
-                              radius: 21.r,
-                              backgroundColor: Colors.grey.shade200,
-                              backgroundImage: AssetImage(
-                                'assets/images/avatar${index + 1}.png',
-                              ),
-                            ),
                           ],
                         ),
                         SizedBox(height: 20.h),
@@ -300,10 +298,48 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1, // My Tasks tab is selected
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const WorkerHomePage()),
+            );
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const WorkerProfilePage()),
+            );
+          }
+          // index == 1 is current page, do nothing
+        },
+        selectedItemColor: Colors.orange.shade700,
+        unselectedItemColor: Colors.grey.shade500,
+        showUnselectedLabels: true,
+        selectedFontSize: 13.sp,
+        unselectedFontSize: 12.sp,
+        iconSize: 22.sp,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, size: 22.sp),
+            label: l10n.home,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt, size: 22.sp),
+            label: l10n.myTasks,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, size: 22.sp),
+            label: l10n.profile,
+          ),
+        ],
+      ),
     );
   }
 }
 
+// Your TaskItem data model class.
 class TaskItem {
   final String id;
   final String title;

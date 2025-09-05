@@ -1,3 +1,4 @@
+import 'package:CiTY/pages/submitted_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../l10n/app_localizations.dart';
@@ -82,45 +83,55 @@ class _MyReportsPageState extends State<MyReportsPage> {
         ),
         centerTitle: true,
         elevation: 1,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: SubmittedPage.mainBlue,
+        foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
       backgroundColor: const Color(0xFFF6F6F6),
       body: SafeArea(
         child: Column(
           children: [
-            // Summary Row
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _SummaryItem(
-                    title: loc.total,
-                    value: "12",
-                    color: Colors.black,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              child: Card(
+                color: Colors.white,
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 16.h,
+                    horizontal: 8.w,
                   ),
-                  _SummaryItem(
-                    title: loc.pending,
-                    value: "3",
-                    color: Colors.orange,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _SummaryItem(
+                        title: loc.total,
+                        value: "12",
+                        color: Colors.black,
+                      ),
+                      _SummaryItem(
+                        title: loc.pending,
+                        value: "3",
+                        color: Colors.orange,
+                      ),
+                      _SummaryItem(
+                        title: loc.inProgress,
+                        value: "4",
+                        color: Colors.blue,
+                      ),
+                      _SummaryItem(
+                        title: loc.resolved,
+                        value: "5",
+                        color: Colors.green,
+                      ),
+                    ],
                   ),
-                  _SummaryItem(
-                    title: loc.inProgress,
-                    value: "4",
-                    color: Colors.blue,
-                  ),
-                  _SummaryItem(
-                    title: loc.resolved,
-                    value: "5",
-                    color: Colors.green,
-                  ),
-                ],
+                ),
               ),
             ),
-
-            // Tabs
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               child: Row(
@@ -143,8 +154,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 ],
               ),
             ),
-
-            // Reports List
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.only(bottom: 16.h),
@@ -172,6 +181,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         );
 
                   return Card(
+                    color: Colors.white,
                     margin: EdgeInsets.symmetric(
                       horizontal: 16.w,
                       vertical: 8.h,
@@ -230,14 +240,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 },
               ),
             ),
-
-            Padding(
-              padding: EdgeInsets.all(12.w),
-              child: Text(
-                loc.footerNote,
-                style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-              ),
-            ),
+            // Footer removed
           ],
         ),
       ),
@@ -415,7 +418,7 @@ class _TabButton extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: selected ? Colors.blue : Colors.grey[200],
+        color: selected ? SubmittedPage.mainBlue : Colors.grey[200],
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Text(

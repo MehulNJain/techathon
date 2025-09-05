@@ -96,6 +96,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
       },
       child: Card(
         elevation: 2,
+        color: Colors.white, // <-- Set card background to white
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14.r),
         ),
@@ -236,6 +237,8 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                     ),
                     selected: isSelected,
                     selectedColor: Colors.orange.shade700,
+                    backgroundColor:
+                        Colors.white, // <-- Unselected filter bg is white
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.white : Colors.black87,
                       fontWeight: isSelected
@@ -296,7 +299,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
     final pages = [_buildHomeContent(), Container(), _buildProfile()];
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: const Color(0xFFF6F6F6), // <-- Use home page bg color
       body: Stack(
         children: [
           Positioned(
@@ -345,7 +348,7 @@ class WorkerDashboardHeader extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return Container(
-      color: Colors.orange.shade700,
+      color: Color(0xFFF57C00),
       padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 16.h),
       child: Column(
         children: [
@@ -435,6 +438,7 @@ class _InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white, // <-- Changed box background to white
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
       elevation: 3,
       child: Padding(
