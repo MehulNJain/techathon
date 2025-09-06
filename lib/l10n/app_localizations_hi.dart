@@ -117,7 +117,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get profile => 'प्रोफ़ाइल';
 
   @override
-  String get good_morning => 'सुप्रभात';
+  String get good_morning => 'सुप्रभात,';
 
   @override
   String get quickReport => 'जल्दी रिपोर्ट';
@@ -153,10 +153,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get pending => 'बाकी';
 
   @override
-  String get inProgress => 'चल रहा';
+  String get inProgress => 'प्रगति में';
 
   @override
-  String get resolved => 'सुलझा हुआ';
+  String get resolved => 'समाधान';
 
   @override
   String get recentReports => 'ताज़ा रिपोर्ट';
@@ -171,7 +171,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get potholeRepair => 'गड्ढा भराई';
 
   @override
-  String get reportIssue => 'समस्या दर्ज करें';
+  String get reportIssue => 'एक और समस्या दर्ज करें';
 
   @override
   String get selectCategory => 'श्रेणी चुनें';
@@ -316,7 +316,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get myTasks => 'मेरे काम';
 
   @override
-  String get completed => 'पूरा';
+  String get completed => 'पूर्ण';
 
   @override
   String get filterAll => 'सब';
@@ -352,7 +352,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get priorityLow => 'कम';
 
   @override
-  String get viewDetails => 'विवरण देखें';
+  String get viewDetails => 'शिकायत को ट्रैक करें';
 
   @override
   String get workerId => 'वर्कर आईडी';
@@ -392,4 +392,107 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get selectLanguage => 'भाषा चुनें';
+
+  @override
+  String get pauseVoiceNote => 'वॉइस नोट रोकें';
+
+  @override
+  String get playVoiceNote => 'वॉइस नोट चलाएं';
+
+  @override
+  String get complaintNotFound => 'शिकायत नहीं मिली';
+
+  @override
+  String refId(String id, Object complaintId) {
+    return 'संदर्भ आईडी: #$complaintId';
+  }
+
+  @override
+  String get close => 'बंद करें';
+
+  @override
+  String get statusTimeline => 'स्थिति टाइमलाइन';
+
+  @override
+  String get submitted => 'शिकायत दर्ज की गई';
+
+  @override
+  String get reportSubmittedByCitizen =>
+      'आपकी शिकायत सफलतापूर्वक दर्ज कर ली गई है!';
+
+  @override
+  String get assigned => 'नियुक्त';
+
+  @override
+  String get timestampNotAvailable => 'समय उपलब्ध नहीं';
+
+  @override
+  String get assignedToMunicipalWorker =>
+      'आपकी शिकायत एक नगर कर्मचारी को सौंप दी गई है';
+
+  @override
+  String get updateTimestampPending => 'अपडेट का समय लंबित है';
+
+  @override
+  String get workHasStarted => 'आपकी शिकायत पर कार्य शुरू कर दिया गया है';
+
+  @override
+  String get issueResolved =>
+      'आपकी समस्या का सफलतापूर्वक समाधान कर दिया गया है';
+
+  @override
+  String get reportDetails => 'शिकायत विवरण';
+
+  @override
+  String get photosSubmitted => 'जमा की गई तस्वीरें';
+
+  @override
+  String get issueDescription => 'समस्या का विवरण';
+
+  @override
+  String get good_afternoon => 'नमस्कार,';
+
+  @override
+  String get good_evening => 'शुभ संध्या,';
+
+  @override
+  String get permissionRequired => 'अनुमति आवश्यक';
+
+  @override
+  String get locationPermissionPermanentlyDenied =>
+      'स्थान की अनुमति स्थायी रूप से अस्वीकार कर दी गई है। कृपया इसे ऐप सेटिंग्स से सक्षम करें।';
+
+  @override
+  String get openSettings => 'सेटिंग्स खोलें';
+
+  @override
+  String get cancel => 'रद्द करें';
+
+  @override
+  String get locationPermissionDenied => 'स्थान की अनुमति अस्वीकृत';
+
+  @override
+  String get unableToFetchLocation => 'स्थान प्राप्त करने में असमर्थ';
+
+  @override
+  String gpsCoordinates(String gps) {
+    return 'जीपीएस निर्देशांक: $gps';
+  }
+
+  @override
+  String submitFailed(String error) {
+    return 'सबमिट करने में विफल: $error';
+  }
+
+  @override
+  String get pendingReview => 'समीक्षा के लिए लंबित';
+
+  @override
+  String get currentStage => 'वर्तमान चरण';
+
+  @override
+  String get waitingForAssignment => 'कर्मचारी नियुक्ति की प्रतीक्षा में';
+
+  @override
+  String get notYet => 'अभी नहीं';
 }

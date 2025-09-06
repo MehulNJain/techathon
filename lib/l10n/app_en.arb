@@ -85,7 +85,7 @@
   "deleteVoiceNote": "Delete voice note",
   "submitReport": "Submit Report",
 
-  "myReports": "My Reports",
+  "myReports": "My Complaints",
   "all": "All",
   "footerNote": "Government of Jharkhand Initiative – Secure & Verified",
   "settings": "Settings",
@@ -143,5 +143,110 @@
   "changeLanguage": "Change Language",
   "selectLanguage": "Select Language",
   "english": "English",
-  "hindi": "Hindi"
+  "hindi": "Hindi",
+
+  "pauseVoiceNote": "Pause Voice Note",
+  "playVoiceNote": "Play Voice Note",
+  "complaintNotFound": "Complaint not found.",
+  "refId": "REF: {id}",
+  "@refId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "close": "Close",
+  "statusTimeline": "Status Timeline",
+  "submitted": "Submitted",
+  "reportSubmittedByCitizen": "Report submitted by citizen.",
+  "assigned": "Assigned",
+  "timestampNotAvailable": "Timestamp not available",
+  "assignedToMunicipalWorker": "Assigned to a municipal worker.",
+  "updateTimestampPending": "Update timestamp pending",
+  "workHasStarted": "Work has started on your complaint.",
+  "issueResolved": "The issue has been resolved.",
+
+  "reportDetails": "Report Details",
+  "photosSubmitted": "Photos Submitted",
+  "issueDescription": "Issue Description",
+  "good_morning": "Good Morning,",
+  "good_afternoon": "Good Afternoon,",
+  "good_evening": "Good Evening,",
+  "reportDetails": "Report Details",
+  "photosSubmitted": "Photos Submitted",
+  "issueDescription": "Issue Description",
+  "statusTimeline": "Status Timeline",
+  "pauseVoiceNote": "Pause Voice Note",
+  "playVoiceNote": "Play Voice Note",
+  "complaintNotFound": "Complaint not found.",
+  "refId": "REF: {id}",
+  "@refId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "close": "Close",
+  "submitted": "Submitted",
+  "reportSubmittedByCitizen": "Report submitted by citizen.",
+  "assigned": "Assigned",
+  "timestampNotAvailable": "Timestamp not available",
+  "assignedToMunicipalWorker": "Assigned to a municipal worker.",
+  "inProgress": "In Progress",
+  "updateTimestampPending": "Update timestamp pending",
+  "workHasStarted": "Work has started on your complaint.",
+  "resolved": "Resolved",
+  "issueResolved": "The issue has been resolved.",
+
+  "issueResolved": "The issue has been resolved.",
+  "permissionRequired": "Permission Required",
+  "locationPermissionPermanentlyDenied": "Location permission is permanently denied. Please enable it from app settings.",
+  "openSettings": "Open Settings",
+  "cancel": "Cancel",
+  "locationPermissionDenied": "Location permission denied",
+  "unableToFetchLocation": "Unable to fetch location",
+  "gpsCoordinates": "GPS coordinates: {gps}",
+  "@gpsCoordinates": {
+    "placeholders": {
+      "gps": {
+        "type": "String"
+      }
+    }
+  },
+  "submitFailed": "Failed to submit: {error}",
+  "@submitFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "pendingReview": "Pending Review",
+  "completed": "Completed",
+  "currentStage": "Current Stage",
+  "waitingForAssignment": "Waiting for worker assignment",
+  "assigned": "Assigned",
+  "timestampNotAvailable": "Timestamp not available",
+  "notYet": "Not Yet",
+  "assignedToMunicipalWorker": "Your complaint has been assigned to a municipal worker",
+  "inProgress": "In Progress",
+  "workHasStarted": "Work has been started on your complaint",
+  "resolved": "Resolved",
+  "issueResolved": "Your issue has been successfully resolved",
+  "submitted": "Complaint Submitted",
+  "reportSubmittedByCitizen": "Your complaint has been submitted successfully!",
+  "complaintNotFound": "Complaint not found",
+  "reportDetails": "Report Details",
+  "refId": "Ref ID: #{complaintId}",
+  "photosSubmitted": "Photos Submitted",
+  "close": "Close",
+  "issueDescription": "Issue Description",
+  "statusTimeline": "Status Timeline",
+  "pauseVoiceNote": "Pause Voice Note",
+  "playVoiceNote": "Play Voice Note",
+  "viewDetails": "Track Complaint",
+  "reportIssue": "Report an Issue"
 }

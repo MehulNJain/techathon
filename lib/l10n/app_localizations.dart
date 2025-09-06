@@ -319,7 +319,7 @@ abstract class AppLocalizations {
   /// No description provided for @good_morning.
   ///
   /// In en, this message translates to:
-  /// **'Good Morning'**
+  /// **'Good Morning,'**
   String get good_morning;
 
   /// No description provided for @quickReport.
@@ -577,7 +577,7 @@ abstract class AppLocalizations {
   /// No description provided for @myReports.
   ///
   /// In en, this message translates to:
-  /// **'My Reports'**
+  /// **'My Complaints'**
   String get myReports;
 
   /// No description provided for @all.
@@ -787,7 +787,7 @@ abstract class AppLocalizations {
   /// No description provided for @viewDetails.
   ///
   /// In en, this message translates to:
-  /// **'View Details'**
+  /// **'Track Complaint'**
   String get viewDetails;
 
   /// No description provided for @workerId.
@@ -867,6 +867,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Language'**
   String get selectLanguage;
+
+  /// No description provided for @pauseVoiceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Voice Note'**
+  String get pauseVoiceNote;
+
+  /// No description provided for @playVoiceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Play Voice Note'**
+  String get playVoiceNote;
+
+  /// No description provided for @complaintNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint not found'**
+  String get complaintNotFound;
+
+  /// No description provided for @refId.
+  ///
+  /// In en, this message translates to:
+  /// **'Ref ID: #{complaintId}'**
+  String refId(String id, Object complaintId);
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @statusTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Status Timeline'**
+  String get statusTimeline;
+
+  /// No description provided for @submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint Submitted'**
+  String get submitted;
+
+  /// No description provided for @reportSubmittedByCitizen.
+  ///
+  /// In en, this message translates to:
+  /// **'Your complaint has been submitted successfully!'**
+  String get reportSubmittedByCitizen;
+
+  /// No description provided for @assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned'**
+  String get assigned;
+
+  /// No description provided for @timestampNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Timestamp not available'**
+  String get timestampNotAvailable;
+
+  /// No description provided for @assignedToMunicipalWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Your complaint has been assigned to a municipal worker'**
+  String get assignedToMunicipalWorker;
+
+  /// No description provided for @updateTimestampPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Update timestamp pending'**
+  String get updateTimestampPending;
+
+  /// No description provided for @workHasStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Work has been started on your complaint'**
+  String get workHasStarted;
+
+  /// No description provided for @issueResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your issue has been successfully resolved'**
+  String get issueResolved;
+
+  /// No description provided for @reportDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Details'**
+  String get reportDetails;
+
+  /// No description provided for @photosSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos Submitted'**
+  String get photosSubmitted;
+
+  /// No description provided for @issueDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue Description'**
+  String get issueDescription;
+
+  /// No description provided for @good_afternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Afternoon,'**
+  String get good_afternoon;
+
+  /// No description provided for @good_evening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Evening,'**
+  String get good_evening;
+
+  /// No description provided for @permissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Required'**
+  String get permissionRequired;
+
+  /// No description provided for @locationPermissionPermanentlyDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission is permanently denied. Please enable it from app settings.'**
+  String get locationPermissionPermanentlyDenied;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @locationPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied'**
+  String get locationPermissionDenied;
+
+  /// No description provided for @unableToFetchLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to fetch location'**
+  String get unableToFetchLocation;
+
+  /// No description provided for @gpsCoordinates.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS coordinates: {gps}'**
+  String gpsCoordinates(String gps);
+
+  /// No description provided for @submitFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit: {error}'**
+  String submitFailed(String error);
+
+  /// No description provided for @pendingReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Review'**
+  String get pendingReview;
+
+  /// No description provided for @currentStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Stage'**
+  String get currentStage;
+
+  /// No description provided for @waitingForAssignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for worker assignment'**
+  String get waitingForAssignment;
+
+  /// No description provided for @notYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Yet'**
+  String get notYet;
 }
 
 class _AppLocalizationsDelegate

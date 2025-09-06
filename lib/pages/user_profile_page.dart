@@ -1,9 +1,16 @@
+import 'package:CiTY/models/report_model.dart';
+import 'package:CiTY/models/user_profile_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../locale_provider.dart';
 import '../login_page.dart';
+import 'package:CiTY/pages/profile_page.dart';
+import 'package:CiTY/providers/user_provider.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
 import 'reports_page.dart';
@@ -17,6 +24,69 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> {
   bool notificationsEnabled = true;
+  bool _isLoading = true;
+
+  late Box<UserProfile> _userProfileBox;
+  late Box<Report> _reportsBox;
+
+  @override
+  void initState() {
+    super.initState();
+    _userProfileBox = Hive.box<UserProfile>('userProfileBox');
+    _reportsBox = Hive.box<Report>('reportsBox');
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    // If cache exists, load immediately. Otherwise, show loading.
+    if (_userProfileBox.isNotEmpty) {
+      setState(() => _isLoading = false);
+    }
+    // Always fetch fresh data from network in the background.
+    await _fetchUserDataFromFirebase();
+  }
+
+  Future<void> _fetchUserDataFromFirebase() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null || user.phoneNumber == null) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+
+    final phone = user.phoneNumber!;
+    final userRef = FirebaseDatabase.instance.ref('users/$phone');
+
+    try {
+      final userSnapshot = await userRef.get();
+
+      if (userSnapshot.exists && userSnapshot.value != null) {
+        final userData = Map<String, dynamic>.from(userSnapshot.value as Map);
+        final civicData = userData['civicProfile'] != null
+            ? Map<String, dynamic>.from(userData['civicProfile'])
+            : {'badge': 'Civic Newcomer', 'points': 0};
+
+        final userProfile = UserProfile()
+          ..fullName = userData['fullName'] ?? 'No Name'
+          ..email = userData['email'] ?? 'No Email'
+          ..phoneNumber = userData['phoneNumber'] ?? phone
+          ..badge = civicData['badge'] ?? 'Civic Newcomer'
+          ..points = civicData['points'] ?? 0;
+
+        // Store the single user profile object using a known key, e.g., 'currentUser'
+        await _userProfileBox.put('currentUser', userProfile);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to refresh profile: $e")),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,26 +107,72 @@ class _UserProfilePageState extends State<UserProfilePage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: const Color(0xFFF6F6F6),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _profileCard(loc, mainBlue),
-            SizedBox(height: 18.h),
-            _badgeCard(loc),
-            SizedBox(height: 18.h),
-            _reportsSummary(loc, mainBlue),
-            SizedBox(height: 18.h),
-            _settingsCard(loc, mainBlue, localeProvider),
-            SizedBox(height: 18.h),
-            _supportCard(loc),
-            SizedBox(height: 18.h),
-            _logoutButton(loc),
-            SizedBox(height: 20.h),
-          ],
-        ),
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ValueListenableBuilder<Box<UserProfile>>(
+              valueListenable: _userProfileBox.listenable(),
+              builder: (context, profileBox, _) {
+                final userProfile = profileBox.get('currentUser');
+
+                if (userProfile == null) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Could not load user profile."),
+                        SizedBox(height: 10.h),
+                        ElevatedButton(
+                          onPressed: _fetchUserDataFromFirebase,
+                          child: Text("Try Again"),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return ValueListenableBuilder<Box<Report>>(
+                  valueListenable: _reportsBox.listenable(),
+                  builder: (context, reportsBox, _) {
+                    final reports = reportsBox.values.toList();
+                    final totalReports = reports.length;
+                    final resolvedReports = reports
+                        .where((r) => r.status == 'Resolved')
+                        .length;
+                    final pendingReports = totalReports - resolvedReports;
+
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 12.h,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _profileCard(loc, mainBlue, userProfile),
+                          SizedBox(height: 18.h),
+                          _badgeCard(loc, userProfile),
+                          SizedBox(height: 18.h),
+                          _reportsSummary(
+                            loc,
+                            mainBlue,
+                            totalReports,
+                            resolvedReports,
+                            pendingReports,
+                          ),
+                          SizedBox(height: 18.h),
+                          _settingsCard(loc, mainBlue, localeProvider),
+                          SizedBox(height: 18.h),
+                          _supportCard(loc),
+                          SizedBox(height: 18.h),
+                          _logoutButton(loc),
+                          SizedBox(height: 20.h),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFF0F4FF),
@@ -188,7 +304,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   // --- Helper Widgets ---
 
-  Widget _profileCard(AppLocalizations loc, Color mainBlue) {
+  Widget _profileCard(
+    AppLocalizations loc,
+    Color mainBlue,
+    UserProfile profile,
+  ) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -199,8 +319,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
         children: [
           CircleAvatar(
             radius: 32.r,
-            backgroundImage: const NetworkImage(
-              "https://randomuser.me/api/portraits/women/44.jpg",
+            backgroundColor: mainBlue.withOpacity(0.1),
+            child: Text(
+              profile.fullName.isNotEmpty
+                  ? profile.fullName[0].toUpperCase()
+                  : 'U',
+              style: TextStyle(
+                fontSize: 28.sp,
+                fontWeight: FontWeight.bold,
+                color: mainBlue,
+              ),
             ),
           ),
           SizedBox(width: 16.w),
@@ -208,25 +336,45 @@ class _UserProfilePageState extends State<UserProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      "Priya Sharma",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.sp,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(
+                          phoneNumber: profile.phoneNumber,
+                          initialName: profile.fullName,
+                          initialEmail: profile.email,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 4.w),
-                    Icon(Icons.edit, color: mainBlue, size: 18.sp),
-                  ],
+                    ).then((_) {
+                      // Refresh data when returning from the edit page
+                      _fetchUserDataFromFirebase();
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        profile.fullName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.sp,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      Icon(Icons.edit, color: mainBlue, size: 18.sp),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 4.h),
                 Row(
                   children: [
                     Icon(Icons.phone, size: 16.sp, color: Colors.grey),
                     SizedBox(width: 4.w),
-                    Text("+91 98765 43210", style: TextStyle(fontSize: 14.sp)),
+                    Text(
+                      profile.phoneNumber,
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
                     SizedBox(width: 4.w),
                     Icon(Icons.verified, color: Colors.green, size: 16.sp),
                   ],
@@ -236,10 +384,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   children: [
                     Icon(Icons.email, size: 16.sp, color: Colors.grey),
                     SizedBox(width: 4.w),
-                    Text(
-                      "priya.sharma@email.com",
-                      style: TextStyle(fontSize: 14.sp),
-                    ),
+                    Text(profile.email, style: TextStyle(fontSize: 14.sp)),
                   ],
                 ),
               ],
@@ -250,7 +395,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  Widget _badgeCard(AppLocalizations loc) {
+  Widget _badgeCard(AppLocalizations loc, UserProfile profile) {
+    int points = profile.points;
+    int nextLevelPoints = 15;
+    String nextLevelName = "Neighborhood Guardian 🦸‍♂️";
+    if (points >= 15) {
+      nextLevelPoints = 30;
+      nextLevelName = "City Champion 🏆";
+    }
+    double progress = points / nextLevelPoints;
+    int reportsToNextLevel = (nextLevelPoints - points).clamp(0, 100);
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -269,7 +424,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               Icon(Icons.emoji_events, color: Colors.white, size: 28.sp),
               SizedBox(width: 8.w),
               Text(
-                loc.civicHero,
+                profile.badge, // Dynamic badge name
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -281,7 +436,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "12",
+                    profile.points.toString(), // Dynamic points
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -305,12 +460,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
           Row(
             children: [
               Text(
-                "Progress to Neighborhood Guardian 🦸‍♂️",
+                "Progress to $nextLevelName",
                 style: TextStyle(color: Colors.white, fontSize: 13.sp),
               ),
               const Spacer(),
               Text(
-                "12/15",
+                "$points/$nextLevelPoints",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -321,14 +476,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
           SizedBox(height: 6.h),
           LinearProgressIndicator(
-            value: 12 / 15,
+            value: progress,
             backgroundColor: Colors.white24,
             color: Colors.white,
             minHeight: 7.h,
           ),
           SizedBox(height: 8.h),
           Text(
-            "3 more reports to reach next level!",
+            reportsToNextLevel == 0
+                ? "You've reached the highest level!"
+                : "$reportsToNextLevel more reports to reach next level!",
             style: TextStyle(color: Colors.white, fontSize: 13.sp),
           ),
         ],
@@ -336,7 +493,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  Widget _reportsSummary(AppLocalizations loc, Color mainBlue) {
+  Widget _reportsSummary(
+    AppLocalizations loc,
+    Color mainBlue,
+    int total,
+    int resolved,
+    int pending,
+  ) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -358,21 +521,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
             children: [
               _summaryIconBox(
                 Icons.assignment,
-                "12",
+                total.toString(),
                 loc.total,
                 Colors.blue.shade100,
                 mainBlue,
               ),
               _summaryIconBox(
                 Icons.check_circle,
-                "8",
+                resolved.toString(),
                 loc.resolved,
                 Colors.green.shade100,
                 Colors.green,
               ),
               _summaryIconBox(
                 Icons.access_time,
-                "4",
+                pending.toString(),
                 loc.pending,
                 Colors.yellow.shade100,
                 Colors.orange,
@@ -565,12 +728,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
           elevation: 2,
           shadowColor: Colors.red.withOpacity(0.4),
         ),
-        onPressed: () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const LoginPage()),
-            (route) => false,
-          );
+        onPressed: () async {
+          await FirebaseAuth.instance.signOut();
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginPage()),
+              (route) => false,
+            );
+          }
         },
       ),
     );

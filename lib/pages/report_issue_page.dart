@@ -11,6 +11,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
+import '../l10n/app_localizations.dart';
 import 'home_page.dart';
 import 'reports_page.dart';
 import 'user_profile_page.dart';
@@ -120,6 +121,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
   }
 
   Future<void> _requestAndFetchLocation() async {
+    final loc = AppLocalizations.of(context)!;
     var status = await Permission.locationWhenInUse.status;
     if (status.isDenied || status.isPermanentlyDenied) {
       status = await Permission.locationWhenInUse.request();
@@ -128,27 +130,25 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text("Permission Required"),
-          content: const Text(
-            "Location permission is permanently denied. Please enable it from app settings.",
-          ),
+          title: Text(loc.permissionRequired),
+          content: Text(loc.locationPermissionPermanentlyDenied),
           actions: [
             TextButton(
               onPressed: () {
                 openAppSettings();
                 Navigator.of(ctx).pop();
               },
-              child: const Text("Open Settings"),
+              child: Text(loc.openSettings),
             ),
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text("Cancel"),
+              child: Text(loc.cancel),
             ),
           ],
         ),
       );
       setState(() {
-        location = "Location permission denied";
+        location = loc.locationPermissionDenied;
         gps = "";
         address = null;
       });
@@ -156,7 +156,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
     }
     if (!status.isGranted) {
       setState(() {
-        location = "Location permission denied";
+        location = loc.locationPermissionDenied;
         gps = "";
         address = null;
       });
@@ -166,6 +166,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
   }
 
   Future<void> _fetchLocation() async {
+    final loc = AppLocalizations.of(context)!;
     try {
       Position pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
@@ -197,12 +198,12 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
         });
       } else {
         setState(() {
-          address = "Address not found";
+          address = loc.addressNotFound;
         });
       }
     } catch (e) {
       setState(() {
-        location = "Unable to fetch location";
+        location = loc.unableToFetchLocation;
         gps = "";
         address = null;
       });
@@ -292,6 +293,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
   }
 
   void _showImagePreview(_PhotoWithTimestamp photo) {
+    final loc = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (_) => Dialog(
@@ -310,7 +312,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                "Close",
+                loc.close,
                 style: TextStyle(color: Colors.white, fontSize: 14.sp),
               ),
             ),
@@ -331,7 +333,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       photos.isNotEmpty &&
       address != null &&
       address!.isNotEmpty &&
-      address != "Address not found";
+      address != AppLocalizations.of(context)!.addressNotFound;
 
   // Upload images to Firebase Storage with timestamp in filename
   Future<List<String>> _uploadPhotosToStorage(String complaintId) async {
@@ -387,6 +389,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
   }
 
   Future<void> _submitReport() async {
+    final loc = AppLocalizations.of(context)!;
     setState(() => _isSubmitting = true);
     try {
       final dbRef = FirebaseDatabase.instance.ref();
@@ -416,6 +419,9 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
         "location": address,
         "gps": gps,
         "dateTime": DateTime.now().toIso8601String(),
+        "status": "Pending", // ✅ Initial status for a new complaint
+        "assignedTo": null, // ✅ Field to store worker ID later
+        "assignedTimestamp": null, // ✅ Field to store assignment time later
         "category_date": "$catShort-$dateStr", // For unique ID generation
       };
 
@@ -441,12 +447,13 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       setState(() => _isSubmitting = false);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Failed to submit: $e")));
+      ).showSnackBar(SnackBar(content: Text(loc.submitFailed(e.toString()))));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     List<String> subcategories = selectedCategory != null
         ? [...categoryMap[selectedCategory!]!, 'Other']
         : [];
@@ -459,7 +466,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
         elevation: 0,
         automaticallyImplyLeading: false, // Removes the back button
         title: Text(
-          'Report an Issue',
+          loc.reportIssue,
           style: TextStyle(
             color: Colors.white,
             fontSize: 17.sp,
@@ -478,7 +485,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Select Category',
+                    loc.selectCategory,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.sp,
@@ -491,7 +498,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     child: DropdownButtonFormField<String>(
                       initialValue: selectedCategory,
                       hint: Text(
-                        "Select category",
+                        loc.selectCategoryHint,
                         style: TextStyle(fontSize: 14.sp),
                       ),
                       items: categoryMap.keys
@@ -536,14 +543,14 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     Padding(
                       padding: EdgeInsets.only(top: 4.h, left: 4.w),
                       child: Text(
-                        "Please select a category",
+                        loc.categoryRequired,
                         style: TextStyle(color: Colors.red, fontSize: 12.sp),
                       ),
                     ),
                   SizedBox(height: 20.h),
 
                   Text(
-                    'Subcategory',
+                    loc.subcategory,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.sp,
@@ -556,7 +563,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     child: DropdownButtonFormField<String>(
                       initialValue: selectedSubcategory,
                       hint: Text(
-                        'Select specific issue',
+                        loc.subcategoryHint,
                         style: TextStyle(fontSize: 14.sp),
                       ),
                       items: subcategories
@@ -589,7 +596,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     Padding(
                       padding: EdgeInsets.only(top: 4.h, left: 4.w),
                       child: Text(
-                        "Subcategory is required",
+                        loc.subcategoryRequired,
                         style: TextStyle(color: Colors.red, fontSize: 12.sp),
                       ),
                     ),
@@ -599,7 +606,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       child: TextField(
                         controller: customSubcategoryController,
                         decoration: InputDecoration(
-                          labelText: "Please specify",
+                          labelText: loc.pleaseSpecify,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.r),
                           ),
@@ -613,7 +620,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     Padding(
                       padding: EdgeInsets.only(top: 4.h, left: 4.w),
                       child: Text(
-                        "Please specify the issue",
+                        loc.pleaseSpecifyIssue,
                         style: TextStyle(color: Colors.red, fontSize: 12.sp),
                       ),
                     ),
@@ -622,7 +629,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                   Row(
                     children: [
                       Text(
-                        'Capture Photos',
+                        loc.capturePhotos,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15.sp,
@@ -674,6 +681,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                                         color: Colors.white,
                                         fontSize: 10.sp,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
@@ -723,13 +731,13 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                   ),
                   SizedBox(height: 6.h),
                   Text(
-                    'At least 1 photo required. Up to 3 photos allowed.',
+                    loc.photoNote,
                     style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                   ),
                   SizedBox(height: 20.h),
 
                   Text(
-                    'Location',
+                    loc.location,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.sp,
@@ -754,11 +762,13 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                               size: 20.sp,
                             ),
                             SizedBox(width: 6.w),
-                            Text(
-                              'Auto-detected Location',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.sp,
+                            Flexible(
+                              child: Text(
+                                loc.autoDetectedLocation,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.sp,
+                                ),
                               ),
                             ),
                           ],
@@ -778,27 +788,33 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                             address ??
                                 ((location == null ||
                                         location!.contains("Lat:"))
-                                    ? "Fetching address..."
+                                    ? loc.fetchingAddress
                                     : location!),
                             style: TextStyle(fontSize: 15.sp),
                           ),
                         ),
                         SizedBox(height: 6.h),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.gps_fixed,
-                              size: 16.sp,
-                              color: Colors.grey,
+                            Padding(
+                              padding: EdgeInsets.only(top: 2.h),
+                              child: Icon(
+                                Icons.gps_fixed,
+                                size: 16.sp,
+                                color: Colors.grey,
+                              ),
                             ),
                             SizedBox(width: 6.w),
-                            Text(
-                              gps != null && gps!.isNotEmpty
-                                  ? "GPS coordinates: $gps"
-                                  : "Fetching GPS...",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.black87,
+                            Expanded(
+                              child: Text(
+                                gps != null && gps!.isNotEmpty
+                                    ? loc.gpsCoordinates(gps!)
+                                    : loc.fetchingGps,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.black87,
+                                ),
                               ),
                             ),
                           ],
@@ -809,7 +825,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                           child: TextButton.icon(
                             icon: Icon(Icons.refresh, size: 16.sp),
                             label: Text(
-                              "Refresh",
+                              loc.refresh,
                               style: TextStyle(fontSize: 13.sp),
                             ),
                             onPressed: _requestAndFetchLocation,
@@ -821,7 +837,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                   SizedBox(height: 20.h),
 
                   Text(
-                    'Additional Details',
+                    loc.additionalDetails,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.sp,
@@ -832,7 +848,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     controller: detailsController,
                     maxLines: 4,
                     decoration: InputDecoration(
-                      hintText: 'Enter details...',
+                      hintText: loc.enterDetails,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
@@ -850,12 +866,14 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                         child: _isRecording
                             ? Row(
                                 children: [
-                                  Text(
-                                    'Recording...',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14.sp,
+                                  Flexible(
+                                    child: Text(
+                                      loc.recording,
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.sp,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: 8.w),
@@ -872,12 +890,14 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                             : _isPlaying
                             ? Row(
                                 children: [
-                                  Text(
-                                    'Playing...',
-                                    style: TextStyle(
-                                      color: mainBlue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14.sp,
+                                  Flexible(
+                                    child: Text(
+                                      loc.playing,
+                                      style: TextStyle(
+                                        color: mainBlue,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.sp,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: 8.w),
@@ -893,8 +913,8 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                               )
                             : Text(
                                 _audioPath == null
-                                    ? 'Record voice note (optional)'
-                                    : 'Voice note recorded',
+                                    ? loc.recordVoiceNote
+                                    : loc.voiceNoteRecorded,
                                 style: TextStyle(
                                   color: Colors.grey.shade700,
                                   fontSize: 13.sp,
@@ -933,7 +953,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                                 size: 22.sp,
                               ),
                               onPressed: _deleteVoiceNote,
-                              tooltip: "Delete voice note",
+                              tooltip: loc.deleteVoiceNote,
                             ),
                           ],
                         ),
@@ -981,7 +1001,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                                 ),
                                 SizedBox(width: 8.w),
                                 Text(
-                                  'Submit',
+                                  loc.submitReport,
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
@@ -1052,7 +1072,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     ),
                     child: Icon(Icons.home, color: Colors.grey, size: 24.sp),
                   ),
-                  label: "Home",
+                  label: loc.home,
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
@@ -1070,7 +1090,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       size: 24.sp,
                     ),
                   ),
-                  label: "Report",
+                  label: loc.report,
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
@@ -1088,7 +1108,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       size: 24.sp,
                     ),
                   ),
-                  label: "Complaints",
+                  label: loc.complaints,
                 ),
                 BottomNavigationBarItem(
                   icon: Container(
@@ -1102,7 +1122,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     ),
                     child: Icon(Icons.person, color: Colors.grey, size: 24.sp),
                   ),
-                  label: "Profile",
+                  label: loc.profile,
                 ),
               ],
             ),

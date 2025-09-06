@@ -118,7 +118,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile => 'Profile';
 
   @override
-  String get good_morning => 'Good Morning';
+  String get good_morning => 'Good Morning,';
 
   @override
   String get quickReport => 'Quick Report';
@@ -247,7 +247,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submitReport => 'Submit Report';
 
   @override
-  String get myReports => 'My Reports';
+  String get myReports => 'My Complaints';
 
   @override
   String get all => 'All';
@@ -354,7 +354,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get priorityLow => 'Low';
 
   @override
-  String get viewDetails => 'View Details';
+  String get viewDetails => 'Track Complaint';
 
   @override
   String get workerId => 'Worker ID';
@@ -394,4 +394,106 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Select Language';
+
+  @override
+  String get pauseVoiceNote => 'Pause Voice Note';
+
+  @override
+  String get playVoiceNote => 'Play Voice Note';
+
+  @override
+  String get complaintNotFound => 'Complaint not found';
+
+  @override
+  String refId(String id, Object complaintId) {
+    return 'Ref ID: #$complaintId';
+  }
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get statusTimeline => 'Status Timeline';
+
+  @override
+  String get submitted => 'Complaint Submitted';
+
+  @override
+  String get reportSubmittedByCitizen =>
+      'Your complaint has been submitted successfully!';
+
+  @override
+  String get assigned => 'Assigned';
+
+  @override
+  String get timestampNotAvailable => 'Timestamp not available';
+
+  @override
+  String get assignedToMunicipalWorker =>
+      'Your complaint has been assigned to a municipal worker';
+
+  @override
+  String get updateTimestampPending => 'Update timestamp pending';
+
+  @override
+  String get workHasStarted => 'Work has been started on your complaint';
+
+  @override
+  String get issueResolved => 'Your issue has been successfully resolved';
+
+  @override
+  String get reportDetails => 'Report Details';
+
+  @override
+  String get photosSubmitted => 'Photos Submitted';
+
+  @override
+  String get issueDescription => 'Issue Description';
+
+  @override
+  String get good_afternoon => 'Good Afternoon,';
+
+  @override
+  String get good_evening => 'Good Evening,';
+
+  @override
+  String get permissionRequired => 'Permission Required';
+
+  @override
+  String get locationPermissionPermanentlyDenied =>
+      'Location permission is permanently denied. Please enable it from app settings.';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get locationPermissionDenied => 'Location permission denied';
+
+  @override
+  String get unableToFetchLocation => 'Unable to fetch location';
+
+  @override
+  String gpsCoordinates(String gps) {
+    return 'GPS coordinates: $gps';
+  }
+
+  @override
+  String submitFailed(String error) {
+    return 'Failed to submit: $error';
+  }
+
+  @override
+  String get pendingReview => 'Pending Review';
+
+  @override
+  String get currentStage => 'Current Stage';
+
+  @override
+  String get waitingForAssignment => 'Waiting for worker assignment';
+
+  @override
+  String get notYet => 'Not Yet';
 }

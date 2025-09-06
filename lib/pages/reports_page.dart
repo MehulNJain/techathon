@@ -1,6 +1,12 @@
+import 'package:CiTY/models/report_model.dart';
+import 'package:CiTY/pages/report_details_page.dart';
 import 'package:CiTY/pages/submitted_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
@@ -14,50 +20,96 @@ class MyReportsPage extends StatefulWidget {
 }
 
 class _MyReportsPageState extends State<MyReportsPage> {
-  final List<Map<String, dynamic>> reports = [
-    {
-      "title": "Garbage - Overflowing Dustbin",
-      "location": "MG Road, Sector 14",
-      "date": "Aug 31, 2:45 PM",
-      "status": "Pending",
-      "image": "https://img.icons8.com/fluency/96/trash.png",
-    },
-    {
-      "title": "Street Light - Not Working",
-      "location": "Park Street, Block A",
-      "date": "Aug 30, 11:20 AM",
-      "status": "In Progress",
-      "image": "assets/images/streetlight.png",
-    },
-    {
-      "title": "Road Damage - Pothole",
-      "location": "Main Road, Near Mall",
-      "date": "Aug 29, 4:15 PM",
-      "status": "Resolved",
-      "image": "https://img.icons8.com/fluency/96/road-worker.png",
-    },
-    {
-      "title": "Water Supply - Pipe Leakage",
-      "location": "Residential Area, B-12",
-      "date": "Aug 28, 9:30 AM",
-      "status": "In Progress",
-      "image": "https://img.icons8.com/fluency/96/water.png",
-    },
-    {
-      "title": "Garbage - Illegal Dumping",
-      "location": "Market Road, Near Bus Stand",
-      "date": "Aug 27, 6:45 PM",
-      "status": "Resolved",
-      "image": "https://img.icons8.com/fluency/96/trash.png",
-    },
-  ];
-
+  late Box<Report> _reportsBox;
+  bool _isLoading = true;
   String selectedTab = "All";
+
+  @override
+  void initState() {
+    super.initState();
+    _reportsBox = Hive.box<Report>('reportsBox');
+    _loadReports();
+  }
+
+  Future<void> _loadReports() async {
+    // Show cached data immediately, if available
+    if (_reportsBox.isNotEmpty) {
+      if (mounted) setState(() => _isLoading = false);
+    }
+    // Fetch fresh data from network
+    await _fetchUserReportsFromFirebase();
+  }
+
+  Future<void> _fetchUserReportsFromFirebase() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null || user.phoneNumber == null) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+
+    final dbRef = FirebaseDatabase.instance.ref(
+      'users/${user.phoneNumber}/complaints',
+    );
+
+    try {
+      final snapshot = await dbRef.get();
+      if (snapshot.exists && snapshot.value != null) {
+        final Map<String, Report> fetchedReportsMap = {};
+        final data = snapshot.value as Map;
+
+        data.forEach((key, value) {
+          final reportData = Map<String, dynamic>.from(value);
+          String effectiveStatus;
+          if (reportData['assignedTo'] != null) {
+            effectiveStatus = "Assigned";
+          } else {
+            effectiveStatus = reportData['status'] ?? 'Pending';
+          }
+
+          final report = Report()
+            ..complaintId = key
+            ..title =
+                "${reportData['category'] ?? 'N/A'} - ${reportData['subcategory'] ?? 'N/A'}"
+            ..date = reportData['dateTime'] != null
+                ? DateFormat(
+                    'MMM dd, h:mm a',
+                  ).format(DateTime.parse(reportData['dateTime']))
+                : 'Unknown Date'
+            ..status = effectiveStatus
+            ..image = (reportData['photos'] as List?)?.isNotEmpty ?? false
+                ? reportData['photos'][0]
+                : 'https://img.icons8.com/fluency/96/image--v1.png'
+            ..location =
+                reportData['location'] ?? 'Unknown Location'; // Add this line
+          fetchedReportsMap[key] = report;
+        });
+
+        // Update local cache and UI
+        await _reportsBox.clear();
+        await _reportsBox.putAll(fetchedReportsMap);
+      } else {
+        // If no reports on Firebase, clear local cache
+        await _reportsBox.clear();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to refresh reports: $e")),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   Color _getStatusColor(String status) {
     switch (status) {
       case "Pending":
         return Colors.orange;
+      case "Assigned":
+        return Colors.purple;
       case "In Progress":
         return Colors.blue;
       case "Resolved":
@@ -67,13 +119,79 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
+  String _getStatusLabel(String status, AppLocalizations loc) {
+    switch (status) {
+      case "Pending":
+        return loc.pending;
+      case "Assigned":
+        return loc.assigned;
+      case "In Progress":
+        return loc.inProgress;
+      case "Resolved":
+        return loc.resolved;
+      default:
+        return status;
+    }
+  }
+
+  // Add this method to get the icon based on category
+  IconData getCategoryIcon(String category) {
+    // Extract the main category from the title (e.g. "Garbage - Overflow" -> "Garbage")
+    final mainCategory = category.split(' - ').first;
+
+    switch (mainCategory) {
+      case "Garbage":
+        return Icons.delete;
+      case "Street Light":
+        return Icons.lightbulb_outline;
+      case "Road Damage":
+        return Icons.traffic;
+      case "Water":
+        return Icons.water_drop;
+      default:
+        return Icons.report_problem;
+    }
+  }
+
+  // Add this method to get the background color for the category icon
+  Color getCategoryBgColor(String category) {
+    final mainCategory = category.split(' - ').first;
+
+    switch (mainCategory) {
+      case "Garbage":
+        return const Color(0xFFEAF8ED); // Light green
+      case "Street Light":
+        return const Color(0xFFFFF9E5); // Light yellow
+      case "Road Damage":
+        return const Color(0xFFFFEAEA); // Light red
+      case "Water":
+        return const Color(0xFFEAF4FF); // Light blue
+      default:
+        return Colors.grey.shade100;
+    }
+  }
+
+  // Add this method to get the icon color for the category
+  Color getCategoryIconColor(String category) {
+    final mainCategory = category.split(' - ').first;
+
+    switch (mainCategory) {
+      case "Garbage":
+        return Colors.green;
+      case "Street Light":
+        return Colors.orange;
+      case "Road Damage":
+        return Colors.red;
+      case "Water":
+        return const Color(0xFF1746D1); // Main blue
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-
-    final filteredReports = selectedTab == "All"
-        ? reports
-        : reports.where((r) => r["status"] == selectedTab).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -88,161 +206,212 @@ class _MyReportsPageState extends State<MyReportsPage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: const Color(0xFFF6F6F6),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              child: Card(
-                color: Colors.white,
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 16.h,
-                    horizontal: 8.w,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _SummaryItem(
-                        title: loc.total,
-                        value: "12",
-                        color: Colors.black,
-                      ),
-                      _SummaryItem(
-                        title: loc.pending,
-                        value: "3",
-                        color: Colors.orange,
-                      ),
-                      _SummaryItem(
-                        title: loc.inProgress,
-                        value: "4",
-                        color: Colors.blue,
-                      ),
-                      _SummaryItem(
-                        title: loc.resolved,
-                        value: "5",
-                        color: Colors.green,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  for (var tab in ["All", "Pending", "In Progress", "Resolved"])
-                    GestureDetector(
-                      onTap: () => setState(() => selectedTab = tab),
-                      child: _TabButton(
-                        label: tab == "All"
-                            ? loc.all
-                            : tab == "Pending"
-                            ? loc.pending
-                            : tab == "In Progress"
-                            ? loc.inProgress
-                            : loc.resolved,
-                        selected: (tab == selectedTab),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.only(bottom: 16.h),
-                itemCount: filteredReports.length,
-                itemBuilder: (context, index) {
-                  final report = filteredReports[index];
-                  final imageWidget =
-                      report["image"].toString().startsWith("http")
-                      ? Image.network(
-                          report["image"],
-                          width: 50.w,
-                          height: 50.w,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.broken_image,
-                            size: 40.sp,
-                            color: Colors.grey,
-                          ),
-                        )
-                      : Image.asset(
-                          report["image"],
-                          width: 50.w,
-                          height: 50.w,
-                          fit: BoxFit.cover,
-                        );
+      body: ValueListenableBuilder<Box<Report>>(
+        valueListenable: _reportsBox.listenable(),
+        builder: (context, box, _) {
+          var reports = box.values.toList().cast<Report>();
 
-                  return Card(
+          // Sort reports by date descending
+          reports.sort((a, b) {
+            DateTime dateA = DateFormat('MMM dd, h:mm a').parse(a.date);
+            DateTime dateB = DateFormat('MMM dd, h:mm a').parse(b.date);
+            return dateB.compareTo(dateA);
+          });
+
+          final filteredReports = selectedTab == "All"
+              ? reports
+              : reports.where((r) => r.status == selectedTab).toList();
+
+          final totalCount = reports.length;
+          final pendingCount = reports
+              .where((r) => r.status == 'Pending')
+              .length;
+          final inProgressCount = reports
+              .where((r) => r.status == 'In Progress')
+              .length;
+          final resolvedCount = reports
+              .where((r) => r.status == 'Resolved')
+              .length;
+          final assignedCount = reports
+              .where((r) => r.status == 'Assigned')
+              .length;
+
+          return SafeArea(
+            child: Column(
+              children: [
+                // COMBINED CARD: Total, Pending, In Progress, Resolved
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h),
+                  child: Card(
                     color: Colors.white,
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 8.h,
-                    ),
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
-                    child: ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: imageWidget,
-                      ),
-                      title: Text(
-                        report["title"],
-                        style: TextStyle(fontSize: 15.sp),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            report["location"],
-                            style: TextStyle(fontSize: 13.sp),
+                          _SummaryItem(
+                            title: loc.total,
+                            value: totalCount.toString(),
+                            color: Colors.black,
                           ),
-                          Text(
-                            report["date"],
-                            style: TextStyle(fontSize: 12.sp),
+                          _SummaryItem(
+                            title: loc.pending,
+                            value: pendingCount.toString(),
+                            color: Colors.orange,
+                          ),
+                          _SummaryItem(
+                            title: loc.inProgress,
+                            value: inProgressCount.toString(),
+                            color: Colors.blue,
+                          ),
+                          _SummaryItem(
+                            title: loc.resolved,
+                            value: resolvedCount.toString(),
+                            color: Colors.green,
                           ),
                         ],
                       ),
-                      trailing: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(
-                            report["status"],
-                          ).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Text(
-                          report["status"] == "Pending"
-                              ? loc.pending
-                              : report["status"] == "In Progress"
-                              ? loc.inProgress
-                              : loc.resolved,
-                          style: TextStyle(
-                            color: _getStatusColor(report["status"]),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13.sp,
+                    ),
+                  ),
+                ),
+
+                // FILTER TABS - Keep as is with Assigned included
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        for (var tab in [
+                          "All",
+                          "Pending",
+                          "Assigned",
+                          "In Progress",
+                          "Resolved",
+                        ])
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 4.w),
+                            child: GestureDetector(
+                              onTap: () => setState(() => selectedTab = tab),
+                              child: _TabButton(
+                                label: tab == "All"
+                                    ? loc.all
+                                    : _getStatusLabel(tab, loc),
+                                selected: (tab == selectedTab),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: _isLoading && reports.isEmpty
+                      ? const Center(child: CircularProgressIndicator())
+                      : filteredReports.isEmpty
+                      ? Center(
+                          child: Text(
+                            selectedTab == "All"
+                                ? "You have not submitted any reports."
+                                : "No reports found in this category.",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : RefreshIndicator(
+                          onRefresh: _fetchUserReportsFromFirebase,
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(bottom: 16.h),
+                            itemCount: filteredReports.length,
+                            itemBuilder: (context, index) {
+                              final report = filteredReports[index];
+
+                              // Category icon instead of image
+                              final categoryIcon = Container(
+                                width: 50.w,
+                                height: 50.w,
+                                decoration: BoxDecoration(
+                                  color: getCategoryBgColor(report.title),
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    getCategoryIcon(report.title),
+                                    size: 26.sp,
+                                    color: getCategoryIconColor(report.title),
+                                  ),
+                                ),
+                              );
+
+                              return Card(
+                                color: Colors.white,
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 16.w,
+                                  vertical: 8.h,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ReportDetailsPage(
+                                          complaintId: report.complaintId,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  leading: categoryIcon, // Use category icon
+                                  title: Text(
+                                    report.title,
+                                    style: TextStyle(fontSize: 15.sp),
+                                  ),
+                                  subtitle: Text(
+                                    report.date,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                  trailing: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w,
+                                      vertical: 4.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: _getStatusColor(
+                                        report.status,
+                                      ).withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12.r),
+                                    ),
+                                    child: Text(
+                                      _getStatusLabel(report.status, loc),
+                                      style: TextStyle(
+                                        color: _getStatusColor(report.status),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                ),
+              ],
             ),
-            // Footer removed
-          ],
-        ),
+          );
+        },
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -391,6 +560,7 @@ class _SummaryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           value,
@@ -400,7 +570,15 @@ class _SummaryItem extends StatelessWidget {
             color: color,
           ),
         ),
-        Text(title, style: TextStyle(fontSize: 14.sp)),
+        SizedBox(height: 4.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+          ),
+        ),
       ],
     );
   }

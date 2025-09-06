@@ -3,6 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'models/report_model.dart';
+import 'models/user_profile_model.dart';
 
 // Your custom pages and providers
 import 'login_page.dart';
@@ -17,6 +20,13 @@ import 'l10n/app_localizations.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize Hive for local data caching
+  await Hive.initFlutter();
+  Hive.registerAdapter(ReportAdapter());
+  Hive.registerAdapter(UserProfileAdapter()); // Register the new adapter
+  await Hive.openBox<Report>('reportsBox');
+  await Hive.openBox<UserProfile>('userProfileBox'); // Open the new box
 
   // Initialize and load the initial locale
   final localeProvider = LocaleProvider();

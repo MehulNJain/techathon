@@ -4,6 +4,9 @@
   "app_title": "ᱥᱢᱟᱨᱴ ᱥᱤᱵᱤᱠ ᱯᱚᱨᱴᱟᱞ",
   "login_subtitle": "ᱢᱩᱞᱟᱜ ᱠᱟᱴᱮ ᱯᱚᱨᱮ ᱛᱮ ᱡᱚᱢᱚᱱ ᱠᱚ ᱟᱫᱮᱨ ᱟᱨ ᱥᱮᱞᱮᱰᱮ ᱢᱟᱱᱟᱢ ᱨᱮ",
   "phone_number": "ᱯᱷᱚᱱ ᱢᱚᱱᱵᱚᱨ",
+  "reportDetails": "ᱨᱤᱯᱚᱴ ᱵᱤᱵᱚᱨᱚᱱ",
+  "photosSubmitted": "ᱯᱷᱚᱴᱚ ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
+  "issueDescription": "ᱵᱟᱣᱟ ᱵᱤᱵᱚᱨᱚᱱ",
   "enter_phone_number": "ᱯᱷᱚᱱ ᱢᱚᱱᱵᱚᱨ ᱟᱪᱟᱹᱨ",
   "send_otp": "OTP ᱪᱷᱚᱭᱚᱢ",
   "login_as_worker": "ᱣᱟᱹᱠᱚᱨ ᱨᱮ ᱞᱚᱜᱤᱱ",
@@ -138,5 +141,108 @@
   "qualityWork": "ᱵᱷᱟᱞᱚ ᱠᱟᱢ",
   "onTime": "ᱥᱟᱢᱭ ᱛᱮ",
   "changePassword": "ᱯᱟᱥᱱᱚᱣᱚᱨᱰ ᱵᱟᱰᱞᱚᱢ",
-  "changeLanguage": "ᱨᱩᱴᱤᱭᱟᱠ ᱵᱟᱰᱞᱚᱢ"
+  "changeLanguage": "ᱨᱩᱴᱤᱭᱟᱠ ᱵᱟᱰᱞᱚᱢ",
+
+  "pauseVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱛᱷᱤᱨ ᱠᱟᱨᱟᱢ",
+  "playVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱪᱟᱞ ᱠᱟᱨᱟᱢ",
+  "complaintNotFound": "ᱥᱤᱠᱟᱭᱟᱴ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
+  "refId": "ᱥᱟᱸᱫᱷᱟᱨᱵᱷ: {id}",
+  "@refId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "close": "ᱵᱚᱱᱫ ᱠᱟᱨᱟᱢ",
+  "statusTimeline": "ᱥᱴᱮᱴᱟᱥ ᱴᱟᱭᱤᱢᱞᱟᱭᱤᱱ",
+  "submitted": "ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
+  "reportSubmittedByCitizen": "ᱥᱤᱴᱤᱡᱮᱱ ᱫᱚᱨᱟ ᱨᱤᱯᱚᱨᱴ ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
+  "assigned": "ᱟᱥᱟᱭᱤᱱᱰ ᱠᱟᱱᱟ",
+  "timestampNotAvailable": "ᱥᱟᱢᱭ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
+  "assignedToMunicipalWorker": "ᱢᱩᱱᱤᱥᱤᱯᱟᱞ ᱣᱟᱹᱠᱚᱨ ᱛᱮ ᱟᱥᱟᱭᱤᱱᱰ ᱠᱟᱱᱟ",
+  "updateTimestampPending": "ᱟᱯᱰᱮᱴ ᱥᱟᱢᱭ ᱯᱮᱱᱰᱤᱝ",
+  "workHasStarted": "ᱟᱢᱟᱜ ᱥᱤᱠᱟᱭᱟᱴ ᱛᱮ ᱠᱟᱢ ᱦᱚᱨ ᱨᱮ",
+  "issueResolved": "ᱵᱟᱣᱟ ᱥᱩᱞᱩᱛᱟᱢ ᱠᱟᱱᱟ",
+  "good_morning": "ᱥᱟᱹᱜᱩᱱ ᱥᱮᱛᱟ,",
+  "good_afternoon": "ᱥᱟᱹᱜᱩᱱ ᱥᱤᱝᱜᱟᱹᱲ,",
+  "good_evening": "ᱥᱟᱹᱜᱩᱱ ᱟᱹᱭᱩᱵ,",
+
+  "reportDetails": "ᱨᱤᱯᱚᱴ ᱵᱤᱵᱚᱨᱚᱱ",
+  "photosSubmitted": "ᱯᱷᱚᱴᱚ ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
+  "issueDescription": "ᱵᱟᱣᱟ ᱵᱤᱵᱚᱨᱚᱱ",
+  "statusTimeline": "ᱥᱴᱮᱴᱟᱥ ᱴᱟᱭᱤᱢᱞᱟᱭᱤᱱ",
+  "pauseVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱛᱷᱤᱨ ᱠᱟᱨᱟᱢ",
+  "playVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱪᱟᱞ ᱠᱟᱨᱟᱢ",
+  "complaintNotFound": "ᱥᱤᱠᱟᱭᱟᱴ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
+  "refId": "ᱥᱟᱸᱫᱷᱟᱨᱵᱷ: {id}",
+  "@refId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "close": "ᱵᱚᱱᱫ ᱠᱟᱨᱟᱢ",
+  "submitted": "ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
+  "reportSubmittedByCitizen": "ᱥᱤᱴᱤᱡᱮᱱ ᱫᱚᱨᱟ ᱨᱤᱯᱚᱨᱴ ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
+  "assigned": "ᱟᱥᱟᱭᱤᱱᱰ ᱠᱟᱱᱟ",
+  "timestampNotAvailable": "ᱥᱟᱢᱭ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
+  "assignedToMunicipalWorker": "ᱢᱩᱱᱤᱥᱤᱯᱟᱞ ᱣᱟᱹᱠᱚᱨ ᱛᱮ ᱟᱥᱟᱭᱤᱱᱰ ᱠᱟᱱᱟ",
+  "inProgress": "ᱠᱟᱹᱢᱤ ᱪᱟᱹᱞᱩ ᱢᱮᱱᱟᱜᱼᱟ",
+  "updateTimestampPending": "ᱟᱯᱰᱮᱴ ᱥᱟᱢᱭ ᱯᱮᱱᱰᱤᱝ",
+  "workHasStarted": "ᱟᱢᱟᱜ ᱥᱤᱠᱟᱭᱟᱴ ᱛᱮ ᱠᱟᱢ ᱦᱚᱨ ᱨᱮ",
+  "resolved": "ᱥᱩᱞᱩᱛᱟᱢ ᱠᱟᱱᱟ",
+  "issueResolved": "ᱵᱟᱣᱟ ᱥᱩᱞᱩᱛᱟᱢ ᱠᱟᱱᱟ",
+
+  "issueResolved": "ᱵᱟᱣᱟ ᱥᱩᱞᱩᱛᱟᱢ ᱠᱟᱱᱟ",
+  "permissionRequired": "ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱡᱟᱹᱨᱩᱨᱤ",
+  "locationPermissionPermanentlyDenied": "ᱡᱟᱭᱜᱟ ᱨᱮᱭᱟᱜ ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱡᱟᱣᱜᱮ ᱞᱟᱹᱜᱤᱫ ᱵᱟᱝ ᱮᱢ ᱟᱠᱟᱱᱟ᱾ ᱫᱟᱭᱟᱠᱟᱛᱮ ᱱᱤᱭᱟᱹ ᱮᱯ ᱥᱮᱴᱤᱝᱥ ᱠᱷᱚᱱ ᱪᱟᱹᱞᱩᱭ ᱯᱮ᱾",
+  "openSettings": "ᱥᱮᱴᱤᱝᱥ ᱠᱷᱩᱞᱟᱹᱭ ᱯᱮ",
+  "cancel": "ᱵᱟᱹᱰᱤᱡ",
+  "locationPermissionDenied": "ᱡᱟᱭᱜᱟ ᱨᱮᱭᱟᱜ ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱵᱟᱝ ᱮᱢ ᱟᱠᱟᱱᱟ",
+  "unableToFetchLocation": "ᱡᱟᱭᱜᱟ ᱧᱟᱢ ᱨᱮ ᱟᱹᱥᱩᱵᱤᱫᱷᱟ",
+  "gpsCoordinates": "GPS ᱱᱤᱨᱫᱮᱥᱟᱸᱠ: {gps}",
+  "@gpsCoordinates": {
+    "placeholders": {
+      "gps": {
+        "type": "String"
+      }
+    }
+  },
+  "submitFailed": "ᱯᱟᱴᱮᱭᱚᱢ ᱨᱮ ᱵᱤᱯᱷᱚᱞ: {error}",
+  "@submitFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingReview": "ᱜᱤᱱᱚᱛᱤ ᱞᱟᱹᱜᱤᱫ ᱵᱩᱡᱷᱟᱣ ᱮᱱᱟ",
+  "completed": "ᱯᱩᱨᱟᱹᱣ ᱮᱱᱟ",
+  "currentStage": "ᱱᱤᱛᱚᱜᱟᱜ ᱛᱟᱦᱮᱱ",
+  "waitingForAssignment": "ᱠᱟᱹᱢᱤᱭᱟᱹ ᱵᱟᱪᱷᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱛᱟᱧᱡᱟ",
+  "assigned": "ᱵᱟᱪᱷᱟᱣ ᱟᱠᱟᱱᱟ",
+  "timestampNotAvailable": "ᱚᱠᱛᱚ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ",
+  "notYet": "ᱱᱤᱛᱚᱜ ᱵᱟᱝ",
+  "assignedToMunicipalWorker": "ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱢᱤᱫᱴᱮᱱ ᱱᱟᱜᱟᱨᱯᱟᱞᱤᱠᱟ ᱠᱟᱹᱢᱤᱭᱟᱹ ᱥᱟᱶ ᱜᱚᱴᱟ ᱟᱠᱟᱱᱟ",
+  "inProgress": "ᱪᱟᱹᱞᱩ ᱟᱠᱟᱱᱟ",
+  "workHasStarted": "ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱠᱟᱹᱢᱤ ᱮᱦᱚᱵ ᱟᱠᱟᱱᱟ",
+  "resolved": "ᱥᱟᱯᱲᱟᱣ ᱦᱩᱭ ᱮᱱᱟ",
+  "issueResolved": "ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱥᱟᱯᱲᱟᱣ ᱦᱩᱭ ᱮᱱᱟ",
+  "submitted": "ᱱᱟᱞᱤᱥ ᱡᱚᱢᱟ ᱮᱱᱟ",
+  "reportSubmittedByCitizen": "ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱥᱟᱯᱷᱟᱞ ᱛᱮ ᱡᱚᱢᱟ ᱦᱩᱭ ᱮᱱᱟ!",
+  "complaintNotFound": "ᱱᱟᱞᱤᱥ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟ",
+  "reportDetails": "ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱵᱤᱥᱛᱟᱨ",
+  "refId": "ᱥᱩᱫᱷᱤ ᱟᱭᱰᱤ: #{complaintId}",
+  "photosSubmitted": "ᱡᱚᱢᱟ ᱦᱩᱭ ᱟᱠᱟᱱ ᱪᱤᱛᱟᱹᱨᱠᱚ",
+  "close": "ᱵᱚᱱᱫᱚ ᱢᱮ",
+  "issueDescription": "ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱵᱤᱵᱨᱟᱬ",
+  "statusTimeline": "ᱚᱵᱚᱥᱛᱟ ᱴᱟᱭᱤᱢᱞᱟᱭᱤᱱ",
+  "pauseVoiceNote": "ᱨᱚᱲ ᱱᱚᱴ ᱛᱟᱧᱦᱚᱯ ᱢᱮ",
+  "playVoiceNote": "ᱨᱚᱲ ᱱᱚᱴ ᱵᱟᱡᱟᱣ ᱢᱮ",
+  "viewDetails": "ᱱᱟᱞᱤᱥ ᱯᱟᱧᱡᱟ ᱢᱮ",
+  "reportIssue": "ᱮᱴᱟᱜ ᱱᱟᱞᱤᱥ ᱮᱢ ᱢᱮ"
+
+
 }

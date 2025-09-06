@@ -5,6 +5,7 @@ import 'home_page.dart';
 import 'report_issue_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../l10n/app_localizations.dart'; // Add this import
 
 class SubmittedPage extends StatefulWidget {
   final String complaintId;
@@ -55,6 +56,9 @@ class _SubmittedPageState extends State<SubmittedPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get localizations
+    final l10n = AppLocalizations.of(context)!;
+
     if (_loading) {
       return Scaffold(
         backgroundColor: SubmittedPage.bgGrey,
@@ -64,7 +68,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
     if (complaintData == null) {
       return Scaffold(
         backgroundColor: SubmittedPage.bgGrey,
-        body: Center(child: Text("Complaint not found.")),
+        body: Center(child: Text(l10n.complaintNotFound)),
       );
     }
 
@@ -94,7 +98,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
               SizedBox(height: 12.h),
               // Add "Complaint Submitted" back here
               Text(
-                "Complaint Submitted",
+                l10n.submitted, // "Complaint Submitted" -> localized
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.sp,
@@ -116,7 +120,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
               ),
               SizedBox(height: 18.h),
               Text(
-                "Success!",
+                l10n.resolved, // "Success!" -> localized
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.sp,
@@ -125,11 +129,12 @@ class _SubmittedPageState extends State<SubmittedPage> {
               ),
               SizedBox(height: 8.h),
               Text(
-                "Your complaint has been submitted\nsuccessfully!",
+                l10n.reportSubmittedByCitizen, // "Your complaint has been submitted successfully!" -> localized
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.black87, fontSize: 13.sp),
               ),
               SizedBox(height: 24.h),
+              // Keep Complaint Summary box intact
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(16.w),
@@ -149,10 +154,10 @@ class _SubmittedPageState extends State<SubmittedPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Complaint Summary",
+                      "Complaint Summary", // Keeping this as is per requirement
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 13.sp, // Slightly smaller
+                        fontSize: 13.sp,
                         color: Colors.black,
                       ),
                     ),
@@ -173,7 +178,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                             "Status",
                             style: TextStyle(
                               color: Colors.black54,
-                              fontSize: 12.sp, // Slightly smaller
+                              fontSize: 12.sp,
                             ),
                           ),
                         ),
@@ -191,7 +196,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                             style: TextStyle(
                               color: const Color(0xFFB26A00),
                               fontWeight: FontWeight.w600,
-                              fontSize: 12.sp, // Slightly smaller
+                              fontSize: 12.sp,
                             ),
                           ),
                         ),
@@ -205,7 +210,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                             "Complaint ID",
                             style: TextStyle(
                               color: Colors.black54,
-                              fontSize: 13.sp, // Slightly smaller
+                              fontSize: 13.sp,
                             ),
                           ),
                         ),
@@ -214,7 +219,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                           style: TextStyle(
                             color: SubmittedPage.mainBlue,
                             fontWeight: FontWeight.bold,
-                            fontSize: 13.sp, // Slightly smaller
+                            fontSize: 13.sp,
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -229,7 +234,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                 child: ElevatedButton.icon(
                   icon: Icon(Icons.search, color: Colors.white, size: 20.sp),
                   label: Text(
-                    "Track Complaint",
+                    l10n.viewDetails, // "Track Complaint" -> localized
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.sp,
@@ -264,7 +269,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                     size: 20.sp,
                   ),
                   label: Text(
-                    "Report Another Issue",
+                    l10n.reportIssue, // "Report Another Issue" -> localized
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.sp,
@@ -307,7 +312,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                     SizedBox(width: 10.w),
                     Expanded(
                       child: Text(
-                        "Your complaint will be reviewed by our team within 24 hours and assigned to the relevant department for resolution.",
+                        l10n.assignedToMunicipalWorker, // Info text -> localized
                         style: TextStyle(
                           color: SubmittedPage.mainBlue,
                           fontSize: 12.sp,
@@ -333,10 +338,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
           Expanded(
             child: Text(
               label,
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 13.sp,
-              ), // Slightly smaller
+              style: TextStyle(color: Colors.black54, fontSize: 13.sp),
             ),
           ),
           Text(
@@ -344,7 +346,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w600,
-              fontSize: 13.sp, // Slightly smaller
+              fontSize: 13.sp,
             ),
           ),
         ],
