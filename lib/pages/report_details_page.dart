@@ -113,6 +113,7 @@ class ReportDetailsPage extends StatefulWidget {
 
   static const mainBlue = Color(0xFF1746D1);
   static const navBg = Color(0xFFF0F4FF);
+  static const bgGrey = Color(0xFFF6F6F6); // Add this for home page grey
 
   @override
   State<ReportDetailsPage> createState() => _ReportDetailsPageState();
@@ -227,13 +228,13 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
 
     if (_loading) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ReportDetailsPage.bgGrey, // Use grey bg
         body: Center(child: CircularProgressIndicator()),
       );
     }
     if (complaintData == null) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ReportDetailsPage.bgGrey, // Use grey bg
         body: Center(child: Text(loc.complaintNotFound)),
       );
     }
@@ -242,12 +243,12 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
     final voiceNoteUrl = complaintData!['voiceNote'];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ReportDetailsPage.bgGrey, // Use grey bg
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: ReportDetailsPage.mainBlue,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black87, size: 24.sp),
+          icon: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
           onPressed: () {
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (_) => MyReportsPage()),
@@ -258,12 +259,12 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
         title: Text(
           loc.reportDetails,
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 19.sp,
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
@@ -366,12 +367,16 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                         label: Text(
                           effectiveStatus,
                           style: TextStyle(
-                            color: _getStatusColor(effectiveStatus),
+                            color: _getStatusColor(
+                              effectiveStatus.trim().toLowerCase(),
+                            ),
                             fontWeight: FontWeight.bold,
                             fontSize: 13.sp,
                           ),
                         ),
-                        backgroundColor: _getStatusBgColor(effectiveStatus),
+                        backgroundColor: _getStatusBgColor(
+                          effectiveStatus.trim().toLowerCase(),
+                        ),
                         padding: EdgeInsets.symmetric(
                           horizontal: 10.w,
                           vertical: 0.h,
@@ -383,7 +388,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
               ),
             ),
 
-            // Photos Submitted
+            // Photos Submitted (make images bigger to match Report Issue Page)
             if (photos.isNotEmpty)
               Container(
                 width: double.infinity,
@@ -406,13 +411,27 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                     ),
                     SizedBox(height: 10.h),
                     SizedBox(
-                      height: 90.h,
+                      height: 90.h, // Match Report Issue Page
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: photos.length,
                         separatorBuilder: (_, __) => SizedBox(width: 10.w),
                         itemBuilder: (context, i) {
                           final photoUrl = photos[i];
+                          // Use the complaint's original timestamp for the photo, as in Report Issue Page
+                          final photoTimestamp = complaintData!['dateTime'];
+                          String photoTimeLabel = '';
+                          if (photoTimestamp != null &&
+                              photoTimestamp is String) {
+                            try {
+                              final dt = DateTime.parse(photoTimestamp);
+                              photoTimeLabel = DateFormat(
+                                'dd MMM, hh:mm a',
+                              ).format(dt);
+                            } catch (_) {
+                              photoTimeLabel = photoTimestamp;
+                            }
+                          }
                           return GestureDetector(
                             onTap: () {
                               showDialog(
@@ -422,11 +441,15 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Image.network(photoUrl),
+                                      Image.network(
+                                        photoUrl,
+                                        width: 300.w,
+                                        fit: BoxFit.contain,
+                                      ),
                                       Padding(
                                         padding: EdgeInsets.all(8.w),
                                         child: Text(
-                                          "$formattedDate, $formattedTime",
+                                          photoTimeLabel,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 15.sp,
@@ -452,11 +475,11 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                             child: Stack(
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.r),
+                                  borderRadius: BorderRadius.circular(12.r),
                                   child: Image.network(
                                     photoUrl,
-                                    width: 70.w,
-                                    height: 70.w,
+                                    width: 90.w,
+                                    height: 90.w,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -470,7 +493,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                                       vertical: 2.h,
                                     ),
                                     child: Text(
-                                      "$formattedDate, $formattedTime",
+                                      photoTimeLabel,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 10.sp,
@@ -522,7 +545,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
               ),
             ),
 
-            // ✅ UPDATED STATUS TIMELINE
+            // Status Timeline
             Container(
               width: double.infinity,
               margin: EdgeInsets.only(bottom: 14.h),
@@ -555,13 +578,11 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
     );
   }
 
-  // ✅ Updated method to build the timeline with all status steps
+  // --- Connect status lines ---
   Widget _buildStatusTimeline() {
     final loc = AppLocalizations.of(context)!;
 
-    // Determine the current status stage (0=Submitted, 1=Pending, 2=Assigned, 3=In Progress, 4=Resolved)
     int currentStage = 0;
-
     if (complaintData!['status'] == 'Resolved') {
       currentStage = 4;
     } else if (complaintData!['status'] == 'In Progress') {
@@ -569,171 +590,159 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
     } else if (complaintData!['assignedTo'] != null) {
       currentStage = 2;
     } else {
-      currentStage = 1; // Pending by default after submission
+      currentStage = 1;
     }
 
+    final steps = [
+      {
+        "icon": Icons.check_circle,
+        "color": Colors.green,
+        "title": loc.submitted,
+        "date": "$formattedDate, $formattedTime",
+        "desc": loc.reportSubmittedByCitizen,
+      },
+      {
+        "icon": Icons.hourglass_empty,
+        "color": const Color(0xFFB26A00),
+        "title": loc.pendingReview,
+        "date": currentStage > 1 ? loc.completed : loc.currentStage,
+        "desc": loc.waitingForAssignment,
+      },
+      {
+        "icon": Icons.person_search,
+        "color": Colors.purple,
+        "title": loc.assigned,
+        "date": currentStage > 2
+            ? (complaintData!['assignedTimestamp'] != null
+                  ? DateFormat('dd MMM yyyy, hh:mm a').format(
+                      DateTime.parse(complaintData!['assignedTimestamp']),
+                    )
+                  : loc.timestampNotAvailable)
+            : (currentStage == 2 ? loc.currentStage : loc.notYet),
+        "desc": loc.assignedToMunicipalWorker,
+      },
+      {
+        "icon": Icons.construction,
+        "color": Colors.blue,
+        "title": loc.inProgress,
+        "date": currentStage > 3
+            ? loc.completed
+            : (currentStage == 3 ? loc.currentStage : loc.notYet),
+        "desc": loc.workHasStarted,
+      },
+      {
+        "icon": Icons.verified,
+        "color": Colors.green,
+        "title": loc.resolved,
+        "date": currentStage == 4 ? loc.currentStage : loc.notYet,
+        "desc": loc.issueResolved,
+      },
+    ];
+
     return Column(
-      children: [
-        // 1. Submitted (Always completed)
-        _timelineTile(
-          icon: Icons.check_circle,
-          color: Colors.green,
-          title: loc.submitted,
-          date: "$formattedDate, $formattedTime",
-          desc: loc.reportSubmittedByCitizen,
-          isLast: false,
-          isActive: true,
-        ),
-
-        // 2. Pending Review
-        _timelineTile(
-          icon: Icons.hourglass_empty,
-          color: currentStage >= 1 ? const Color(0xFFB26A00) : Colors.grey,
-          title: loc.pendingReview,
-          date: currentStage > 1 ? loc.completed : loc.currentStage,
-          desc: loc.waitingForAssignment,
-          isLast: false,
-          isActive: currentStage >= 1,
-        ),
-
-        // 3. Assigned
-        _timelineTile(
-          icon: Icons.person_search,
-          color: currentStage >= 2 ? Colors.purple : Colors.grey,
-          title: loc.assigned,
-          date: currentStage > 2
-              ? (complaintData!['assignedTimestamp'] != null
-                    ? DateFormat('dd MMM yyyy, hh:mm a').format(
-                        DateTime.parse(complaintData!['assignedTimestamp']),
-                      )
-                    : loc.timestampNotAvailable)
-              : (currentStage == 2 ? loc.currentStage : loc.notYet),
-          desc: loc.assignedToMunicipalWorker,
-          isLast: false,
-          isActive: currentStage >= 2,
-        ),
-
-        // 4. In Progress
-        _timelineTile(
-          icon: Icons.construction,
-          color: currentStage >= 3 ? Colors.blue : Colors.grey,
-          title: loc.inProgress,
-          date: currentStage > 3
-              ? loc.completed
-              : (currentStage == 3 ? loc.currentStage : loc.notYet),
-          desc: loc.workHasStarted,
-          isLast: false,
-          isActive: currentStage >= 3,
-        ),
-
-        // 5. Resolved
-        _timelineTile(
-          icon: Icons.verified,
-          color: currentStage >= 4 ? Colors.green : Colors.grey,
-          title: loc.resolved,
-          date: currentStage == 4 ? loc.currentStage : loc.notYet,
-          desc: loc.issueResolved,
-          isLast: true,
-          isActive: currentStage >= 4,
-        ),
-      ],
-    );
-  }
-
-  Widget _timelineTile({
-    required IconData icon,
-    required Color color,
-    required String title,
-    required String date,
-    required String desc,
-    bool isLast = false,
-    bool isActive = true,
-  }) {
-    // Get current locale
-    final currentLocale = Localizations.localeOf(context).languageCode;
-    final bool isNonLatinScript =
-        (currentLocale == 'sat' || currentLocale == 'hi');
-
-    // Adjust font sizes for non-Latin scripts
-    final double titleFontSize = isNonLatinScript ? 13.sp : 15.sp;
-    final double dateFontSize = isNonLatinScript ? 12.sp : 13.sp;
-    final double descFontSize = isNonLatinScript ? 12.sp : 13.sp;
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: 14.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(6.w),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isActive
-                      ? color.withOpacity(0.1)
-                      : Colors.grey.withOpacity(0.1),
-                  border: Border.all(
-                    color: isActive ? color : Colors.grey.shade400,
-                    width: 1.5,
+      children: List.generate(steps.length, (i) {
+        final isActive = currentStage >= i;
+        final isLast = i == steps.length - 1;
+        return Row(
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // <-- Center icons vertically
+          children: [
+            // Timeline column with connected line and icon
+            Container(
+              width: 32.w,
+              child: Column(
+                children: [
+                  // Line above icon (except first)
+                  if (i != 0)
+                    Container(
+                      width: 2.w,
+                      height: 29.h,
+                      color: (currentStage >= i)
+                          ? steps[i - 1]["color"]
+                                as Color // Use previous step's color
+                          : Colors.grey.shade300,
+                    ),
+                  // The icon itself
+                  Container(
+                    padding: EdgeInsets.all(6.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isActive
+                          ? (steps[i]["color"] as Color).withOpacity(0.1)
+                          : Colors.grey.withOpacity(0.1),
+                      border: Border.all(
+                        color: isActive
+                            ? steps[i]["color"] as Color
+                            : Colors.grey.shade400,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Icon(
+                      steps[i]["icon"] as IconData,
+                      color: isActive
+                          ? steps[i]["color"] as Color
+                          : Colors.grey.shade400,
+                      size: 18.sp,
+                    ),
                   ),
-                ),
-                child: Icon(
-                  icon,
-                  color: isActive ? color : Colors.grey.shade400,
-                  size: 18.sp,
+                  // Line below icon (except last)
+                  if (!isLast)
+                    Container(
+                      width: 2.w,
+                      height: 29.h,
+                      color: (currentStage > i)
+                          ? steps[i]["color"]
+                                as Color // Use current step's color
+                          : Colors.grey.shade300,
+                    ),
+                ],
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: isLast ? 0 : 18.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      steps[i]["title"] as String,
+                      style: TextStyle(
+                        color: isActive
+                            ? steps[i]["color"] as Color
+                            : Colors.grey.shade500,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
+                      ),
+                      maxLines: 2,
+                    ),
+                    Text(
+                      steps[i]["date"] as String,
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 11.sp,
+                        fontWeight: (steps[i]["date"] == "Current Stage")
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      steps[i]["desc"] as String,
+                      style: TextStyle(
+                        color: isActive ? Colors.black87 : Colors.grey.shade500,
+                        fontSize: 12.sp,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ),
-              if (!isLast)
-                Container(
-                  width: 2.w,
-                  height: 40.h,
-                  color: isActive
-                      ? color.withOpacity(0.5)
-                      : Colors.grey.shade300,
-                ),
-            ],
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            // Make sure this is expandable
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: isActive ? color : Colors.grey.shade500,
-                    fontWeight: FontWeight.bold,
-                    fontSize: titleFontSize, // Adjusted size
-                  ),
-                  maxLines: 2, // Allow wrapping
-                ),
-                Text(
-                  date,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: dateFontSize, // Adjusted size
-                    fontWeight: date == "Current Stage"
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
-                ),
-                SizedBox(height: 2.h), // Reduced spacing
-                Text(
-                  desc,
-                  style: TextStyle(
-                    color: isActive ? Colors.black87 : Colors.grey.shade500,
-                    fontSize: descFontSize, // Adjusted size
-                  ),
-                  maxLines: 3, // Allow wrapping
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 }

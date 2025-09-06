@@ -100,7 +100,10 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
         categoryMap.keys.contains(widget.prefilledCategory)) {
       selectedCategory = widget.prefilledCategory;
     }
-    _requestAndFetchLocation();
+    // Use post-frame callback to ensure context is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestAndFetchLocation();
+    });
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     Future.microtask(() async {
@@ -458,676 +461,702 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
         ? [...categoryMap[selectedCategory!]!, 'Other']
         : [];
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: mainBlue, // Changed from mainBlue to white
-        elevation: 0,
-        automaticallyImplyLeading: false, // Removes the back button
-        title: Text(
-          loc.reportIssue,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 17.sp,
-            fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => HomePage()),
+          (route) => false,
+        );
+        return false; // Prevent default pop
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: mainBlue, // Changed from mainBlue to white
+          elevation: 0,
+          automaticallyImplyLeading: false, // Removes the back button
+          title: Text(
+            loc.reportIssue,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: MediaQuery.of(context).padding.top + kToolbarHeight),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    loc.selectCategory,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.sp,
+        body: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).padding.top + kToolbarHeight,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      loc.selectCategory,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8.h),
-                  SizedBox(
-                    // FIX: Enforce fixed height to prevent vertical jumping
-                    height: 55.h,
-                    child: DropdownButtonFormField<String>(
-                      initialValue: selectedCategory,
-                      hint: Text(
-                        loc.selectCategoryHint,
-                        style: TextStyle(fontSize: 14.sp),
-                      ),
-                      items: categoryMap.keys
-                          .map(
-                            (c) => DropdownMenuItem(
-                              value: c,
-                              child: Text(c, style: TextStyle(fontSize: 14.sp)),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: widget.prefilledCategory != null
-                          ? null
-                          : (v) {
-                              setState(() {
-                                selectedCategory = v;
-                                selectedSubcategory = null;
-                              });
-                            },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
+                    SizedBox(height: 8.h),
+                    SizedBox(
+                      // FIX: Enforce fixed height to prevent vertical jumping
+                      height: 55.h,
+                      child: DropdownButtonFormField<String>(
+                        initialValue: selectedCategory,
+                        hint: Text(
+                          loc.selectCategoryHint,
+                          style: TextStyle(fontSize: 14.sp),
                         ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 14.h,
-                        ),
-                        filled: widget.prefilledCategory != null,
-                        fillColor: widget.prefilledCategory != null
-                            ? Colors.grey.shade100
-                            : null,
-                      ),
-                      disabledHint: widget.prefilledCategory != null
-                          ? Text(
-                              widget.prefilledCategory!,
-                              style: TextStyle(fontSize: 14.sp),
+                        items: categoryMap.keys
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c,
+                                child: Text(
+                                  c,
+                                  style: TextStyle(fontSize: 14.sp),
+                                ),
+                              ),
                             )
-                          : null,
-                      isExpanded: true,
-                    ),
-                  ),
-                  if (_isCategoryRequired && selectedCategory == null)
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.h, left: 4.w),
-                      child: Text(
-                        loc.categoryRequired,
-                        style: TextStyle(color: Colors.red, fontSize: 12.sp),
-                      ),
-                    ),
-                  SizedBox(height: 20.h),
-
-                  Text(
-                    loc.subcategory,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.sp,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  SizedBox(
-                    // FIX: Enforce fixed height to prevent vertical jumping
-                    height: 55.h,
-                    child: DropdownButtonFormField<String>(
-                      initialValue: selectedSubcategory,
-                      hint: Text(
-                        loc.subcategoryHint,
-                        style: TextStyle(fontSize: 14.sp),
-                      ),
-                      items: subcategories
-                          .map(
-                            (c) => DropdownMenuItem(
-                              value: c,
-                              child: Text(c, style: TextStyle(fontSize: 14.sp)),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (v) {
-                        setState(() {
-                          selectedSubcategory = v;
-                          if (v != 'Other') customSubcategoryController.clear();
-                        });
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 14.h,
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (selectedSubcategory == null ||
-                      selectedSubcategory!.isEmpty)
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.h, left: 4.w),
-                      child: Text(
-                        loc.subcategoryRequired,
-                        style: TextStyle(color: Colors.red, fontSize: 12.sp),
-                      ),
-                    ),
-                  if (_isOtherSelected)
-                    Padding(
-                      padding: EdgeInsets.only(top: 12.h),
-                      child: TextField(
-                        controller: customSubcategoryController,
+                            .toList(),
+                        onChanged: widget.prefilledCategory != null
+                            ? null
+                            : (v) {
+                                setState(() {
+                                  selectedCategory = v;
+                                  selectedSubcategory = null;
+                                });
+                              },
                         decoration: InputDecoration(
-                          labelText: loc.pleaseSpecify,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.r),
                           ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 14.h,
+                          ),
+                          filled: widget.prefilledCategory != null,
+                          fillColor: widget.prefilledCategory != null
+                              ? Colors.grey.shade100
+                              : null,
                         ),
-                        style: TextStyle(fontSize: 14.sp),
-                        onChanged: (_) => setState(() {}),
+                        disabledHint: widget.prefilledCategory != null
+                            ? Text(
+                                widget.prefilledCategory!,
+                                style: TextStyle(fontSize: 14.sp),
+                              )
+                            : null,
+                        isExpanded: true,
                       ),
                     ),
-                  if (_isOtherSelected &&
-                      customSubcategoryController.text.trim().isEmpty)
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.h, left: 4.w),
-                      child: Text(
-                        loc.pleaseSpecifyIssue,
-                        style: TextStyle(color: Colors.red, fontSize: 12.sp),
-                      ),
-                    ),
-                  SizedBox(height: 20.h),
-
-                  Row(
-                    children: [
-                      Text(
-                        loc.capturePhotos,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.sp,
+                    if (_isCategoryRequired && selectedCategory == null)
+                      Padding(
+                        padding: EdgeInsets.only(top: 4.h, left: 4.w),
+                        child: Text(
+                          loc.categoryRequired,
+                          style: TextStyle(color: Colors.red, fontSize: 12.sp),
                         ),
                       ),
-                      Text(
-                        ' *',
-                        style: TextStyle(color: Colors.red, fontSize: 15.sp),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  SizedBox(
-                    height: 90.h,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 3,
-                      separatorBuilder: (_, __) => SizedBox(width: 10.w),
-                      itemBuilder: (context, i) {
-                        if (i < photos.length) {
-                          final photo = photos[i];
-                          return GestureDetector(
-                            onTap: () => _showImagePreview(photo),
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  child: Image.file(
-                                    photo.file,
-                                    width: 90.w,
-                                    height: 90.w,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 2.h,
-                                  left: 2.w,
-                                  child: Container(
-                                    color: Colors.black54,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4.w,
-                                      vertical: 2.h,
-                                    ),
-                                    child: Text(
-                                      DateFormat(
-                                        'dd MMM, hh:mm a',
-                                      ).format(photo.timestamp),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10.sp,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 2.h,
-                                  right: 2.w,
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        setState(() => photos.removeAt(i)),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                        size: 18.sp,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          return GestureDetector(
-                            onTap: _pickImage,
-                            child: Container(
-                              width: 90.w,
-                              height: 90.w,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(12.r),
-                                color: Colors.grey.shade100,
-                              ),
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.grey,
-                                size: 32.sp,
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    loc.photoNote,
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                  ),
-                  SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
 
-                  Text(
-                    loc.location,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.sp,
+                    Text(
+                      loc.subcategory,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Container(
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: Colors.grey.shade50,
+                    SizedBox(height: 8.h),
+                    SizedBox(
+                      // FIX: Enforce fixed height to prevent vertical jumping
+                      height: 55.h,
+                      child: DropdownButtonFormField<String>(
+                        initialValue: selectedSubcategory,
+                        hint: Text(
+                          loc.subcategoryHint,
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
+                        items: subcategories
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c,
+                                child: Text(
+                                  c,
+                                  style: TextStyle(fontSize: 14.sp),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (v) {
+                          setState(() {
+                            selectedSubcategory = v;
+                            if (v != 'Other')
+                              customSubcategoryController.clear();
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 14.h,
+                          ),
+                        ),
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    if (selectedSubcategory == null ||
+                        selectedSubcategory!.isEmpty)
+                      Padding(
+                        padding: EdgeInsets.only(top: 4.h, left: 4.w),
+                        child: Text(
+                          loc.subcategoryRequired,
+                          style: TextStyle(color: Colors.red, fontSize: 12.sp),
+                        ),
+                      ),
+                    if (_isOtherSelected)
+                      Padding(
+                        padding: EdgeInsets.only(top: 12.h),
+                        child: TextField(
+                          controller: customSubcategoryController,
+                          decoration: InputDecoration(
+                            labelText: loc.pleaseSpecify,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                          ),
+                          style: TextStyle(fontSize: 14.sp),
+                          onChanged: (_) => setState(() {}),
+                        ),
+                      ),
+                    if (_isOtherSelected &&
+                        customSubcategoryController.text.trim().isEmpty)
+                      Padding(
+                        padding: EdgeInsets.only(top: 4.h, left: 4.w),
+                        child: Text(
+                          loc.pleaseSpecifyIssue,
+                          style: TextStyle(color: Colors.red, fontSize: 12.sp),
+                        ),
+                      ),
+                    SizedBox(height: 20.h),
+
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: Colors.red,
-                              size: 20.sp,
-                            ),
-                            SizedBox(width: 6.w),
-                            Flexible(
-                              child: Text(
-                                loc.autoDetectedLocation,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8.h),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.w,
-                            vertical: 8.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(6.r),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Text(
-                            address ??
-                                ((location == null ||
-                                        location!.contains("Lat:"))
-                                    ? loc.fetchingAddress
-                                    : location!),
-                            style: TextStyle(fontSize: 15.sp),
+                        Text(
+                          loc.capturePhotos,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.sp,
                           ),
                         ),
-                        SizedBox(height: 6.h),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 2.h),
-                              child: Icon(
-                                Icons.gps_fixed,
-                                size: 16.sp,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            SizedBox(width: 6.w),
-                            Expanded(
-                              child: Text(
-                                gps != null && gps!.isNotEmpty
-                                    ? loc.gpsCoordinates(gps!)
-                                    : loc.fetchingGps,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 6.h),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton.icon(
-                            icon: Icon(Icons.refresh, size: 16.sp),
-                            label: Text(
-                              loc.refresh,
-                              style: TextStyle(fontSize: 13.sp),
-                            ),
-                            onPressed: _requestAndFetchLocation,
-                          ),
+                        Text(
+                          ' *',
+                          style: TextStyle(color: Colors.red, fontSize: 15.sp),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 20.h),
-
-                  Text(
-                    loc.additionalDetails,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.sp,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  TextField(
-                    controller: detailsController,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      hintText: loc.enterDetails,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      contentPadding: EdgeInsets.all(12.w),
-                    ),
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
-                  SizedBox(height: 12.h),
-
-                  Row(
-                    children: [
-                      Icon(Icons.mic, color: Colors.grey, size: 20.sp),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: _isRecording
-                            ? Row(
+                    SizedBox(height: 8.h),
+                    SizedBox(
+                      height: 90.h,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 3,
+                        separatorBuilder: (_, __) => SizedBox(width: 10.w),
+                        itemBuilder: (context, i) {
+                          if (i < photos.length) {
+                            final photo = photos[i];
+                            return GestureDetector(
+                              onTap: () => _showImagePreview(photo),
+                              child: Stack(
                                 children: [
-                                  Flexible(
-                                    child: Text(
-                                      loc.recording,
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.sp,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    child: Image.file(
+                                      photo.file,
+                                      width: 90.w,
+                                      height: 90.w,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 2.h,
+                                    left: 2.w,
+                                    child: Container(
+                                      color: Colors.black54,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w,
+                                        vertical: 2.h,
+                                      ),
+                                      child: Text(
+                                        DateFormat(
+                                          'dd MMM, hh:mm a',
+                                        ).format(photo.timestamp),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10.sp,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 8.w),
-                                  SizedBox(
-                                    width: 18.w,
-                                    height: 18.w,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.red,
-                                      strokeWidth: 3,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : _isPlaying
-                            ? Row(
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      loc.playing,
-                                      style: TextStyle(
-                                        color: mainBlue,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.sp,
+                                  Positioned(
+                                    top: 2.h,
+                                    right: 2.w,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          setState(() => photos.removeAt(i)),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 18.sp,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 8.w),
-                                  SizedBox(
-                                    width: 18.w,
-                                    height: 18.w,
-                                    child: CircularProgressIndicator(
-                                      color: mainBlue,
-                                      strokeWidth: 3,
-                                    ),
-                                  ),
                                 ],
-                              )
-                            : Text(
-                                _audioPath == null
-                                    ? loc.recordVoiceNote
-                                    : loc.voiceNoteRecorded,
-                                style: TextStyle(
-                                  color: Colors.grey.shade700,
-                                  fontSize: 13.sp,
+                              ),
+                            );
+                          } else {
+                            return GestureDetector(
+                              onTap: _pickImage,
+                              child: Container(
+                                width: 90.w,
+                                height: 90.w,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  color: Colors.grey.shade100,
+                                ),
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.grey,
+                                  size: 32.sp,
                                 ),
                               ),
+                            );
+                          }
+                        },
                       ),
-                      if (!_isRecording && _audioPath == null)
-                        IconButton(
-                          icon: Icon(Icons.mic, color: mainBlue, size: 22.sp),
-                          onPressed: _startRecording,
-                        ),
-                      if (_isRecording)
-                        IconButton(
-                          icon: Icon(
-                            Icons.stop,
-                            color: Colors.red,
-                            size: 22.sp,
-                          ),
-                          onPressed: _stopRecording,
-                        ),
-                      if (!_isRecording && _audioPath != null)
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                _isPlaying ? Icons.pause : Icons.play_arrow,
-                                color: mainBlue,
-                                size: 22.sp,
-                              ),
-                              onPressed: _isPlaying ? _stopAudio : _playAudio,
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                                size: 22.sp,
-                              ),
-                              onPressed: _deleteVoiceNote,
-                              tooltip: loc.deleteVoiceNote,
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                  SizedBox(height: 28.h),
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      loc.photoNote,
+                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                    ),
+                    SizedBox(height: 20.h),
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _isFormValid
-                            ? mainBlue
-                            : Colors.grey.shade300,
-                        padding: EdgeInsets.symmetric(vertical: 16.h),
-                        shape: RoundedRectangleBorder(
+                    Text(
+                      loc.location,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Container(
+                      padding: EdgeInsets.all(12.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: Colors.grey.shade50,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: Colors.red,
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 6.w),
+                              Flexible(
+                                child: Text(
+                                  loc.autoDetectedLocation,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8.h),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 8.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6.r),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Text(
+                              address ??
+                                  ((location == null ||
+                                          location!.contains("Lat:"))
+                                      ? loc.fetchingAddress
+                                      : location!),
+                              style: TextStyle(fontSize: 15.sp),
+                            ),
+                          ),
+                          SizedBox(height: 6.h),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(top: 2.h),
+                                child: Icon(
+                                  Icons.gps_fixed,
+                                  size: 16.sp,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(width: 6.w),
+                              Expanded(
+                                child: Text(
+                                  gps != null && gps!.isNotEmpty
+                                      ? loc.gpsCoordinates(gps!)
+                                      : loc.fetchingGps,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 6.h),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton.icon(
+                              icon: Icon(Icons.refresh, size: 16.sp),
+                              label: Text(
+                                loc.refresh,
+                                style: TextStyle(fontSize: 13.sp),
+                              ),
+                              onPressed: _requestAndFetchLocation,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+
+                    Text(
+                      loc.additionalDetails,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    TextField(
+                      controller: detailsController,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        hintText: loc.enterDetails,
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.r),
                         ),
-                        foregroundColor: Colors.white,
-                        textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                        ),
+                        contentPadding: EdgeInsets.all(12.w),
                       ),
-                      onPressed: _isFormValid && !_isSubmitting
-                          ? _submitReport
-                          : null,
-                      child: _isSubmitting
-                          ? SizedBox(
-                              height: 20.h,
-                              width: 20.w,
-                              child: const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                  size: 20.sp,
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  loc.submitReport,
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
+                    SizedBox(height: 12.h),
+
+                    Row(
+                      children: [
+                        Icon(Icons.mic, color: Colors.grey, size: 20.sp),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: _isRecording
+                              ? Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        loc.recording,
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    SizedBox(
+                                      width: 18.w,
+                                      height: 18.w,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.red,
+                                        strokeWidth: 3,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : _isPlaying
+                              ? Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        loc.playing,
+                                        style: TextStyle(
+                                          color: mainBlue,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    SizedBox(
+                                      width: 18.w,
+                                      height: 18.w,
+                                      child: CircularProgressIndicator(
+                                        color: mainBlue,
+                                        strokeWidth: 3,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  _audioPath == null
+                                      ? loc.recordVoiceNote
+                                      : loc.voiceNoteRecorded,
                                   style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Colors.grey.shade700,
+                                    fontSize: 13.sp,
                                   ),
                                 ),
-                              ],
+                        ),
+                        if (!_isRecording && _audioPath == null)
+                          IconButton(
+                            icon: Icon(Icons.mic, color: mainBlue, size: 22.sp),
+                            onPressed: _startRecording,
+                          ),
+                        if (_isRecording)
+                          IconButton(
+                            icon: Icon(
+                              Icons.stop,
+                              color: Colors.red,
+                              size: 22.sp,
                             ),
+                            onPressed: _stopRecording,
+                          ),
+                        if (!_isRecording && _audioPath != null)
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  _isPlaying ? Icons.pause : Icons.play_arrow,
+                                  color: mainBlue,
+                                  size: 22.sp,
+                                ),
+                                onPressed: _isPlaying ? _stopAudio : _playAudio,
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                  size: 22.sp,
+                                ),
+                                onPressed: _deleteVoiceNote,
+                                tooltip: loc.deleteVoiceNote,
+                              ),
+                            ],
+                          ),
+                      ],
                     ),
+                    SizedBox(height: 28.h),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _isFormValid
+                              ? mainBlue
+                              : Colors.grey.shade300,
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          foregroundColor: Colors.white,
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                        onPressed: _isFormValid && !_isSubmitting
+                            ? _submitReport
+                            : null,
+                        child: _isSubmitting
+                            ? SizedBox(
+                                height: 20.h,
+                                width: 20.w,
+                                child: const CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.send,
+                                    color: Colors.white,
+                                    size: 20.sp,
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  Text(
+                                    loc.submitReport,
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: navBg,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8.r,
+                    offset: Offset(0, -2.h),
+                  ),
+                ],
+              ),
+              child: BottomNavigationBar(
+                backgroundColor: navBg,
+                currentIndex: 1,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: mainBlue,
+                unselectedItemColor: Colors.grey,
+                iconSize: 24.sp,
+                selectedFontSize: 14.sp,
+                unselectedFontSize: 13.sp,
+                elevation: 0,
+                showUnselectedLabels: true,
+                onTap: (index) {
+                  if (index == 0) {
+                    // Use Provider to get the user's name
+                    final fullName = Provider.of<UserProvider>(
+                      context,
+                      listen: false,
+                    ).fullName;
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      (route) => false,
+                    );
+                  } else if (index == 2) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => MyReportsPage()),
+                    );
+                  } else if (index == 3) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => UserProfilePage(),
+                      ),
+                    );
+                  }
+                },
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: 1 == 0 ? mainBlue.withOpacity(0.12) : null,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(Icons.home, color: Colors.grey, size: 24.sp),
+                    ),
+                    label: loc.home,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: mainBlue.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.add_circle_outline,
+                        color: mainBlue,
+                        size: 24.sp,
+                      ),
+                    ),
+                    label: loc.report,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: 1 == 2 ? mainBlue.withOpacity(0.12) : null,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.list_alt,
+                        color: Colors.grey,
+                        size: 24.sp,
+                      ),
+                    ),
+                    label: loc.complaints,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: 1 == 3 ? mainBlue.withOpacity(0.12) : null,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.grey,
+                        size: 24.sp,
+                      ),
+                    ),
+                    label: loc.profile,
                   ),
                 ],
               ),
             ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: navBg,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 8.r,
-                  offset: Offset(0, -2.h),
-                ),
-              ],
-            ),
-            child: BottomNavigationBar(
-              backgroundColor: navBg,
-              currentIndex: 1,
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: mainBlue,
-              unselectedItemColor: Colors.grey,
-              iconSize: 24.sp,
-              selectedFontSize: 14.sp,
-              unselectedFontSize: 13.sp,
-              elevation: 0,
-              showUnselectedLabels: true,
-              onTap: (index) {
-                if (index == 0) {
-                  // Use Provider to get the user's name
-                  final fullName = Provider.of<UserProvider>(
-                    context,
-                    listen: false,
-                  ).fullName;
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                    (route) => false,
-                  );
-                } else if (index == 2) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => MyReportsPage()),
-                  );
-                } else if (index == 3) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => UserProfilePage()),
-                  );
-                }
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: 1 == 0 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(Icons.home, color: Colors.grey, size: 24.sp),
-                  ),
-                  label: loc.home,
-                ),
-                BottomNavigationBarItem(
-                  icon: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: mainBlue.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(
-                      Icons.add_circle_outline,
-                      color: mainBlue,
-                      size: 24.sp,
-                    ),
-                  ),
-                  label: loc.report,
-                ),
-                BottomNavigationBarItem(
-                  icon: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: 1 == 2 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(
-                      Icons.list_alt,
-                      color: Colors.grey,
-                      size: 24.sp,
-                    ),
-                  ),
-                  label: loc.complaints,
-                ),
-                BottomNavigationBarItem(
-                  icon: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: 1 == 3 ? mainBlue.withOpacity(0.12) : null,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(Icons.person, color: Colors.grey, size: 24.sp),
-                  ),
-                  label: loc.profile,
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

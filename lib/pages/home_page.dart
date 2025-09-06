@@ -43,8 +43,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _userProfileBox = Hive.box<UserProfile>('userProfileBox');
     _reportsBox = Hive.box<Report>('reportsBox');
-    _loadDataFromCache();
-    _fetchHomePageData(); // Fetch fresh data in background
+    _migrateReportDatesToISO().then((_) {
+      _loadDataFromCache();
+      _fetchHomePageData();
+    });
   }
 
   void _loadDataFromCache() {
@@ -63,8 +65,8 @@ class _HomePageState extends State<HomePage> {
       _pendingReports = _totalReports - _resolvedReports;
 
       reports.sort((a, b) {
-        DateTime dateA = DateFormat('MMM dd, h:mm a').parse(a.date);
-        DateTime dateB = DateFormat('MMM dd, h:mm a').parse(b.date);
+        DateTime dateA = DateTime.parse(a.date);
+        DateTime dateB = DateTime.parse(b.date);
         return dateB.compareTo(dateA);
       });
       _recentReports = reports.take(4).toList();
@@ -128,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                 "${reportData['category'] ?? 'N/A'} - ${reportData['subcategory'] ?? 'N/A'}"
             ..date = reportData['dateTime'] != null
                 ? DateTime.parse(reportData['dateTime'])
-                      .toString() // Store as raw string
+                      .toIso8601String() // Store as ISO string
                 : 'Unknown Date'
             ..status = (reportData['assignedTo'] != null)
                 ? "Assigned"
@@ -156,6 +158,32 @@ class _HomePageState extends State<HomePage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Failed to refresh data: $e")));
+      }
+    }
+  }
+
+  Future<void> _migrateReportDatesToISO() async {
+    final reports = _reportsBox.values.toList();
+    bool updated = false;
+    for (final report in reports) {
+      try {
+        // If already ISO, this will succeed
+        DateTime.parse(report.date);
+      } catch (_) {
+        // Try to parse as display format and convert to ISO
+        try {
+          final parsed = DateFormat('MMM dd, h:mm a').parse(report.date);
+          report.date = parsed.toIso8601String();
+          updated = true;
+        } catch (_) {
+          // If can't parse, leave as is
+        }
+      }
+    }
+    if (updated) {
+      await _reportsBox.clear();
+      for (final report in reports) {
+        await _reportsBox.put(report.complaintId, report);
       }
     }
   }
@@ -654,14 +682,11 @@ class _HomePageState extends State<HomePage> {
                               DateTime date;
                               String subtitle;
                               try {
-                                // Try to parse the stored date
                                 date = DateTime.parse(report.date);
-                                // Format it correctly
                                 subtitle = DateFormat.yMMMd().add_jm().format(
                                   date,
                                 );
                               } catch (e) {
-                                // Fallback if parsing fails
                                 subtitle = report.date;
                               }
 

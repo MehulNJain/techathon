@@ -32,12 +32,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   Future<void> _loadReports() async {
-    // Show cached data immediately, if available
-    if (_reportsBox.isNotEmpty) {
-      if (mounted) setState(() => _isLoading = false);
-    }
-    // Fetch fresh data from network
+    setState(() => _isLoading = true);
     await _fetchUserReportsFromFirebase();
+    if (mounted) setState(() => _isLoading = false);
   }
 
   Future<void> _fetchUserReportsFromFirebase() async {
@@ -71,9 +68,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
             ..title =
                 "${reportData['category'] ?? 'N/A'} - ${reportData['subcategory'] ?? 'N/A'}"
             ..date = reportData['dateTime'] != null
-                ? DateFormat(
-                    'MMM dd, h:mm a',
-                  ).format(DateTime.parse(reportData['dateTime']))
+                ? DateTime.parse(reportData['dateTime']).toIso8601String()
                 : 'Unknown Date'
             ..status = effectiveStatus
             ..image = (reportData['photos'] as List?)?.isNotEmpty ?? false
@@ -189,6 +184,16 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
+  // New method to format date
+  String _formatDate(String dateStr) {
+    try {
+      final date = DateTime.parse(dateStr);
+      return DateFormat('MMM dd, h:mm a').format(date);
+    } catch (_) {
+      return dateStr;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
@@ -213,8 +218,18 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
           // Sort reports by date descending
           reports.sort((a, b) {
-            DateTime dateA = DateFormat('MMM dd, h:mm a').parse(a.date);
-            DateTime dateB = DateFormat('MMM dd, h:mm a').parse(b.date);
+            DateTime dateA;
+            DateTime dateB;
+            try {
+              dateA = DateTime.parse(a.date);
+            } catch (_) {
+              dateA = DateTime.now();
+            }
+            try {
+              dateB = DateTime.parse(b.date);
+            } catch (_) {
+              dateB = DateTime.now();
+            }
             return dateB.compareTo(dateA);
           });
 
@@ -376,7 +391,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     style: TextStyle(fontSize: 15.sp),
                                   ),
                                   subtitle: Text(
-                                    report.date,
+                                    _formatDate(report.date),
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       color: Colors.grey.shade600,
