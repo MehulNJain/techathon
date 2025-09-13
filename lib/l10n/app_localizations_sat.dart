@@ -115,10 +115,16 @@ class AppLocalizationsSat extends AppLocalizations {
   String get complaints => 'ᱥᱤᱠᱟᱭᱟᱴ';
 
   @override
-  String get profile => 'ᱯᱨᱚᱯᱟᱭᱤᱞ';
+  String get profile => 'ᱯᱨᱚᱯᱷᱟᱭᱤᱞ';
 
   @override
-  String get good_morning => 'ᱥᱟᱹᱜᱩᱱ ᱥᱮᱛᱟ,';
+  String get good_morning => 'ᱡᱚᱦᱟᱹᱨ';
+
+  @override
+  String get good_afternoon => 'ᱡᱚᱦᱟᱹᱨ ᱟᱹᱯᱷᱟᱱᱛᱚᱨ';
+
+  @override
+  String get good_evening => 'ᱡᱚᱦᱟᱹᱨ ᱤᱵᱤᱝᱜ';
 
   @override
   String get quickReport => 'ᱴᱤᱜᱮ ᱨᱤᱯᱚᱨᱴ';
@@ -154,10 +160,13 @@ class AppLocalizationsSat extends AppLocalizations {
   String get pending => 'ᱯᱮᱱᱰᱤᱝ';
 
   @override
-  String get inProgress => 'ᱪᱟᱹᱞᱩ ᱟᱠᱟᱱᱟ';
+  String get inProgress => 'ᱦᱚᱨ ᱨᱮ';
 
   @override
-  String get resolved => 'ᱥᱟᱯᱲᱟᱣ ᱦᱩᱭ ᱮᱱᱟ';
+  String get success => 'ᱨᱟᱹᱥ!';
+
+  @override
+  String get resolved => 'ᱥᱩᱞᱩᱛᱟᱢ';
 
   @override
   String get recentReports => 'ᱱᱩᱛᱤᱱ ᱨᱤᱯᱚᱨᱴ';
@@ -172,7 +181,7 @@ class AppLocalizationsSat extends AppLocalizations {
   String get potholeRepair => 'ᱯᱚᱴᱳᱞ ᱢᱮᱱᱰᱚᱢ';
 
   @override
-  String get reportIssue => 'ᱮᱴᱟᱜ ᱱᱟᱞᱤᱥ ᱮᱢ ᱢᱮ';
+  String get reportIssue => 'ᱵᱟᱣᱟ ᱨᱤᱯᱚᱨᱴ ᱠᱟᱨᱟᱢ';
 
   @override
   String get selectCategory => 'ᱠᱮᱴᱮᱜᱚᱨᱤ ᱮᱱᱚᱢ';
@@ -217,7 +226,7 @@ class AppLocalizationsSat extends AppLocalizations {
   String get addressNotFound => 'ᱟᱰᱨᱮᱥ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ';
 
   @override
-  String get fetchingGps => 'GPS ᱱᱚᱠᱚᱢ...';
+  String get fetchingGps => 'GPS ᱱ ᱠᱚᱢ...';
 
   @override
   String get refresh => 'ᱰᱚ ᱵᱟᱨᱟ';
@@ -241,7 +250,7 @@ class AppLocalizationsSat extends AppLocalizations {
   String get voiceNoteRecorded => 'ᱣᱚᱭᱥ ᱱᱚᱴ ᱨᱤᱠᱳᱰ ᱠᱟᱱᱟ';
 
   @override
-  String get deleteVoiceNote => 'ᱣᱚᱭᱥ ᱱᱚᱴ ᱢᱤᱴᱟᱢ';
+  String get deleteVoiceNote => 'ᱣᱚᱭᱥ ᱱ ᱴ ᱢᱤᱴᱟᱢ';
 
   @override
   String get submitReport => 'ᱨᱤᱯᱚᱨᱴ ᱯᱟᱴᱮᱭᱚᱢ';
@@ -277,7 +286,7 @@ class AppLocalizationsSat extends AppLocalizations {
   String get contactSupport => 'ᱥᱟᱦᱟᱭ ᱛᱮ ᱡᱚᱜᱟᱡᱚᱜ ᱠᱟᱨᱟᱢ';
 
   @override
-  String get logout => 'ᱞᱚᱜᱚᱴ';
+  String get logout => 'ᱞᱚᱜᱟᱣᱴ';
 
   @override
   String get workerLoginTitle => 'ᱣᱟᱹᱠᱚᱨ ᱞᱚᱜᱤᱱ';
@@ -317,7 +326,7 @@ class AppLocalizationsSat extends AppLocalizations {
   String get myTasks => 'ᱟᱨ ᱠᱟᱢ';
 
   @override
-  String get completed => 'ᱯᱩᱨᱟᱹᱣ ᱮᱱᱟ';
+  String get completed => 'ᱥᱟᱢᱯᱩᱨᱱᱚᱢ';
 
   @override
   String get filterAll => 'ᱥᱟᱵ';
@@ -353,145 +362,180 @@ class AppLocalizationsSat extends AppLocalizations {
   String get priorityLow => 'ᱠᱚᱢ';
 
   @override
-  String get viewDetails => 'ᱱᱟᱞᱤᱥ ᱯᱟᱧᱡᱟ ᱢᱮ';
+  String get viewDetails => 'ᱠᱦᱤᱱᱤ ᱰᱮᱠᱚᱢ';
 
   @override
-  String get workerId => 'ᱣᱟᱹᱠᱚᱨ ID';
+  String get workerId => 'ᱠᱟᱹᱢᱤᱭᱟᱹ ID';
 
   @override
   String get phoneNumber => 'ᱯᱷᱚᱱ ᱢᱚᱱᱵᱚᱨ';
 
   @override
-  String get department => 'ᱰᱤᱯᱟᱨᱴᱢᱮᱱᱴ';
+  String get department => 'ᱵᱤᱵᱷᱟᱜ';
 
   @override
-  String get assignedArea => 'ᱟᱥᱟᱭᱤᱱᱰ ᱮᱨᱤᱭᱟ';
+  String get assignedArea => 'ᱵᱟᱪᱷᱟᱣ ᱴᱚᱴᱷᱟ';
 
   @override
-  String get recognitionProgress => 'ᱳᱝᱠᱚ ᱟᱨ ᱦᱚᱨ';
+  String get recognitionProgress => 'ᱢᱟᱱᱚᱛ ᱟᱨ ᱞᱟᱦᱟᱱᱛᱤ';
 
   @override
-  String get tasksCompleted => 'ᱤᱦᱟᱴᱟ ᱢᱟᱥᱚᱢ ᱛᱮ ᱠᱟᱢ ᱥᱟᱢᱯᱩᱨᱱᱚᱢ';
+  String get tasksCompleted => 'ᱯᱩᱨᱟᱹᱣ ᱠᱟᱹᱢᱤᱠᱚ';
 
   @override
-  String get earnedBadges => 'ᱵᱮᱰᱡ ᱯᱟᱭᱱᱚᱢ';
+  String get earnedBadges => 'ᱧᱟᱢ ᱟᱠᱟᱱ ᱵᱮᱰᱡᱽ';
 
   @override
-  String get quickResponse => 'ᱴᱤᱜᱮ ᱡᱟᱣᱟᱵ';
+  String get quickResponse => 'ᱞᱚᱜᱚᱱ ᱨᱚᱲ';
 
   @override
-  String get qualityWork => 'ᱵᱷᱟᱞᱚ ᱠᱟᱢ';
+  String get qualityWork => 'ᱱᱟᱯᱟᱭ ᱠᱟᱹᱢᱤ';
 
   @override
-  String get onTime => 'ᱥᱟᱢᱭ ᱛᱮ';
+  String get onTime => 'ᱚᱠᱛᱚ ᱨᱮ';
 
   @override
-  String get changePassword => 'ᱯᱟᱥᱱᱚᱣᱚᱨᱰ ᱵᱟᱰᱞᱚᱢ';
+  String get changePassword => 'ᱯᱟᱥᱣᱟᱨᱰ ᱵᱚᱫᱚᱞ';
 
   @override
-  String get changeLanguage => 'ᱨᱩᱴᱤᱭᱟᱠ ᱵᱟᱰᱞᱚᱢ';
+  String get currentPassword => 'ᱱᱤᱛᱚᱜᱟᱜ ᱯᱟᱥᱣᱟᱨᱰ';
 
   @override
-  String get selectLanguage => 'Select Language';
+  String get newPassword => 'ᱱᱟᱶᱟ ᱯᱟᱥᱣᱟᱨᱰ';
 
   @override
-  String get pauseVoiceNote => 'ᱨᱚᱲ ᱱᱚᱴ ᱛᱟᱧᱦᱚᱯ ᱢᱮ';
+  String get confirmPassword => 'ᱯᱟᱥᱣᱟᱨᱰ ᱫᱚᱦᱲᱟ ᱫᱚᱦᱚᱭ ᱢᱮ';
 
   @override
-  String get playVoiceNote => 'ᱨᱚᱲ ᱱᱚᱴ ᱵᱟᱡᱟᱣ ᱢᱮ';
+  String get update => 'ᱟᱯᱰᱮᱴ';
 
   @override
-  String get complaintNotFound => 'ᱱᱟᱞᱤᱥ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟ';
+  String get cancel => 'ᱵᱟᱫ';
 
   @override
-  String refId(String id, Object complaintId) {
-    return 'ᱥᱩᱫᱷᱤ ᱟᱭᱰᱤ: #$complaintId';
+  String get passwordTooShort => 'ᱯᱟᱥᱣᱟᱨᱰ ᱖ ᱟᱠᱷᱚᱨ ᱠᱷᱚᱱ ᱡᱟᱹᱥᱛᱤ ᱦᱩᱭᱩᱜᱼᱟ';
+
+  @override
+  String get passwordsDoNotMatch => 'ᱯᱟᱥᱣᱟᱨᱰ ᱵᱟᱱᱟᱨ ᱥᱚᱢᱟᱱ ᱵᱟᱝ ᱠᱟᱱᱟ';
+
+  @override
+  String get passwordUpdateSuccess => 'ᱯᱟᱥᱣᱟᱨᱰ ᱥᱟᱯᱷᱟᱞ ᱛᱮ ᱟᱯᱰᱮᱴ ᱦᱩᱭ ᱮᱱᱟ';
+
+  @override
+  String get currentPasswordIncorrect => 'ᱱᱤᱛᱚᱜᱟᱜ ᱯᱟᱥᱣᱟᱨᱰ ᱵᱷᱩᱞ ᱠᱟᱱᱟ';
+
+  @override
+  String get changeLanguage => 'ᱯᱟᱹᱨᱥᱤ ᱵᱚᱫᱚᱞ';
+
+  @override
+  String get pauseVoiceNote => 'Pause Voice Note';
+
+  @override
+  String get playVoiceNote => 'Play Voice Note';
+
+  @override
+  String get complaintNotFound => 'Complaint not found.';
+
+  @override
+  String refId(String id) {
+    return 'ᱥᱟᱹᱱᱫᱚᱨᱵ: $id';
   }
 
   @override
-  String get close => 'ᱵᱚᱱᱫᱚ ᱢᱮ';
+  String get close => 'Close';
 
   @override
-  String get statusTimeline => 'ᱚᱵᱚᱥᱛᱟ ᱴᱟᱭᱤᱢᱞᱟᱭᱤᱱ';
+  String get statusTimeline => 'ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱴᱟᱭᱢᱞᱟᱭᱱ';
 
   @override
-  String get submitted => 'ᱱᱟᱞᱤᱥ ᱡᱚᱢᱟ ᱮᱱᱟ';
+  String get submitted => 'ᱥᱟᱹᱱᱫᱚᱨᱵ ᱦᱚᱲᱚᱜ';
 
   @override
-  String get reportSubmittedByCitizen => 'ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱥᱟᱯᱷᱟᱞ ᱛᱮ ᱡᱚᱢᱟ ᱦᱩᱭ ᱮᱱᱟ!';
+  String get reportSubmittedByCitizen =>
+      'ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱥᱟᱯᱲᱟᱣ ᱦᱚᱲᱚᱜ ᱠᱚ ᱥᱟᱹᱱᱫᱚᱨᱵ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾';
 
   @override
-  String get assigned => 'ᱵᱟᱪᱷᱟᱣ ᱟᱠᱟᱱᱟ';
+  String get assigned => 'ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾';
 
   @override
-  String get timestampNotAvailable => 'ᱚᱠᱛᱚ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ';
+  String get timestampNotAvailable => 'Timestamp not available';
 
   @override
-  String get assignedToMunicipalWorker =>
-      'ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱢᱤᱫᱴᱮᱱ ᱱᱟᱜᱟᱨᱯᱟᱞᱤᱠᱟ ᱠᱟᱹᱢᱤᱭᱟᱹ ᱥᱟᱶ ᱜᱚᱴᱟ ᱟᱠᱟᱱᱟ';
+  String get assignedToMunicipalworker =>
+      'ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱒᱔ ᱴᱟᱲᱟᱝ ᱵᱷᱤᱛᱨᱮ ᱟᱞᱮᱭᱟᱜ ᱴᱤᱢ ᱮ ᱧᱮᱞᱟ ᱟᱨ ᱥᱟᱯᱲᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱥᱚᱦᱤ ᱵᱤᱵᱷᱟᱜ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾';
 
   @override
-  String get updateTimestampPending => 'ᱟᱯᱰᱮᱴ ᱥᱟᱢᱭ ᱯᱮᱱᱰᱤᱝ';
+  String get updateTimestampPending => 'Update timestamp pending';
 
   @override
-  String get workHasStarted => 'ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱠᱟᱹᱢᱤ ᱮᱦᱚᱵ ᱟᱠᱟᱱᱟ';
+  String get workHasStarted => 'ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱠᱚᱢ ᱦᱚᱲᱚᱜ';
 
   @override
-  String get issueResolved => 'ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱥᱟᱯᱲᱟᱣ ᱦᱩᱭ ᱮᱱᱟ';
+  String get issueResolved => 'ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱦᱚᱲᱚᱜ ᱠᱚ ᱥᱟᱹᱱᱫᱚᱨᱵ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾';
 
   @override
-  String get reportDetails => 'ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱵᱤᱥᱛᱟᱨ';
-
-  @override
-  String get photosSubmitted => 'ᱡᱚᱢᱟ ᱦᱩᱭ ᱟᱠᱟᱱ ᱪᱤᱛᱟᱹᱨᱠᱚ';
-
-  @override
-  String get issueDescription => 'ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱵᱤᱵᱨᱟᱬ';
-
-  @override
-  String get good_afternoon => 'ᱥᱟᱹᱜᱩᱱ ᱥᱤᱝᱜᱟᱹᱲ,';
-
-  @override
-  String get good_evening => 'ᱥᱟᱹᱜᱩᱱ ᱟᱹᱭᱩᱵ,';
-
-  @override
-  String get permissionRequired => 'ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱡᱟᱹᱨᱩᱨᱤ';
+  String get permissionRequired => 'Permission Required';
 
   @override
   String get locationPermissionPermanentlyDenied =>
-      'ᱡᱟᱭᱜᱟ ᱨᱮᱭᱟᱜ ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱡᱟᱣᱜᱮ ᱞᱟᱹᱜᱤᱫ ᱵᱟᱝ ᱮᱢ ᱟᱠᱟᱱᱟ᱾ ᱫᱟᱭᱟᱠᱟᱛᱮ ᱱᱤᱭᱟᱹ ᱮᱯ ᱥᱮᱴᱤᱝᱥ ᱠᱷᱚᱱ ᱪᱟᱹᱞᱩᱭ ᱯᱮ᱾';
+      'Location permission is permanently denied. Please enable it from app settings.';
 
   @override
-  String get openSettings => 'ᱥᱮᱴᱤᱝᱥ ᱠᱷᱩᱞᱟᱹᱭ ᱯᱮ';
+  String get openSettings => 'Open Settings';
 
   @override
-  String get cancel => 'ᱵᱟᱹᱰᱤᱡ';
+  String get locationPermissionDenied => 'Location permission denied';
 
   @override
-  String get locationPermissionDenied => 'ᱡᱟᱭᱜᱟ ᱨᱮᱭᱟᱜ ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱵᱟᱝ ᱮᱢ ᱟᱠᱟᱱᱟ';
-
-  @override
-  String get unableToFetchLocation => 'ᱡᱟᱭᱜᱟ ᱧᱟᱢ ᱨᱮ ᱟᱹᱥᱩᱵᱤᱫᱷᱟ';
+  String get unableToFetchLocation => 'Unable to fetch location';
 
   @override
   String gpsCoordinates(String gps) {
-    return 'GPS ᱱᱤᱨᱫᱮᱥᱟᱸᱠ: $gps';
+    return 'GPS coordinates: $gps';
   }
 
   @override
   String submitFailed(String error) {
-    return 'ᱯᱟᱴᱮᱭᱚᱢ ᱨᱮ ᱵᱤᱯᱷᱚᱞ: $error';
+    return 'Failed to submit: $error';
   }
 
   @override
-  String get pendingReview => 'ᱜᱤᱱᱚᱛᱤ ᱞᱟᱹᱜᱤᱫ ᱵᱩᱡᱷᱟᱣ ᱮᱱᱟ';
+  String get pendingReview => 'ᱵᱟᱹᱲᱤᱭᱟᱹᱜ ᱥᱟᱯᱲᱟᱣ';
 
   @override
-  String get currentStage => 'ᱱᱤᱛᱚᱜᱟᱜ ᱛᱟᱦᱮᱱ';
+  String get currentStage => 'ᱥᱟᱹᱱᱫᱚᱨᱵ ᱠᱚ ᱦᱚᱲᱚᱜ';
 
   @override
-  String get waitingForAssignment => 'ᱠᱟᱹᱢᱤᱭᱟᱹ ᱵᱟᱪᱷᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱛᱟᱧᱡᱟ';
+  String get waitingForAssignment => 'ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾ ᱠᱚᱢ ᱵᱟᱹᱲᱤᱭᱟᱹᱜ';
 
   @override
-  String get notYet => 'ᱱᱤᱛᱚᱜ ᱵᱟᱝ';
+  String get notYet => 'ᱵᱟᱹᱲᱤᱭᱟᱹᱜ ᱦᱚᱲᱚᱜ';
+
+  @override
+  String get assignedToMunicipalWorker =>
+      'ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱒᱔ ᱴᱟᱲᱟᱝ ᱵᱷᱤᱛᱨᱮ ᱧᱮᱞ ᱠᱟᱛᱮ ᱥᱚᱦᱤ ᱵᱤᱵᱷᱟᱜ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾';
+
+  @override
+  String get reportDetails => 'ᱨᱤᱯᱚᱴ ᱵᱤᱵᱚᱨᱚᱱ';
+
+  @override
+  String get photosSubmitted => 'ᱯᱷᱚᱴᱚ ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ';
+
+  @override
+  String get issueDescription => 'ᱵᱟᱣᱟ ᱵᱤᱵᱚᱨᱚᱱ';
+
+  @override
+  String get errorMessage => 'Error';
+
+  @override
+  String get notAvailable => 'Not available';
+
+  @override
+  String get worker => 'ᱠᱟᱹᱢᱤᱭᱟᱹ';
+
+  @override
+  String get selectLanguage => 'ᱯᱟᱹᱨᱥᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ';
+
+  @override
+  String get reportIssuee => 'ᱮᱴᱟᱜ ᱩᱡᱩᱨ ᱥᱟᱯᱲᱟᱣ ᱢᱮ';
 }

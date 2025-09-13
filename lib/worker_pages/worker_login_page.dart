@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-// Import WorkerHomePage
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// Import the generated localization file
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/app_localizations.dart';
 import 'worker_main_page.dart';
 
@@ -17,40 +18,120 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  void _loginWorker() {
+  @override
+  void initState() {
+    super.initState();
+    _checkForSavedCredentials();
+  }
+
+  // Check if worker credentials are saved in local storage
+  Future<void> _checkForSavedCredentials() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedWorkerId = prefs.getString('workerId');
+
+      if (savedWorkerId != null) {
+        // Auto-authenticate and navigate to worker home
+        setState(() => _isLoading = true);
+
+        // Verify if this worker still exists in Firebase
+        final workerSnapshot = await FirebaseDatabase.instance
+            .ref()
+            .child('workers')
+            .child(savedWorkerId)
+            .get();
+
+        if (workerSnapshot.exists) {
+          if (!mounted) return;
+          setState(() => _isLoading = false);
+
+          // Navigate to worker main page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const WorkerMainPage()),
+          );
+        } else {
+          // Worker no longer exists, clear saved credentials
+          await prefs.remove('workerId');
+          if (!mounted) return;
+          setState(() => _isLoading = false);
+        }
+      }
+    } catch (e) {
+      // Handle any errors
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _loginWorker() async {
     // Get the localization instance
     final l10n = AppLocalizations.of(context)!;
 
-    String userId = _userIdController.text.trim();
+    String workerId = _userIdController.text.trim();
     String password = _passwordController.text;
 
-    if (userId.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        // Use the translated string
-        SnackBar(content: Text(l10n.enterCredentialsError)),
-      );
+    if (workerId.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.enterCredentialsError)));
       return;
     }
 
     setState(() => _isLoading = true);
 
-    // Dummy authentication logic
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return; // Check if the widget is still in the tree
+    try {
+      // Check if worker exists in Firebase database
+      final workerSnapshot = await FirebaseDatabase.instance
+          .ref()
+          .child('workers')
+          .child(workerId)
+          .get();
+
+      if (!workerSnapshot.exists) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.invalidCredentialsError)));
+        return;
+      }
+
+      final workerData = workerSnapshot.value as Map<dynamic, dynamic>;
+      final storedPassword = workerData['password'] as String?;
+
+      if (storedPassword == null || storedPassword != password) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.invalidCredentialsError)));
+        return;
+      }
+
+      // Authentication successful
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('workerId', workerId);
+
+      // Optional: You could also store worker name or other non-sensitive info
+      if (workerData.containsKey('name')) {
+        await prefs.setString('workerName', workerData['name'] as String);
+      }
+
+      if (!mounted) return;
       setState(() => _isLoading = false);
 
-      if (userId == "worker" && password == "1234") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WorkerMainPage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          // Use the translated string
-          SnackBar(content: Text(l10n.invalidCredentialsError)),
-        );
-      }
-    });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const WorkerMainPage()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('${l10n.errorMessage}: $e')));
+    }
   }
 
   @override
@@ -60,7 +141,6 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
 
     return Scaffold(
       appBar: AppBar(
-        // Use the translated string
         title: Text(l10n.workerLoginTitle, style: TextStyle(fontSize: 18.sp)),
       ),
       body: LayoutBuilder(
@@ -102,7 +182,7 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                     ),
                     SizedBox(height: 24.h),
 
-                    // User ID field
+                    // Worker ID field
                     TextField(
                       controller: _userIdController,
                       decoration: InputDecoration(
@@ -128,6 +208,7 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
+                      onSubmitted: (_) => _loginWorker(),
                     ),
                     SizedBox(height: 20.h),
 

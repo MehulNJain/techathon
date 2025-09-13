@@ -69,18 +69,36 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
         backgroundColor: Colors.orange.shade700,
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: Text(
-          loc.home,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 22.sp,
-          ),
-        ),
+        title: WorkerDashboardHeader(),
+        toolbarHeight: 110.h, // Increased height
       ),
       body: Column(
         children: [
-          const WorkerDashboardHeader(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            child: Card(
+              color: Colors.white, // Set card color to white
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.r),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 8.h,
+                  horizontal: 10.w,
+                ), // Decreased vertical padding
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _SimpleStatusCard(number: '12', label: loc.pending),
+                    _SimpleStatusCard(number: '8', label: loc.inProgress),
+                    _SimpleStatusCard(number: '45', label: loc.completed),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Filters
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             alignment: Alignment.centerLeft,
@@ -134,7 +152,6 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
           ),
         ],
       ),
-      // This page correctly has NO BottomNavigationBar.
     );
   }
 
@@ -314,89 +331,36 @@ class WorkerDashboardHeader extends StatelessWidget {
               Icon(Icons.notifications, color: Colors.white, size: 22.sp),
             ],
           ),
-          SizedBox(height: 16.h),
-          Row(
-            children: [
-              Expanded(
-                child: _InfoCard(
-                  icon: Icons.access_time,
-                  iconBg: Colors.yellowAccent,
-                  number: '12',
-                  label: loc.pending,
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: _InfoCard(
-                  icon: Icons.build,
-                  iconBg: Colors.lightBlueAccent,
-                  number: '8',
-                  label: loc.inProgress,
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: _InfoCard(
-                  icon: Icons.check_circle,
-                  iconBg: Colors.lightGreenAccent,
-                  number: '45',
-                  label: loc.completed,
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
   }
 }
 
-class _InfoCard extends StatelessWidget {
-  final IconData icon;
-  final Color iconBg;
+class _SimpleStatusCard extends StatelessWidget {
   final String number;
   final String label;
-  const _InfoCard({
-    required this.icon,
-    required this.iconBg,
-    required this.number,
-    required this.label,
-  });
+
+  const _SimpleStatusCard({required this.number, required this.label});
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
-      elevation: 3,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.h),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: iconBg,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(icon, color: Colors.black87, size: 20.sp),
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              number,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.sp,
-                color: Colors.black87,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              label,
-              style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade700),
-            ),
-          ],
+    return Column(
+      children: [
+        Text(
+          number,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18.sp,
+            color: Colors.black87,
+          ),
         ),
-      ),
+        SizedBox(height: 2.h),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade700),
+        ),
+      ],
     );
   }
 }

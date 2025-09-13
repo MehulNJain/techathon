@@ -352,7 +352,8 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                       Expanded(
                         // Add this to allow text to wrap if needed
                         child: Text(
-                          loc.refId("", complaintData!['complaintId'] ?? ''),
+                          loc.refId(complaintData!['complaintId'] ?? ''),
+                          //loc.refId("", complaintData!['complaintId'] ?? ''),
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 13.sp,
@@ -639,110 +640,120 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
       },
     ];
 
-    return Column(
-      children: List.generate(steps.length, (i) {
-        final isActive = currentStage >= i;
-        final isLast = i == steps.length - 1;
-        return Row(
-          crossAxisAlignment:
-              CrossAxisAlignment.center, // <-- Center icons vertically
-          children: [
-            // Timeline column with connected line and icon
-            Container(
-              width: 32.w,
-              child: Column(
-                children: [
-                  // Line above icon (except first)
-                  if (i != 0)
-                    Container(
-                      width: 2.w,
-                      height: 29.h,
-                      color: (currentStage >= i)
-                          ? steps[i - 1]["color"]
-                                as Color // Use previous step's color
-                          : Colors.grey.shade300,
-                    ),
-                  // The icon itself
-                  Container(
-                    padding: EdgeInsets.all(6.w),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isActive
-                          ? (steps[i]["color"] as Color).withOpacity(0.1)
-                          : Colors.grey.withOpacity(0.1),
-                      border: Border.all(
-                        color: isActive
-                            ? steps[i]["color"] as Color
-                            : Colors.grey.shade400,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Icon(
-                      steps[i]["icon"] as IconData,
-                      color: isActive
-                          ? steps[i]["color"] as Color
-                          : Colors.grey.shade400,
-                      size: 18.sp,
-                    ),
-                  ),
-                  // Line below icon (except last)
-                  if (!isLast)
-                    Container(
-                      width: 2.w,
-                      height: 29.h,
-                      color: (currentStage > i)
-                          ? steps[i]["color"]
-                                as Color // Use current step's color
-                          : Colors.grey.shade300,
-                    ),
-                ],
+    // Height per step (adjust as needed)
+    final stepHeight = 110.0.h;
+
+    return Container(
+      height: steps.length * stepHeight,
+      child: Stack(
+        children: [
+          // Draw multiple line segments colored according to progress
+          for (int i = 0; i < steps.length - 1; i++)
+            Positioned(
+              left: 16.w, // Center of the icon column
+              top:
+                  30.h +
+                  (i * stepHeight), // Start position (first icon's center)
+              height: stepHeight, // One segment height
+              width: 2.w,
+              child: Container(
+                color: currentStage > i
+                    ? steps[i]["color"]
+                          as Color // Completed segment: use that step's color
+                    : Colors.grey.shade300, // Future segment: gray
               ),
             ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: isLast ? 0 : 18.h),
-                child: Column(
+
+          // Place all steps on top of the line
+          Column(
+            children: List.generate(steps.length, (i) {
+              final isActive = currentStage >= i;
+              final stepColor = isActive
+                  ? steps[i]["color"] as Color
+                  : Colors.grey.shade400;
+
+              return Container(
+                height: stepHeight,
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      steps[i]["title"] as String,
-                      style: TextStyle(
-                        color: isActive
-                            ? steps[i]["color"] as Color
-                            : Colors.grey.shade500,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
+                    // Icon column - centered on the vertical line
+                    Container(
+                      width: 32.w,
+                      height: stepHeight,
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10.h),
+                        padding: EdgeInsets.all(6.w),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors
+                              .white, // White background to cover the line
+                          border: Border.all(
+                            color: isActive ? stepColor : Colors.grey.shade400,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Icon(
+                          steps[i]["icon"] as IconData,
+                          color: isActive ? stepColor : Colors.grey.shade400,
+                          size: 18.sp,
+                        ),
                       ),
-                      maxLines: 2,
                     ),
-                    Text(
-                      steps[i]["date"] as String,
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 11.sp,
-                        fontWeight: (steps[i]["date"] == "Current Stage")
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                    SizedBox(width: 10.w),
+                    // Step content
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              steps[i]["title"] as String,
+                              style: TextStyle(
+                                color: isActive
+                                    ? stepColor
+                                    : Colors.grey.shade500,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.sp,
+                              ),
+                              maxLines: 2,
+                            ),
+                            Text(
+                              steps[i]["date"] as String,
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 11.sp,
+                                fontWeight:
+                                    (steps[i]["date"] == loc.currentStage)
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              steps[i]["desc"] as String,
+                              style: TextStyle(
+                                color: isActive
+                                    ? Colors.black87
+                                    : Colors.grey.shade500,
+                                fontSize: 12.sp,
+                              ),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      steps[i]["desc"] as String,
-                      style: TextStyle(
-                        color: isActive ? Colors.black87 : Colors.grey.shade500,
-                        fontSize: 12.sp,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
-              ),
-            ),
-          ],
-        );
-      }),
+              );
+            }),
+          ),
+        ],
+      ),
     );
   }
 }

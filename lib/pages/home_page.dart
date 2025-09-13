@@ -939,6 +939,9 @@ class _HomePageState extends State<HomePage> {
         return Icons.traffic;
       case "Water":
         return Icons.water_drop;
+      case "Drainage & Sewerage":
+        return Icons
+            .water_damage_outlined; // Use the same icon as report_details_page.dart
       default:
         return Icons.report_problem;
     }
@@ -956,6 +959,8 @@ class _HomePageState extends State<HomePage> {
         return const Color(0xFFFFEAEA); // Light red
       case "Water":
         return const Color(0xFFEAF4FF); // Light blue
+      case "Drainage & Sewerage":
+        return const Color(0xFFEAF4FF); // Same as Water (light blue)
       default:
         return Colors.grey.shade100;
     }
@@ -973,6 +978,10 @@ class _HomePageState extends State<HomePage> {
         return Colors.red;
       case "Water":
         return const Color(0xFF1746D1); // Main blue
+      case "Drainage & Sewerage":
+        return const Color(
+          0xFF1746D1,
+        ); // Main blue, same as Report Details Page
       default:
         return Colors.grey;
     }

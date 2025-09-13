@@ -121,6 +121,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get good_morning => 'Good Morning,';
 
   @override
+  String get good_afternoon => 'Good Afternoon,';
+
+  @override
+  String get good_evening => 'Good Evening,';
+
+  @override
   String get quickReport => 'Quick Report';
 
   @override
@@ -155,6 +161,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inProgress => 'In Progress';
+
+  @override
+  String get success => 'Success!';
 
   @override
   String get resolved => 'Resolved';
@@ -372,7 +381,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recognitionProgress => 'Recognition & Progress';
 
   @override
-  String get tasksCompleted => 'Tasks Completed This Month';
+  String get tasksCompleted => 'Tasks Completed';
 
   @override
   String get earnedBadges => 'Earned Badges';
@@ -390,10 +399,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changePassword => 'Change Password';
 
   @override
-  String get changeLanguage => 'Change Language';
+  String get currentPassword => 'Current Password';
 
   @override
-  String get selectLanguage => 'Select Language';
+  String get newPassword => 'New Password';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get passwordUpdateSuccess => 'Password updated successfully';
+
+  @override
+  String get currentPasswordIncorrect => 'Current password is incorrect';
+
+  @override
+  String get changeLanguage => 'Change Language';
 
   @override
   String get pauseVoiceNote => 'Pause Voice Note';
@@ -402,11 +435,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playVoiceNote => 'Play Voice Note';
 
   @override
-  String get complaintNotFound => 'Complaint not found';
+  String get complaintNotFound => 'Complaint not found.';
 
   @override
-  String refId(String id, Object complaintId) {
-    return 'Ref ID: #$complaintId';
+  String refId(String id) {
+    return 'REF: $id';
   }
 
   @override
@@ -429,32 +462,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timestampNotAvailable => 'Timestamp not available';
 
   @override
-  String get assignedToMunicipalWorker =>
-      'Your complaint has been assigned to a municipal worker';
+  String get assignedToMunicipalworker =>
+      'Your complaint will be reviewed by our team within 24 hours and assigned to the relevant department for resolution.';
 
   @override
   String get updateTimestampPending => 'Update timestamp pending';
 
   @override
-  String get workHasStarted => 'Work has been started on your complaint';
+  String get workHasStarted => 'Work has started on your complaint.';
 
   @override
-  String get issueResolved => 'Your issue has been successfully resolved';
-
-  @override
-  String get reportDetails => 'Report Details';
-
-  @override
-  String get photosSubmitted => 'Photos Submitted';
-
-  @override
-  String get issueDescription => 'Issue Description';
-
-  @override
-  String get good_afternoon => 'Good Afternoon,';
-
-  @override
-  String get good_evening => 'Good Evening,';
+  String get issueResolved => 'The issue has been resolved.';
 
   @override
   String get permissionRequired => 'Permission Required';
@@ -465,9 +483,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openSettings => 'Open Settings';
-
-  @override
-  String get cancel => 'Cancel';
 
   @override
   String get locationPermissionDenied => 'Location permission denied';
@@ -496,4 +511,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notYet => 'Not Yet';
+
+  @override
+  String get assignedToMunicipalWorker =>
+      'Your complaint has been assigned to a municipal worker';
+
+  @override
+  String get reportDetails => 'Report Details';
+
+  @override
+  String get photosSubmitted => 'Photos Submitted';
+
+  @override
+  String get issueDescription => 'Issue Description';
+
+  @override
+  String get errorMessage => 'Error';
+
+  @override
+  String get notAvailable => 'Not available';
+
+  @override
+  String get worker => 'Worker';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
+  String get reportIssuee => 'Report Another Issue';
 }

@@ -120,7 +120,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
               ),
               SizedBox(height: 18.h),
               Text(
-                l10n.resolved, // "Success!" -> localized
+                l10n.success, // "Success!" -> localized
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.sp,
@@ -269,7 +269,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                     size: 20.sp,
                   ),
                   label: Text(
-                    l10n.reportIssue, // "Report Another Issue" -> localized
+                    l10n.reportIssuee, // "Report Another Issue" -> localized
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.sp,
@@ -312,7 +312,7 @@ class _SubmittedPageState extends State<SubmittedPage> {
                     SizedBox(width: 10.w),
                     Expanded(
                       child: Text(
-                        l10n.assignedToMunicipalWorker, // Info text -> localized
+                        l10n.assignedToMunicipalworker, // Info text -> localized
                         style: TextStyle(
                           color: SubmittedPage.mainBlue,
                           fontSize: 12.sp,

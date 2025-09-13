@@ -63,6 +63,7 @@
   "potholeRepair": "ᱯᱚᱴᱳᱞ ᱢᱮᱱᱰᱚᱢ",
 
   "reportIssue": "ᱵᱟᱣᱟ ᱨᱤᱯᱚᱨᱴ ᱠᱟᱨᱟᱢ",
+  "reportIssuee": "ᱮᱴᱟᱜ ᱩᱡᱩᱨ ᱥᱟᱯᱲᱟᱣ ᱢᱮ",
   "selectCategory": "ᱠᱮᱴᱮᱜᱚᱨᱤ ᱮᱱᱚᱢ",
   "selectCategoryHint": "ᱠᱮᱴᱮᱜᱚᱨᱤ ᱵᱟᱪᱟ",
   "categoryRequired": "ᱠᱮᱴᱮᱜᱚᱨᱤ ᱡᱟᱹᱨᱩᱨᱤ",
@@ -77,7 +78,7 @@
   "autoDetectedLocation": "ᱟᱣᱴᱚ ᱛᱷᱚᱠᱟᱠᱚ ᱛᱷᱟᱴᱤ",
   "fetchingAddress": "ᱟᱰᱨᱮᱥ ᱱᱚᱠᱚᱢ...",
   "addressNotFound": "ᱟᱰᱨᱮᱥ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
-  "fetchingGps": "GPS ᱱᱚᱠᱚᱢ...",
+  "fetchingGps": "GPS ᱱ ᱠᱚᱢ...",
   "refresh": "ᱰᱚ ᱵᱟᱨᱟ",
   "additionalDetails": "ᱟᱰᱤᱠ ᱠᱦᱤᱱᱤ",
   "enterDetails": "ᱠᱦᱤᱱᱤ ᱟᱪᱟᱹᱨ...",
@@ -85,7 +86,7 @@
   "playing": "ᱪᱟᱞ ᱠᱚ...",
   "recordVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱨᱤᱠᱳᱰ ᱠᱟᱨᱟᱢ (ᱤᱪᱚ ᱨᱮ)",
   "voiceNoteRecorded": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱨᱤᱠᱳᱰ ᱠᱟᱱᱟ",
-  "deleteVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱢᱤᱴᱟᱢ",
+  "deleteVoiceNote": "ᱣᱚᱭᱥ ᱱ ᱴ ᱢᱤᱴᱟᱢ",
   "submitReport": "ᱨᱤᱯᱚᱨᱴ ᱯᱟᱴᱮᱭᱚᱢ",
 
   "myReports": "ᱟᱨ ᱨᱤᱯᱚᱨᱴ",
@@ -111,6 +112,7 @@
   "workerDashboard": "ᱣᱟᱹᱠᱚᱨ ᱰᱮᱥᱵᱚᱨᱰ",
   "municipalServices": "ᱢᱩᱱᱤᱥᱤᱯᱟᱞ ᱥᱮᱨᱵᱤᱥ",
   "recentComplaints": "ᱱᱩᱛᱤᱱ ᱥᱤᱠᱟᱭᱟᱴ",
+"reportSubmittedByCitizen": "ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱥᱟᱯᱲᱟᱣ ᱦᱚᱲᱚᱜ ᱠᱚ ᱥᱟᱹᱱᱫᱚᱨᱵ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾",
   "myTasks": "ᱟᱨ ᱠᱟᱢ",
 
   "completed": "ᱥᱟᱢᱯᱩᱨᱱᱚᱢ",
@@ -130,119 +132,54 @@
   "priorityLow": "ᱠᱚᱢ",
 
   "viewDetails": "ᱠᱦᱤᱱᱤ ᱰᱮᱠᱚᱢ",
-  "workerId": "ᱣᱟᱹᱠᱚᱨ ID",
+  "workerId": "ᱠᱟᱹᱢᱤᱭᱟᱹ ID",
+  "worker": "ᱠᱟᱹᱢᱤᱭᱟᱹ",
+  "profile": "ᱯᱨᱚᱯᱷᱟᱭᱤᱞ",
   "phoneNumber": "ᱯᱷᱚᱱ ᱢᱚᱱᱵᱚᱨ",
-  "department": "ᱰᱤᱯᱟᱨᱴᱢᱮᱱᱴ",
-  "assignedArea": "ᱟᱥᱟᱭᱤᱱᱰ ᱮᱨᱤᱭᱟ",
-  "recognitionProgress": "ᱳᱝᱠᱚ ᱟᱨ ᱦᱚᱨ",
-  "tasksCompleted": "ᱤᱦᱟᱴᱟ ᱢᱟᱥᱚᱢ ᱛᱮ ᱠᱟᱢ ᱥᱟᱢᱯᱩᱨᱱᱚᱢ",
-  "earnedBadges": "ᱵᱮᱰᱡ ᱯᱟᱭᱱᱚᱢ",
-  "quickResponse": "ᱴᱤᱜᱮ ᱡᱟᱣᱟᱵ",
-  "qualityWork": "ᱵᱷᱟᱞᱚ ᱠᱟᱢ",
-  "onTime": "ᱥᱟᱢᱭ ᱛᱮ",
-  "changePassword": "ᱯᱟᱥᱱᱚᱣᱚᱨᱰ ᱵᱟᱰᱞᱚᱢ",
-  "changeLanguage": "ᱨᱩᱴᱤᱭᱟᱠ ᱵᱟᱰᱞᱚᱢ",
-
-  "pauseVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱛᱷᱤᱨ ᱠᱟᱨᱟᱢ",
-  "playVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱪᱟᱞ ᱠᱟᱨᱟᱢ",
-  "complaintNotFound": "ᱥᱤᱠᱟᱭᱟᱴ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
-  "refId": "ᱥᱟᱸᱫᱷᱟᱨᱵᱷ: {id}",
-  "@refId": {
-    "placeholders": {
-      "id": {
-        "type": "String"
-      }
+  "department": "ᱵᱤᱵᱷᱟᱜ",
+  "assignedArea": "ᱵᱟᱪᱷᱟᱣ ᱴᱚᱴᱷᱟ",
+  "recognitionProgress": "ᱢᱟᱱᱚᱛ ᱟᱨ ᱞᱟᱦᱟᱱᱛᱤ",
+  "tasksCompleted": "ᱯᱩᱨᱟᱹᱣ ᱠᱟᱹᱢᱤᱠᱚ",
+  "earnedBadges": "ᱧᱟᱢ ᱟᱠᱟᱱ ᱵᱮᱰᱡᱽ",
+  "quickResponse": "ᱞᱚᱜᱚᱱ ᱨᱚᱲ",
+  "qualityWork": "ᱱᱟᱯᱟᱭ ᱠᱟᱹᱢᱤ",
+  "onTime": "ᱚᱠᱛᱚ ᱨᱮ",
+  "changePassword": "ᱯᱟᱥᱣᱟᱨᱰ ᱵᱚᱫᱚᱞ",
+  "currentPassword": "ᱱᱤᱛᱚᱜᱟᱜ ᱯᱟᱥᱣᱟᱨᱰ",
+  "newPassword": "ᱱᱟᱶᱟ ᱯᱟᱥᱣᱟᱨᱰ",
+  "confirmPassword": "ᱯᱟᱥᱣᱟᱨᱰ ᱫᱚᱦᱲᱟ ᱫᱚᱦᱚᱭ ᱢᱮ",
+  "update": "ᱟᱯᱰᱮᱴ",
+  "cancel": "ᱵᱟᱫ",
+  "passwordTooShort": "ᱯᱟᱥᱣᱟᱨᱰ ᱖ ᱟᱠᱷᱚᱨ ᱠᱷᱚᱱ ᱡᱟᱹᱥᱛᱤ ᱦᱩᱭᱩᱜᱼᱟ",
+  "passwordsDoNotMatch": "ᱯᱟᱥᱣᱟᱨᱰ ᱵᱟᱱᱟᱨ ᱥᱚᱢᱟᱱ ᱵᱟᱝ ᱠᱟᱱᱟ",
+  "passwordUpdateSuccess": "ᱯᱟᱥᱣᱟᱨᱰ ᱥᱟᱯᱷᱟᱞ ᱛᱮ ᱟᱯᱰᱮᱴ ᱦᱩᱭ ᱮᱱᱟ",
+  "currentPasswordIncorrect": "ᱱᱤᱛᱚᱜᱟᱜ ᱯᱟᱥᱣᱟᱨᱰ ᱵᱷᱩᱞ ᱠᱟᱱᱟ",
+  "changeLanguage": "ᱯᱟᱹᱨᱥᱤ ᱵᱚᱫᱚᱞ",
+  "selectLanguage": "ᱯᱟᱹᱨᱥᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ",
+"submitted": "ᱥᱟᱹᱱᱫᱚᱨᱵ ᱦᱚᱲᱚᱜ",
+"notYet": "ᱵᱟᱹᱲᱤᱭᱟᱹᱜ ᱦᱚᱲᱚᱜ",
+"assigned": "ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾",
+"workHasStarted": "ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱠᱚᱢ ᱦᱚᱲᱚᱜ",
+"currentStage": "ᱥᱟᱹᱱᱫᱚᱨᱵ ᱠᱚ ᱦᱚᱲᱚᱜ",
+"waitingForAssignment": "ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾ ᱠᱚᱢ ᱵᱟᱹᱲᱤᱭᱟᱹᱜ",
+"statusTimeline": "ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱴᱟᱭᱢᱞᱟᱭᱱ",
+"pendingReview": "ᱵᱟᱹᱲᱤᱭᱟᱹᱜ ᱥᱟᱯᱲᱟᱣ",
+"issueResolved": "ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱦᱚᱲᱚᱜ ᱠᱚ ᱥᱟᱹᱱᱫᱚᱨᱵ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾",
+  "logout": "ᱞᱚᱜᱟᱣᱴ",
+  "good_afternoon": "ᱡᱚᱦᱟᱹᱨ ᱟᱹᱯᱷᱟᱱᱛᱚᱨ",
+  "good_evening": "ᱡᱚᱦᱟᱹᱨ ᱤᱵᱤᱝᱜ",
+  "good_night": "ᱡᱚᱦᱟᱹᱨ ᱱᱟᱭᱴ",
+  "refId": "ᱥᱟᱹᱱᱫᱚᱨᱵ: {id}",
+"@refId": {
+  "placeholders": {
+    "id": {
+      "type": "String"
     }
-  },
-  "close": "ᱵᱚᱱᱫ ᱠᱟᱨᱟᱢ",
-  "statusTimeline": "ᱥᱴᱮᱴᱟᱥ ᱴᱟᱭᱤᱢᱞᱟᱭᱤᱱ",
-  "submitted": "ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
-  "reportSubmittedByCitizen": "ᱥᱤᱴᱤᱡᱮᱱ ᱫᱚᱨᱟ ᱨᱤᱯᱚᱨᱴ ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
-  "assigned": "ᱟᱥᱟᱭᱤᱱᱰ ᱠᱟᱱᱟ",
-  "timestampNotAvailable": "ᱥᱟᱢᱭ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
-  "assignedToMunicipalWorker": "ᱢᱩᱱᱤᱥᱤᱯᱟᱞ ᱣᱟᱹᱠᱚᱨ ᱛᱮ ᱟᱥᱟᱭᱤᱱᱰ ᱠᱟᱱᱟ",
-  "updateTimestampPending": "ᱟᱯᱰᱮᱴ ᱥᱟᱢᱭ ᱯᱮᱱᱰᱤᱝ",
-  "workHasStarted": "ᱟᱢᱟᱜ ᱥᱤᱠᱟᱭᱟᱴ ᱛᱮ ᱠᱟᱢ ᱦᱚᱨ ᱨᱮ",
-  "issueResolved": "ᱵᱟᱣᱟ ᱥᱩᱞᱩᱛᱟᱢ ᱠᱟᱱᱟ",
-  "good_morning": "ᱥᱟᱹᱜᱩᱱ ᱥᱮᱛᱟ,",
-  "good_afternoon": "ᱥᱟᱹᱜᱩᱱ ᱥᱤᱝᱜᱟᱹᱲ,",
-  "good_evening": "ᱥᱟᱹᱜᱩᱱ ᱟᱹᱭᱩᱵ,",
-
-  "reportDetails": "ᱨᱤᱯᱚᱴ ᱵᱤᱵᱚᱨᱚᱱ",
-  "photosSubmitted": "ᱯᱷᱚᱴᱚ ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
-  "issueDescription": "ᱵᱟᱣᱟ ᱵᱤᱵᱚᱨᱚᱱ",
-  "statusTimeline": "ᱥᱴᱮᱴᱟᱥ ᱴᱟᱭᱤᱢᱞᱟᱭᱤᱱ",
-  "pauseVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱛᱷᱤᱨ ᱠᱟᱨᱟᱢ",
-  "playVoiceNote": "ᱣᱚᱭᱥ ᱱᱚᱴ ᱪᱟᱞ ᱠᱟᱨᱟᱢ",
-  "complaintNotFound": "ᱥᱤᱠᱟᱭᱟᱴ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
-  "refId": "ᱥᱟᱸᱫᱷᱟᱨᱵᱷ: {id}",
-  "@refId": {
-    "placeholders": {
-      "id": {
-        "type": "String"
-      }
-    }
-  },
-  "close": "ᱵᱚᱱᱫ ᱠᱟᱨᱟᱢ",
-  "submitted": "ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
-  "reportSubmittedByCitizen": "ᱥᱤᱴᱤᱡᱮᱱ ᱫᱚᱨᱟ ᱨᱤᱯᱚᱨᱴ ᱯᱟᱴᱮᱭᱚᱢ ᱠᱟᱱᱟ",
-  "assigned": "ᱟᱥᱟᱭᱤᱱᱰ ᱠᱟᱱᱟ",
-  "timestampNotAvailable": "ᱥᱟᱢᱭ ᱢᱟᱦᱮᱱ ᱠᱟᱱᱟ",
-  "assignedToMunicipalWorker": "ᱢᱩᱱᱤᱥᱤᱯᱟᱞ ᱣᱟᱹᱠᱚᱨ ᱛᱮ ᱟᱥᱟᱭᱤᱱᱰ ᱠᱟᱱᱟ",
-  "inProgress": "ᱠᱟᱹᱢᱤ ᱪᱟᱹᱞᱩ ᱢᱮᱱᱟᱜᱼᱟ",
-  "updateTimestampPending": "ᱟᱯᱰᱮᱴ ᱥᱟᱢᱭ ᱯᱮᱱᱰᱤᱝ",
-  "workHasStarted": "ᱟᱢᱟᱜ ᱥᱤᱠᱟᱭᱟᱴ ᱛᱮ ᱠᱟᱢ ᱦᱚᱨ ᱨᱮ",
-  "resolved": "ᱥᱩᱞᱩᱛᱟᱢ ᱠᱟᱱᱟ",
-  "issueResolved": "ᱵᱟᱣᱟ ᱥᱩᱞᱩᱛᱟᱢ ᱠᱟᱱᱟ",
-
-  "issueResolved": "ᱵᱟᱣᱟ ᱥᱩᱞᱩᱛᱟᱢ ᱠᱟᱱᱟ",
-  "permissionRequired": "ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱡᱟᱹᱨᱩᱨᱤ",
-  "locationPermissionPermanentlyDenied": "ᱡᱟᱭᱜᱟ ᱨᱮᱭᱟᱜ ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱡᱟᱣᱜᱮ ᱞᱟᱹᱜᱤᱫ ᱵᱟᱝ ᱮᱢ ᱟᱠᱟᱱᱟ᱾ ᱫᱟᱭᱟᱠᱟᱛᱮ ᱱᱤᱭᱟᱹ ᱮᱯ ᱥᱮᱴᱤᱝᱥ ᱠᱷᱚᱱ ᱪᱟᱹᱞᱩᱭ ᱯᱮ᱾",
-  "openSettings": "ᱥᱮᱴᱤᱝᱥ ᱠᱷᱩᱞᱟᱹᱭ ᱯᱮ",
-  "cancel": "ᱵᱟᱹᱰᱤᱡ",
-  "locationPermissionDenied": "ᱡᱟᱭᱜᱟ ᱨᱮᱭᱟᱜ ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱵᱟᱝ ᱮᱢ ᱟᱠᱟᱱᱟ",
-  "unableToFetchLocation": "ᱡᱟᱭᱜᱟ ᱧᱟᱢ ᱨᱮ ᱟᱹᱥᱩᱵᱤᱫᱷᱟ",
-  "gpsCoordinates": "GPS ᱱᱤᱨᱫᱮᱥᱟᱸᱠ: {gps}",
-  "@gpsCoordinates": {
-    "placeholders": {
-      "gps": {
-        "type": "String"
-      }
-    }
-  },
-  "submitFailed": "ᱯᱟᱴᱮᱭᱚᱢ ᱨᱮ ᱵᱤᱯᱷᱚᱞ: {error}",
-  "@submitFailed": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "pendingReview": "ᱜᱤᱱᱚᱛᱤ ᱞᱟᱹᱜᱤᱫ ᱵᱩᱡᱷᱟᱣ ᱮᱱᱟ",
-  "completed": "ᱯᱩᱨᱟᱹᱣ ᱮᱱᱟ",
-  "currentStage": "ᱱᱤᱛᱚᱜᱟᱜ ᱛᱟᱦᱮᱱ",
-  "waitingForAssignment": "ᱠᱟᱹᱢᱤᱭᱟᱹ ᱵᱟᱪᱷᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱛᱟᱧᱡᱟ",
-  "assigned": "ᱵᱟᱪᱷᱟᱣ ᱟᱠᱟᱱᱟ",
-  "timestampNotAvailable": "ᱚᱠᱛᱚ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ",
-  "notYet": "ᱱᱤᱛᱚᱜ ᱵᱟᱝ",
-  "assignedToMunicipalWorker": "ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱢᱤᱫᱴᱮᱱ ᱱᱟᱜᱟᱨᱯᱟᱞᱤᱠᱟ ᱠᱟᱹᱢᱤᱭᱟᱹ ᱥᱟᱶ ᱜᱚᱴᱟ ᱟᱠᱟᱱᱟ",
-  "inProgress": "ᱪᱟᱹᱞᱩ ᱟᱠᱟᱱᱟ",
-  "workHasStarted": "ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱠᱟᱹᱢᱤ ᱮᱦᱚᱵ ᱟᱠᱟᱱᱟ",
-  "resolved": "ᱥᱟᱯᱲᱟᱣ ᱦᱩᱭ ᱮᱱᱟ",
-  "issueResolved": "ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱥᱟᱯᱲᱟᱣ ᱦᱩᱭ ᱮᱱᱟ",
-  "submitted": "ᱱᱟᱞᱤᱥ ᱡᱚᱢᱟ ᱮᱱᱟ",
-  "reportSubmittedByCitizen": "ᱟᱢᱟᱜ ᱱᱟᱞᱤᱥ ᱥᱟᱯᱷᱟᱞ ᱛᱮ ᱡᱚᱢᱟ ᱦᱩᱭ ᱮᱱᱟ!",
-  "complaintNotFound": "ᱱᱟᱞᱤᱥ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟ",
-  "reportDetails": "ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱵᱤᱥᱛᱟᱨ",
-  "refId": "ᱥᱩᱫᱷᱤ ᱟᱭᱰᱤ: #{complaintId}",
-  "photosSubmitted": "ᱡᱚᱢᱟ ᱦᱩᱭ ᱟᱠᱟᱱ ᱪᱤᱛᱟᱹᱨᱠᱚ",
-  "close": "ᱵᱚᱱᱫᱚ ᱢᱮ",
-  "issueDescription": "ᱱᱟᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱵᱤᱵᱨᱟᱬ",
-  "statusTimeline": "ᱚᱵᱚᱥᱛᱟ ᱴᱟᱭᱤᱢᱞᱟᱭᱤᱱ",
-  "pauseVoiceNote": "ᱨᱚᱲ ᱱᱚᱴ ᱛᱟᱧᱦᱚᱯ ᱢᱮ",
-  "playVoiceNote": "ᱨᱚᱲ ᱱᱚᱴ ᱵᱟᱡᱟᱣ ᱢᱮ",
-  "viewDetails": "ᱱᱟᱞᱤᱥ ᱯᱟᱧᱡᱟ ᱢᱮ",
-  "reportIssue": "ᱮᱴᱟᱜ ᱱᱟᱞᱤᱥ ᱮᱢ ᱢᱮ"
-
-
+  }
+},
+  "worker": "ᱠᱟᱹᱢᱤᱭᱟᱹ",
+  "selectLanguage": "ᱯᱟᱹᱨᱥᱤ ᱵᱟᱪᱷᱟᱣ ᱢᱮ",
+"success": "ᱨᱟᱹᱥ!",
+"assignedToMunicipalWorker": "ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱒᱔ ᱴᱟᱲᱟᱝ ᱵᱷᱤᱛᱨᱮ ᱧᱮᱞ ᱠᱟᱛᱮ ᱥᱚᱦᱤ ᱵᱤᱵᱷᱟᱜ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾",
+  "assignedToMunicipalworker": "ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱒᱔ ᱴᱟᱲᱟᱝ ᱵᱷᱤᱛᱨᱮ ᱟᱞᱮᱭᱟᱜ ᱴᱤᱢ ᱮ ᱧᱮᱞᱟ ᱟᱨ ᱥᱟᱯᱲᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱥᱚᱦᱤ ᱵᱤᱵᱷᱟᱜ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾"
 }

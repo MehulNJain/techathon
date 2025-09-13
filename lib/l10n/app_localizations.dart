@@ -322,6 +322,18 @@ abstract class AppLocalizations {
   /// **'Good Morning,'**
   String get good_morning;
 
+  /// No description provided for @good_afternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Afternoon,'**
+  String get good_afternoon;
+
+  /// No description provided for @good_evening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Evening,'**
+  String get good_evening;
+
   /// No description provided for @quickReport.
   ///
   /// In en, this message translates to:
@@ -393,6 +405,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In Progress'**
   String get inProgress;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success!'**
+  String get success;
 
   /// No description provided for @resolved.
   ///
@@ -823,7 +841,7 @@ abstract class AppLocalizations {
   /// No description provided for @tasksCompleted.
   ///
   /// In en, this message translates to:
-  /// **'Tasks Completed This Month'**
+  /// **'Tasks Completed'**
   String get tasksCompleted;
 
   /// No description provided for @earnedBadges.
@@ -856,17 +874,65 @@ abstract class AppLocalizations {
   /// **'Change Password'**
   String get changePassword;
 
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordTooShort;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @passwordUpdateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated successfully'**
+  String get passwordUpdateSuccess;
+
+  /// No description provided for @currentPasswordIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password is incorrect'**
+  String get currentPasswordIncorrect;
+
   /// No description provided for @changeLanguage.
   ///
   /// In en, this message translates to:
   /// **'Change Language'**
   String get changeLanguage;
-
-  /// No description provided for @selectLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Language'**
-  String get selectLanguage;
 
   /// No description provided for @pauseVoiceNote.
   ///
@@ -883,14 +949,14 @@ abstract class AppLocalizations {
   /// No description provided for @complaintNotFound.
   ///
   /// In en, this message translates to:
-  /// **'Complaint not found'**
+  /// **'Complaint not found.'**
   String get complaintNotFound;
 
   /// No description provided for @refId.
   ///
   /// In en, this message translates to:
-  /// **'Ref ID: #{complaintId}'**
-  String refId(String id, Object complaintId);
+  /// **'REF: {id}'**
+  String refId(String id);
 
   /// No description provided for @close.
   ///
@@ -928,11 +994,11 @@ abstract class AppLocalizations {
   /// **'Timestamp not available'**
   String get timestampNotAvailable;
 
-  /// No description provided for @assignedToMunicipalWorker.
+  /// No description provided for @assignedToMunicipalworker.
   ///
   /// In en, this message translates to:
-  /// **'Your complaint has been assigned to a municipal worker'**
-  String get assignedToMunicipalWorker;
+  /// **'Your complaint will be reviewed by our team within 24 hours and assigned to the relevant department for resolution.'**
+  String get assignedToMunicipalworker;
 
   /// No description provided for @updateTimestampPending.
   ///
@@ -943,44 +1009,14 @@ abstract class AppLocalizations {
   /// No description provided for @workHasStarted.
   ///
   /// In en, this message translates to:
-  /// **'Work has been started on your complaint'**
+  /// **'Work has started on your complaint.'**
   String get workHasStarted;
 
   /// No description provided for @issueResolved.
   ///
   /// In en, this message translates to:
-  /// **'Your issue has been successfully resolved'**
+  /// **'The issue has been resolved.'**
   String get issueResolved;
-
-  /// No description provided for @reportDetails.
-  ///
-  /// In en, this message translates to:
-  /// **'Report Details'**
-  String get reportDetails;
-
-  /// No description provided for @photosSubmitted.
-  ///
-  /// In en, this message translates to:
-  /// **'Photos Submitted'**
-  String get photosSubmitted;
-
-  /// No description provided for @issueDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Issue Description'**
-  String get issueDescription;
-
-  /// No description provided for @good_afternoon.
-  ///
-  /// In en, this message translates to:
-  /// **'Good Afternoon,'**
-  String get good_afternoon;
-
-  /// No description provided for @good_evening.
-  ///
-  /// In en, this message translates to:
-  /// **'Good Evening,'**
-  String get good_evening;
 
   /// No description provided for @permissionRequired.
   ///
@@ -999,12 +1035,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open Settings'**
   String get openSettings;
-
-  /// No description provided for @cancel.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
 
   /// No description provided for @locationPermissionDenied.
   ///
@@ -1053,6 +1083,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not Yet'**
   String get notYet;
+
+  /// No description provided for @assignedToMunicipalWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Your complaint has been assigned to a municipal worker'**
+  String get assignedToMunicipalWorker;
+
+  /// No description provided for @reportDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Details'**
+  String get reportDetails;
+
+  /// No description provided for @photosSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos Submitted'**
+  String get photosSubmitted;
+
+  /// No description provided for @issueDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue Description'**
+  String get issueDescription;
+
+  /// No description provided for @errorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorMessage;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get notAvailable;
+
+  /// No description provided for @worker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get worker;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// No description provided for @reportIssuee.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Another Issue'**
+  String get reportIssuee;
 }
 
 class _AppLocalizationsDelegate

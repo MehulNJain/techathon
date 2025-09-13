@@ -9,7 +9,7 @@
   "login_as_worker": "कर्मचारी लॉगिन",
   "government_initiative": "झारखंड सरकार की पहल",
   "secure_and_verified": "सुरक्षित और प्रमाणित",
-  "english": "English",
+  "english": "अंग्रेज़ी",
   "hindi": "हिन्दी",
   "enter_valid_phone": "सही 10 अंकों का फोन नंबर डालें",
   "enter_phone_number_message": "फोन नंबर लिखें",
@@ -22,7 +22,6 @@
   "resend": "फिर से भेजें",
   "otp_resent_web": "ओटीपी दोबारा भेजा गया (वेब)",
   "otp_resent_mobile": "ओटीपी दोबारा भेजा गया (मोबाइल)",
-
   "complete_profile": "प्रोफ़ाइल पूरी करें",
   "profile_subtitle": "आगे बढ़ने के लिए जानकारी भरें",
   "full_name": "पूरा नाम",
@@ -33,13 +32,13 @@
   "profile_save_failed": "प्रोफ़ाइल सेव नहीं हुई",
   "continue_text": "आगे बढ़ें",
   "select_language": "भाषा चुनें",
-
   "home": "होम",
   "report": "रिपोर्ट",
   "complaints": "शिकायतें",
   "profile": "प्रोफ़ाइल",
-
-  "good_morning": "सुप्रभात",
+  "good_morning": "सुप्रभात,",
+  "good_afternoon": "नमस्कार,",
+  "good_evening": "शुभ संध्या,",
   "quickReport": "जल्दी रिपोर्ट",
   "garbage": "कचरा",
   "streetLight": "स्ट्रीट लाइट",
@@ -51,13 +50,12 @@
   "reportsSummary": "रिपोर्ट का हाल",
   "total": "कुल",
   "pending": "बाकी",
-  "inProgress": "चल रहा",
-  "resolved": "सुलझा हुआ",
+  "inProgress": "कार्य प्रगति पर है",
+  "resolved": "समाधान हो गया",
   "recentReports": "ताज़ा रिपोर्ट",
   "brokenStreetLight": "टूटी स्ट्रीट लाइट",
   "garbageCollection": "कचरा उठाना",
   "potholeRepair": "गड्ढा भराई",
-
   "reportIssue": "समस्या दर्ज करें",
   "selectCategory": "श्रेणी चुनें",
   "selectCategoryHint": "एक श्रेणी चुनें",
@@ -83,7 +81,6 @@
   "voiceNoteRecorded": "वॉइस नोट रिकॉर्ड किया गया",
   "deleteVoiceNote": "वॉइस नोट हटाएँ",
   "submitReport": "रिपोर्ट सबमिट करें",
-
   "myReports": "मेरी रिपोर्टें",
   "all": "सभी",
   "footerNote": "झारखंड सरकार की पहल – सुरक्षित और प्रमाणित",
@@ -94,8 +91,7 @@
   "support": "सहायता",
   "faq": "सामान्य प्रश्न",
   "contactSupport": "सपोर्ट से संपर्क करें",
-  "logout": "लॉगआउट",
-
+  "logout": "लॉग आउट",
   "workerLoginTitle": "कर्मचारी लॉगिन",
   "workerLoginSubtitle": "कर्मचारी डैशबोर्ड तक पहुंचने के लिए अपनी जानकारी दर्ज करें",
   "userIdLabel": "यूज़र आईडी",
@@ -108,42 +104,40 @@
   "municipalServices": "नगर सेवाएँ",
   "recentComplaints": "हाल की शिकायतें",
   "myTasks": "मेरे काम",
-
-  "completed": "पूरा",
-
+  "completed": "पूर्ण",
   "filterAll": "सब",
   "filterPending": "बाकी",
-  "filterInProgress": "चल रहा",
-  "filterCompleted": "पूरा",
-
+  "filterInProgress": "कार्य प्रगति पर है",
+  "filterCompleted": "पूर्ण",
   "roadMaintenance": "सड़क मरम्मत",
   "wasteManagement": "कचरा प्रबंधन",
   "streetLighting": "बत्ती लगाना",
   "bulbReplacement": "बल्ब बदलना",
-
   "priorityHigh": "ऊँची",
   "priorityMedium": "मध्यम",
   "priorityLow": "कम",
-
   "viewDetails": "विवरण देखें",
-  "profile": "प्रोफ़ाइल",
   "workerId": "वर्कर आईडी",
   "phoneNumber": "फ़ोन नंबर",
   "department": "विभाग",
   "assignedArea": "नियुक्त क्षेत्र",
   "recognitionProgress": "मान्यता और प्रगति",
-  "tasksCompleted": "इस महीने पूरे किए गए कार्य",
-  "earnedBadges": "प्राप्त बैज",
-  "quickResponse": "तेज़ प्रतिक्रिया",
-  "qualityWork": "गुणवत्ता कार्य",
+  "tasksCompleted": "पूर्ण किए गए कार्य",
+  "earnedBadges": "अर्जित बैज",
+  "quickResponse": "त्वरित प्रतिक्रिया",
+  "qualityWork": "गुणवत्तापूर्ण कार्य",
   "onTime": "समय पर",
   "changePassword": "पासवर्ड बदलें",
-  "logout": "लॉगआउट",
+  "currentPassword": "वर्तमान पासवर्ड",
+  "newPassword": "नया पासवर्ड",
+  "confirmPassword": "पासवर्ड की पुष्टि करें",
+  "update": "अपडेट करें",
+  "cancel": "रद्द करें",
+  "passwordTooShort": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
+  "passwordsDoNotMatch": "पासवर्ड मेल नहीं खाते",
+  "passwordUpdateSuccess": "पासवर्ड सफलतापूर्वक अपडेट किया गया",
+  "currentPasswordIncorrect": "वर्तमान पासवर्ड गलत है",
   "changeLanguage": "भाषा बदलें",
-  "selectLanguage": "भाषा चुनें",
-  "english": "अंग्रेज़ी",
-  "hindi": "हिन्दी",
-
   "pauseVoiceNote": "वॉइस नोट रोकें",
   "playVoiceNote": "वॉइस नोट चलाएं",
   "complaintNotFound": "शिकायत नहीं मिली।",
@@ -161,91 +155,37 @@
   "reportSubmittedByCitizen": "नागरिक द्वारा रिपोर्ट जमा की गई।",
   "assigned": "सौंपा गया",
   "timestampNotAvailable": "समय उपलब्ध नहीं है",
-  "assignedToMunicipalWorker": "एक नगर निगम कर्मचारी को सौंपा गया।",
+  "assignedToMunicipalWorker": "आपकी शिकायत की हमारी टीम द्वारा 24 घंटों के भीतर समीक्षा की जाएगी ।",
+  "assignedToMunicipalworker": "आपकी शिकायत की हमारी टीम द्वारा 24 घंटों के भीतर समीक्षा की जाएगी और समाधान के लिए संबंधित विभाग को सौंपी जाएगी।",
   "updateTimestampPending": "अपडेट का समय लंबित है",
   "workHasStarted": "आपकी शिकायत पर काम शुरू हो गया है।",
   "issueResolved": "समस्या का समाधान हो गया है।",
   "reportDetails": "रिपोर्ट विवरण",
   "photosSubmitted": "तस्वीरें जमा की गईं",
   "issueDescription": "समस्या का विवरण",
+  "viewDetails": "शिकायत को ट्रैक करें",
+  "errorMessage": "त्रुटि",
+  "reportIssue": " समस्या दर्ज करें",
+  "notAvailable": "उपलब्ध नहीं",
+  "worker": "कर्मचारी",
+  "profile": "प्रोफ़ाइल",
+  "pendingReview": "समीक्षा के लिए लंबित",
+  "currentStage": "वर्तमान चरण",
+  "waitingForAssignment": "कर्मचारी नियुक्ति की प्रतीक्षा में",
+  "notYet": "अभी नहीं",
   "good_morning": "सुप्रभात,",
   "good_afternoon": "नमस्कार,",
   "good_evening": "शुभ संध्या,",
-  "reportDetails": "रिपोर्ट विवरण",
-  "photosSubmitted": "तस्वीरें जमा की गईं",
-  "issueDescription": "समस्या का विवरण",
-  "statusTimeline": "स्टेटस टाइमलाइन",
-  "pauseVoiceNote": "वॉइस नोट रोकें",
-  "playVoiceNote": "वॉइस नोट चलाएं",
-  "complaintNotFound": "शिकायत नहीं मिली।",
   "refId": "संदर्भ: {id}",
   "@refId": {
     "placeholders": {
-      "id": {
-        "type": "String"
-      }
+    "id": {
+      "type": "String"
+       }
     }
   },
-  "close": "बंद करें",
-  "submitted": "जमा किया गया",
-  "reportSubmittedByCitizen": "नागरिक द्वारा रिपोर्ट जमा की गई।",
-  "assigned": "सौंपा गया",
-  "timestampNotAvailable": "समय उपलब्ध नहीं है",
-  "assignedToMunicipalWorker": "एक नगर निगम कर्मचारी को सौंपा गया।",
-  "inProgress": "कार्य प्रगति पर है",
-  "updateTimestampPending": "अपडेट का समय लंबित है",
-  "workHasStarted": "आपकी शिकायत पर काम शुरू हो गया है।",
-  "resolved": "समाधान हो गया",
-  "issueResolved": "समस्या का समाधान हो गया है।",
-
-  "issueResolved": "समस्या का समाधान हो गया है।",
-  "permissionRequired": "अनुमति आवश्यक",
-  "locationPermissionPermanentlyDenied": "स्थान की अनुमति स्थायी रूप से अस्वीकार कर दी गई है। कृपया इसे ऐप सेटिंग्स से सक्षम करें।",
-  "openSettings": "सेटिंग्स खोलें",
-  "cancel": "रद्द करें",
-  "locationPermissionDenied": "स्थान की अनुमति अस्वीकृत",
-  "unableToFetchLocation": "स्थान प्राप्त करने में असमर्थ",
-  "gpsCoordinates": "जीपीएस निर्देशांक: {gps}",
-  "@gpsCoordinates": {
-    "placeholders": {
-      "gps": {
-        "type": "String"
-      }
-    }
-  },
-  "submitFailed": "सबमिट करने में विफल: {error}",
-  "@submitFailed": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-    "pendingReview": "समीक्षा के लिए लंबित",
-  "completed": "पूर्ण",
-  "currentStage": "वर्तमान चरण",
-  "waitingForAssignment": "कर्मचारी नियुक्ति की प्रतीक्षा में",
-  "assigned": "नियुक्त",
-  "timestampNotAvailable": "समय उपलब्ध नहीं",
-  "notYet": "अभी नहीं",
-  "assignedToMunicipalWorker": "आपकी शिकायत एक नगर कर्मचारी को सौंप दी गई है",
-  "inProgress": "प्रगति में",
-  "workHasStarted": "आपकी शिकायत पर कार्य शुरू कर दिया गया है",
-  "resolved": "समाधान",
-  "issueResolved": "आपकी समस्या का सफलतापूर्वक समाधान कर दिया गया है",
-  "submitted": "शिकायत दर्ज की गई",
-  "reportSubmittedByCitizen": "आपकी शिकायत सफलतापूर्वक दर्ज कर ली गई है!",
-  "complaintNotFound": "शिकायत नहीं मिली",
-  "reportDetails": "शिकायत विवरण",
-  "refId": "संदर्भ आईडी: #{complaintId}",
-  "photosSubmitted": "जमा की गई तस्वीरें",
-  "close": "बंद करें",
-  "issueDescription": "समस्या का विवरण",
-  "statusTimeline": "स्थिति टाइमलाइन",
-  "pauseVoiceNote": "वॉइस नोट रोकें",
-  "playVoiceNote": "वॉइस नोट चलाएं",
-  "viewDetails": "शिकायत को ट्रैक करें",
-  "reportIssue": "एक और समस्या दर्ज करें"
-
-
+"worker": "कर्मचारी",
+"selectLanguage": "भाषा चुनें",
+"success": "सफलता!",
+"reportIssuee": "एक और समस्या दर्ज करें"
 }
