@@ -1,6 +1,7 @@
 import 'package:CiTY/models/report_model.dart';
 import 'package:CiTY/models/user_profile_model.dart';
 import 'package:CiTY/pages/report_details_page.dart';
+import 'package:CiTY/pages/notifications_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -52,13 +53,15 @@ class _HomePageState extends State<HomePage> {
   void _loadDataFromCache() {
     // Load user profile from cache
     final userProfile = _userProfileBox.get('currentUser');
-    if (userProfile != null) {
-      _badgeName = userProfile.badge;
-      _badgePoints = userProfile.points;
-    }
-
     // Load reports from cache
     final reports = _reportsBox.values.toList();
+
+    if (userProfile != null) {
+      _badgeName = userProfile.badge;
+      // Set badge points as the number of resolved complaints
+      _badgePoints = reports.where((r) => r.status == 'Resolved').length;
+    }
+
     if (reports.isNotEmpty) {
       _totalReports = reports.length;
       _resolvedReports = reports.where((r) => r.status == 'Resolved').length;
@@ -122,25 +125,34 @@ class _HomePageState extends State<HomePage> {
       if (complaintsSnapshot.exists && complaintsSnapshot.value != null) {
         final Map<String, Report> fetchedReportsMap = {};
         final data = complaintsSnapshot.value as Map;
-        data.forEach((key, value) {
-          final reportData = Map<String, dynamic>.from(value);
-          final report = Report()
-            ..complaintId = key
-            ..title =
-                "${reportData['category'] ?? 'N/A'} - ${reportData['subcategory'] ?? 'N/A'}"
-            ..date = reportData['dateTime'] != null
-                ? DateTime.parse(reportData['dateTime'])
-                      .toIso8601String() // Store as ISO string
-                : 'Unknown Date'
-            ..status = (reportData['assignedTo'] != null)
-                ? "Assigned"
-                : (reportData['status'] ?? 'Pending')
-            ..image = (reportData['photos'] as List?)?.isNotEmpty ?? false
-                ? reportData['photos'][0]
-                : 'https://img.icons8.com/fluency/96/image--v1.png'
-            ..location = reportData['location'] ?? 'Unknown Location';
-          fetchedReportsMap[key] = report;
-        });
+
+        // Reference to global complaints node
+        final globalComplaintsRef = FirebaseDatabase.instance.ref('complaints');
+
+        for (final complaintId in data.keys) {
+          final globalSnapshot = await globalComplaintsRef
+              .child(complaintId)
+              .get();
+          if (globalSnapshot.exists && globalSnapshot.value != null) {
+            final reportData = Map<String, dynamic>.from(
+              globalSnapshot.value as Map,
+            );
+
+            final report = Report()
+              ..complaintId = complaintId
+              ..title =
+                  "${reportData['category'] ?? 'N/A'} - ${reportData['subcategory'] ?? 'N/A'}"
+              ..date = reportData['dateTime'] != null
+                  ? DateTime.parse(reportData['dateTime']).toIso8601String()
+                  : 'Unknown Date'
+              ..status = reportData['status'] ?? 'Pending'
+              ..image = (reportData['photos'] as List?)?.isNotEmpty ?? false
+                  ? reportData['photos'][0]
+                  : 'https://img.icons8.com/fluency/96/image--v1.png'
+              ..location = reportData['location'] ?? 'Unknown Location';
+            fetchedReportsMap[complaintId] = report;
+          }
+        }
         await _reportsBox.clear();
         await _reportsBox.putAll(fetchedReportsMap);
       }
@@ -347,30 +359,41 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ],
                                   ),
-                                  Stack(
-                                    children: [
-                                      Icon(
-                                        Icons.notifications,
-                                        color: Colors.white,
-                                        size: 28.sp,
-                                      ),
-                                      Positioned(
-                                        right: 0,
-                                        top: 2.h,
-                                        child: Container(
-                                          width: 10.w,
-                                          height: 10.w,
-                                          decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: Colors.white,
-                                              width: 1.w,
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(24.r),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => NotificationsPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: Stack(
+                                      children: [
+                                        Icon(
+                                          Icons.notifications,
+                                          color: Colors.white,
+                                          size: 28.sp,
+                                        ),
+                                        Positioned(
+                                          right: 0,
+                                          top: 2.h,
+                                          child: Container(
+                                            width: 10.w,
+                                            height: 10.w,
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Colors.white,
+                                                width: 1.w,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),

@@ -396,7 +396,6 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
     setState(() => _isSubmitting = true);
     try {
       final dbRef = FirebaseDatabase.instance.ref();
-      // Get the actual user's phone number from Firebase Auth
       final phoneNumber =
           FirebaseAuth.instance.currentUser?.phoneNumber ?? "unknown";
       final complaintId = await _generateComplaintId(selectedCategory!);
@@ -422,21 +421,21 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
         "location": address,
         "gps": gps,
         "dateTime": DateTime.now().toIso8601String(),
-        "status": "Pending", // ✅ Initial status for a new complaint
-        "assignedTo": null, // ✅ Field to store worker ID later
-        "assignedTimestamp": null, // ✅ Field to store assignment time later
-        "category_date": "$catShort-$dateStr", // For unique ID generation
+        "status": "Pending",
+        "assignedTo": null,
+        "assignedTimestamp": null,
+        "category_date": "$catShort-$dateStr",
       };
 
-      // Save under user node
+      // Store only the complaint ID under the user node
       await dbRef
           .child('users')
           .child(phoneNumber)
           .child('complaints')
           .child(complaintId)
-          .set(complaintData);
+          .set(true); // or .set(null) to just create the key
 
-      // Save under global complaints node (no user info)
+      // Store the full complaint data under the global complaints node
       await dbRef.child('complaints').child(complaintId).set(complaintData);
 
       if (!mounted) return;

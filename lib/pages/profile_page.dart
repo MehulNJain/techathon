@@ -110,15 +110,20 @@ class _ProfilePageState extends State<ProfilePage> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 420.w),
-              child: Column(
-                children: [
-                  // Main scrollable content area
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 0),
-                      child: Form(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                  maxWidth: 420.w,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center vertically
+                    children: [
+                      // REMOVE the Expanded widget, just use the Form directly:
+                      Form(
                         key: _formKey,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -285,50 +290,50 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         ),
                       ),
-                    ),
-                  ),
 
-                  // Footer - now outside the scroll view
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24.w,
-                      vertical: 16.h,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Divider(height: 1.h, color: Colors.grey),
-                        SizedBox(height: 16.h),
-                        Text(
-                          l10n.government_initiative,
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 14.sp,
-                          ),
+                      // Footer
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 16.h,
                         ),
-                        SizedBox(height: 4.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.verified_user,
-                              size: 16.sp,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(width: 4.w),
+                            Divider(height: 1.h, color: Colors.grey),
+                            SizedBox(height: 16.h),
                             Text(
-                              l10n.secure_and_verified,
+                              l10n.government_initiative,
                               style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 13.sp,
+                                color: Colors.black54,
+                                fontSize: 14.sp,
                               ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.verified_user,
+                                  size: 16.sp,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  l10n.secure_and_verified,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.sp,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           );

@@ -44,40 +44,44 @@ class _MyReportsPageState extends State<MyReportsPage> {
       return;
     }
 
-    final dbRef = FirebaseDatabase.instance.ref(
+    final userComplaintsRef = FirebaseDatabase.instance.ref(
       'users/${user.phoneNumber}/complaints',
     );
+    final globalComplaintsRef = FirebaseDatabase.instance.ref('complaints');
 
     try {
-      final snapshot = await dbRef.get();
-      if (snapshot.exists && snapshot.value != null) {
+      final userSnapshot = await userComplaintsRef.get();
+      if (userSnapshot.exists && userSnapshot.value != null) {
         final Map<String, Report> fetchedReportsMap = {};
-        final data = snapshot.value as Map;
+        final data = userSnapshot.value as Map;
 
-        data.forEach((key, value) {
-          final reportData = Map<String, dynamic>.from(value);
-          String effectiveStatus;
-          if (reportData['assignedTo'] != null) {
-            effectiveStatus = "Assigned";
-          } else {
-            effectiveStatus = reportData['status'] ?? 'Pending';
+        for (final complaintId in data.keys) {
+          final globalSnapshot = await globalComplaintsRef
+              .child(complaintId)
+              .get();
+          if (globalSnapshot.exists && globalSnapshot.value != null) {
+            final reportData = Map<String, dynamic>.from(
+              globalSnapshot.value as Map,
+            );
+
+            // Always use the status from the global complaint data
+            String effectiveStatus = reportData['status'] ?? 'Pending';
+
+            final report = Report()
+              ..complaintId = complaintId
+              ..title =
+                  "${reportData['category'] ?? 'N/A'} - ${reportData['subcategory'] ?? 'N/A'}"
+              ..date = reportData['dateTime'] != null
+                  ? DateTime.parse(reportData['dateTime']).toIso8601String()
+                  : 'Unknown Date'
+              ..status = effectiveStatus
+              ..image = (reportData['photos'] as List?)?.isNotEmpty ?? false
+                  ? reportData['photos'][0]
+                  : 'https://img.icons8.com/fluency/96/image--v1.png'
+              ..location = reportData['location'] ?? 'Unknown Location';
+            fetchedReportsMap[complaintId] = report;
           }
-
-          final report = Report()
-            ..complaintId = key
-            ..title =
-                "${reportData['category'] ?? 'N/A'} - ${reportData['subcategory'] ?? 'N/A'}"
-            ..date = reportData['dateTime'] != null
-                ? DateTime.parse(reportData['dateTime']).toIso8601String()
-                : 'Unknown Date'
-            ..status = effectiveStatus
-            ..image = (reportData['photos'] as List?)?.isNotEmpty ?? false
-                ? reportData['photos'][0]
-                : 'https://img.icons8.com/fluency/96/image--v1.png'
-            ..location =
-                reportData['location'] ?? 'Unknown Location'; // Add this line
-          fetchedReportsMap[key] = report;
-        });
+        }
 
         // Update local cache and UI
         await _reportsBox.clear();

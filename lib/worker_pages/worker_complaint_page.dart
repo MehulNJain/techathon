@@ -124,10 +124,19 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
         .child(widget.complaintId);
 
     try {
-      await dbRef.update({'status': newStatus});
+      final Map<String, dynamic> updateData = {'status': newStatus};
+      if (newStatus == 'In Progress') {
+        updateData['inProgressTimestamp'] = DateTime.now().toIso8601String();
+      }
+      await dbRef.update(updateData);
+
       if (mounted) {
         setState(() {
           complaintData!['status'] = newStatus;
+          if (newStatus == 'In Progress') {
+            complaintData!['inProgressTimestamp'] =
+                updateData['inProgressTimestamp'];
+          }
           _isUpdating = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
