@@ -4,10 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'home_page.dart';
 import 'reports_page.dart';
-import 'user_profile_page.dart';
-import 'report_issue_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../l10n/app_localizations.dart';
 
@@ -643,7 +640,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
     // Height per step (adjust as needed)
     final stepHeight = 110.0.h;
 
-    return Container(
+    return SizedBox(
       height: steps.length * stepHeight,
       child: Stack(
         children: [
@@ -672,7 +669,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                   ? steps[i]["color"] as Color
                   : Colors.grey.shade400;
 
-              return Container(
+              return SizedBox(
                 height: stepHeight,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -596,8 +596,9 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                         onChanged: (v) {
                           setState(() {
                             selectedSubcategory = v;
-                            if (v != 'Other')
+                            if (v != 'Other') {
                               customSubcategoryController.clear();
+                            }
                           });
                         },
                         decoration: InputDecoration(

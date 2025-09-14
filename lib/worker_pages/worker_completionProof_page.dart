@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 import 'worker_workCompletion_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class _PhotoWithTimestamp {
   final File file;
@@ -17,7 +19,9 @@ class _PhotoWithTimestamp {
 }
 
 class WorkerCompletionProofPage extends StatefulWidget {
-  const WorkerCompletionProofPage({super.key});
+  final String complaintId;
+
+  const WorkerCompletionProofPage({super.key, required this.complaintId});
 
   @override
   State<WorkerCompletionProofPage> createState() =>
@@ -29,6 +33,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
   String? gps;
   String? address;
   TextEditingController notesController = TextEditingController();
+  bool _isSubmitting = false; // Add this for loading state
 
   // Audio
   FlutterSoundRecorder? _recorder;
@@ -40,7 +45,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
   @override
   void initState() {
     super.initState();
-    _requestAndFetchLocation();
+    _requestAndFetchLocation(); // This correctly fetches location on page load
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     Future.microtask(() async {
@@ -216,12 +221,105 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
     });
   }
 
+  // --- NEW FIREBASE METHODS ---
+
+  Future<List<String>> _uploadPhotosToStorage() async {
+    final storageRef = FirebaseStorage.instance.ref();
+    List<String> photoUrls = [];
+    for (var i = 0; i < photos.length; i++) {
+      final photo = photos[i];
+      final timestampStr = photo.timestamp.toIso8601String().replaceAll(
+        ':',
+        '-',
+      );
+      final fileName = 'completion_photo_${i + 1}_$timestampStr.jpg';
+      final ref = storageRef.child(
+        'complaints/${widget.complaintId}/completion_proofs/$fileName',
+      );
+      final uploadTask = await ref.putFile(photo.file);
+      final url = await uploadTask.ref.getDownloadURL();
+      photoUrls.add(url);
+    }
+    return photoUrls;
+  }
+
+  Future<String?> _uploadAudioToStorage() async {
+    if (_audioPath == null) return null;
+    final storageRef = FirebaseStorage.instance.ref();
+    final fileName =
+        'completion_voice_note_${DateTime.now().toIso8601String().replaceAll(':', '-')}.aac';
+    final ref = storageRef.child(
+      'complaints/${widget.complaintId}/completion_proofs/$fileName',
+    );
+    final uploadTask = await ref.putFile(File(_audioPath!));
+    return await uploadTask.ref.getDownloadURL();
+  }
+
+  Future<void> _submitCompletionProof() async {
+    if (photos.isEmpty || _isSubmitting) return;
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      // 1. Upload files to Storage
+      final List<String> photoUrls = await _uploadPhotosToStorage();
+      final String? voiceNoteUrl = await _uploadAudioToStorage();
+
+      // 2. Prepare data for Realtime Database
+      final completionData = {
+        'status': 'Resolved',
+        'completionPhotos': photoUrls,
+        'completionNotes': notesController.text.trim(),
+        'completionTimestamp': DateTime.now().toIso8601String(),
+        'completionGps': gps,
+        'completionAddress': address,
+        if (voiceNoteUrl != null) 'completionVoiceNote': voiceNoteUrl,
+      };
+
+      // 3. Update the complaint in Firebase
+      final dbRef = FirebaseDatabase.instance
+          .ref()
+          .child('complaints')
+          .child(widget.complaintId);
+      await dbRef.update(completionData);
+
+      if (!mounted) return;
+
+      // 4. Navigate to success page
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WorkerWorkCompletionSuccessPage(
+            complaintId: widget.complaintId,
+            // You might need to fetch these from the complaint data if required
+            supervisorId: 'N/A',
+            citizenId: 'N/A',
+          ),
+        ),
+        (Route<dynamic> route) => route.isFirst,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to submit proof: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor:
+            Colors.orange.shade700, // Changed to match WorkerHomePage
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
@@ -438,16 +536,26 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                   ),
                   SizedBox(height: 6.h),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.gps_fixed, size: 16.sp, color: Colors.grey),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Icon(
+                          Icons.gps_fixed,
+                          size: 16.sp,
+                          color: Colors.grey,
+                        ),
+                      ),
                       SizedBox(width: 6.w),
-                      Text(
-                        gps != null && gps!.isNotEmpty
-                            ? "GPS coordinates: $gps"
-                            : "Fetching GPS...",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.black87,
+                      Expanded(
+                        child: Text(
+                          gps != null && gps!.isNotEmpty
+                              ? "GPS coordinates: $gps"
+                              : "Fetching GPS...",
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.black87,
+                          ),
                         ),
                       ),
                     ],
@@ -586,13 +694,22 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                icon: Icon(
-                  Icons.check_circle,
-                  color: Colors.white,
-                  size: 20.sp,
-                ),
+                icon: _isSubmitting
+                    ? SizedBox(
+                        width: 20.sp,
+                        height: 20.sp,
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Icon(
+                        Icons.check_circle,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
                 label: Text(
-                  'Mark Work Completed',
+                  _isSubmitting ? 'Submitting...' : 'Submit',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
@@ -600,7 +717,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade700,
+                  backgroundColor: Colors.orange.shade700,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.r),
@@ -608,20 +725,8 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                   foregroundColor: Colors.white,
                   textStyle: TextStyle(color: Colors.white, fontSize: 16.sp),
                 ),
-                onPressed: photos.isNotEmpty
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                WorkerWorkCompletionSuccessPage(
-                                  complaintId: 'CMP001234',
-                                  supervisorId: 'SUP001',
-                                  citizenId: 'CIT001',
-                                ),
-                          ),
-                        );
-                      }
+                onPressed: photos.isNotEmpty && !_isSubmitting
+                    ? _submitCompletionProof
                     : null,
               ),
             ),

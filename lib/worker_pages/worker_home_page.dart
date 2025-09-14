@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import 'worker_complaint_page.dart';
 
@@ -12,29 +15,11 @@ class WorkerHomePage extends StatefulWidget {
 
 class _WorkerHomePageState extends State<WorkerHomePage> {
   String selectedFilter = 'All';
-  final filters = ['All', 'Pending', 'In Progress', 'Completed'];
-  final complaints = [
-    ComplaintItem(
-      id: '#CMP001234',
-      title: 'Garbage Collection',
-      location: 'Sector 15, Block A',
-      priority: 'High',
-      status: 'Pending',
-      statusColor: Colors.orange,
-      priorityColor: Colors.red,
-      imageUrl: 'assets/images/garbage.png',
-    ),
-    ComplaintItem(
-      id: '#CMP001235',
-      title: 'Street Light',
-      location: 'Main Road, Near Park',
-      priority: 'Medium',
-      status: 'In Progress',
-      statusColor: Colors.blue,
-      priorityColor: Colors.orange,
-      imageUrl: 'assets/images/streetlight.png',
-    ),
-  ];
+  final filters = ['All', 'Assigned', 'In Progress', 'Resolved'];
+
+  final complaints = <ComplaintItem>[];
+
+  String? _workerId;
 
   /// ✅ Map filter keys to localized labels
   String getFilterLabel(String filterKey, BuildContext context) {
@@ -42,12 +27,12 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
     switch (filterKey) {
       case 'All':
         return l10n.filterAll;
-      case 'Pending':
-        return l10n.filterPending;
+      case 'Assigned':
+        return l10n.assigned;
       case 'In Progress':
-        return l10n.filterInProgress;
-      case 'Completed':
-        return l10n.filterCompleted;
+        return l10n.inProgress;
+      case 'Resolved':
+        return l10n.resolved;
       default:
         return filterKey;
     }
@@ -56,6 +41,108 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
   List<ComplaintItem> get filteredComplaints {
     if (selectedFilter == 'All') return complaints;
     return complaints.where((c) => c.status == selectedFilter).toList();
+  }
+
+  int get pendingCount => complaints.where((c) => c.status == 'Pending').length;
+  int get inProgressCount =>
+      complaints.where((c) => c.status == 'In Progress').length;
+  int get completedCount =>
+      complaints.where((c) => c.status == 'Completed').length;
+  int get resolvedCount =>
+      complaints.where((c) => c.status == 'Resolved').length;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadWorkerIdAndComplaints();
+  }
+
+  Future<void> _loadWorkerIdAndComplaints() async {
+    final prefs = await SharedPreferences.getInstance();
+    _workerId = prefs.getString('workerId');
+    if (_workerId != null) {
+      await _fetchAssignedComplaints();
+      setState(() {}); // Refresh UI after fetching
+    }
+  }
+
+  Future<void> _fetchAssignedComplaints() async {
+    final dbRef = FirebaseDatabase.instance.ref().child('complaints');
+    final snapshot = await dbRef
+        .orderByChild('assignedTo')
+        .equalTo(_workerId)
+        .get();
+
+    final List<ComplaintItem> fetchedComplaints = [];
+    if (snapshot.exists && snapshot.value != null) {
+      final data = Map<String, dynamic>.from(snapshot.value as Map);
+      data.forEach((key, value) {
+        final complaintData = Map<String, dynamic>.from(value);
+        fetchedComplaints.add(
+          ComplaintItem(
+            id: key,
+            title:
+                "${complaintData['category'] ?? 'Unknown'}"
+                "${complaintData['subcategory'] != null ? ' - ${complaintData['subcategory']}' : ''}",
+            status: complaintData['status'] ?? 'Pending',
+            statusColor: _getStatusColor(complaintData['status']),
+            dateTime: complaintData['dateTime'] ?? '',
+          ),
+        );
+      });
+    }
+    setState(() {
+      complaints.clear();
+      complaints.addAll(fetchedComplaints);
+    });
+  }
+
+  Color _getStatusColor(String? status) {
+    switch (status) {
+      case 'Completed':
+        return Colors.green;
+      case 'In Progress':
+        return Colors.blue;
+      case 'Pending':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  Color _getCategoryBgColor(String title) {
+    final mainCategory = title.split(' - ').first;
+    switch (mainCategory) {
+      case "Garbage":
+        return const Color(0xFFEAF8ED);
+      case "Street Light":
+        return const Color(0xFFFFF9E5);
+      case "Road Damage":
+        return const Color(0xFFFFEAEA);
+      case "Water":
+      case "Drainage & Sewerage":
+        return const Color(0xFFEAF4FF);
+      default:
+        return Colors.grey.shade100;
+    }
+  }
+
+  IconData _getCategoryIcon(String title) {
+    final mainCategory = title.split(' - ').first;
+    switch (mainCategory) {
+      case "Garbage":
+        return Icons.delete;
+      case "Street Light":
+        return Icons.lightbulb_outline;
+      case "Road Damage":
+        return Icons.traffic;
+      case "Water":
+        return Icons.water_drop;
+      case "Drainage & Sewerage":
+        return Icons.water_damage_outlined;
+      default:
+        return Icons.report_problem;
+    }
   }
 
   @override
@@ -70,29 +157,38 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: WorkerDashboardHeader(),
-        toolbarHeight: 110.h, // Increased height
+        toolbarHeight: 110.h,
       ),
       body: Column(
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: Card(
-              color: Colors.white, // Set card color to white
+              color: Colors.white,
               elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 8.h,
-                  horizontal: 10.w,
-                ), // Decreased vertical padding
+                padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _SimpleStatusCard(number: '12', label: loc.pending),
-                    _SimpleStatusCard(number: '8', label: loc.inProgress),
-                    _SimpleStatusCard(number: '45', label: loc.completed),
+                    _SimpleStatusCard(
+                      number: complaints
+                          .where((c) => c.status == 'Assigned')
+                          .length
+                          .toString(),
+                      label: loc.assigned,
+                    ),
+                    _SimpleStatusCard(
+                      number: inProgressCount.toString(),
+                      label: loc.inProgress,
+                    ),
+                    _SimpleStatusCard(
+                      number: resolvedCount.toString(),
+                      label: loc.resolved,
+                    ),
                   ],
                 ),
               ),
@@ -143,12 +239,26 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.only(bottom: 16.h),
-              itemCount: filteredComplaints.length,
-              itemBuilder: (context, index) =>
-                  buildComplaintCard(filteredComplaints[index]),
-            ),
+            child: filteredComplaints.isEmpty
+                ? Center(
+                    child: Text(
+                      "No complaints assigned to you.",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _fetchAssignedComplaints,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 16.h),
+                      itemCount: filteredComplaints.length,
+                      itemBuilder: (context, index) =>
+                          buildComplaintCard(filteredComplaints[index]),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -156,126 +266,139 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
   }
 
   Widget buildComplaintCard(ComplaintItem complaint) {
+    String formattedDate = '';
+    try {
+      final dt = DateTime.parse(complaint.dateTime);
+      formattedDate = DateFormat.yMMMd().add_jm().format(dt);
+    } catch (_) {
+      formattedDate = complaint.dateTime;
+    }
+
+    // Icon and background color logic
+    Color iconBg;
+    Color iconColor;
+    switch (complaint.title.split(' - ').first) {
+      case "Garbage":
+        iconBg = const Color(0xFFEAF8ED);
+        iconColor = Colors.green;
+        break;
+      case "Street Light":
+        iconBg = const Color(0xFFFFF9E5);
+        iconColor = Colors.orange;
+        break;
+      case "Road Damage":
+        iconBg = const Color(0xFFFFEAEA);
+        iconColor = Colors.red;
+        break;
+      case "Water":
+        iconBg = const Color(0xFFEAF4FF);
+        iconColor = const Color(0xFF1746D1);
+        break;
+      case "Drainage & Sewerage":
+        iconBg = const Color(0xFFEAF4FF);
+        iconColor = const Color(0xFF1746D1);
+        break;
+      default:
+        iconBg = Colors.grey.shade100;
+        iconColor = Colors.grey;
+    }
+
+    // Status chip color logic
+    Color chipBg;
+    Color chipText;
+    switch (complaint.status) {
+      case 'Resolved':
+        chipBg = Colors.green.shade50;
+        chipText = Colors.green.shade700;
+        break;
+      case 'In Progress':
+        chipBg = Colors.blue.shade50;
+        chipText = Colors.blue.shade700;
+        break;
+      case 'Assigned':
+        chipBg = Colors.purple.shade50;
+        chipText = Colors.purple.shade700;
+        break;
+      default:
+        chipBg = Colors.grey.shade100;
+        chipText = Colors.grey;
+    }
+
     return GestureDetector(
       onTap: () {
-        if (complaint.title == 'Garbage Collection') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const WorkerComplaintPage()),
-          );
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => WorkerComplaintPage(complaintId: complaint.id),
+          ),
+        );
       },
       child: Card(
-        elevation: 2,
         color: Colors.white,
+        margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14.r),
+          borderRadius: BorderRadius.circular(16.r),
         ),
-        margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 16.w),
         child: Padding(
-          padding: EdgeInsets.all(12.w),
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10.r),
-                child: SizedBox(
-                  width: 55.w,
-                  height: 55.w,
-                  child: Image.asset(
-                    complaint.imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Icon(
-                      Icons.broken_image,
-                      size: 30.sp,
-                      color: Colors.grey,
-                    ),
+              // Icon in rounded square
+              Container(
+                width: 44.w,
+                height: 44.w,
+                decoration: BoxDecoration(
+                  color: iconBg,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Center(
+                  child: Icon(
+                    _getCategoryIcon(complaint.title),
+                    color: iconColor,
+                    size: 24.sp,
                   ),
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: 14.w),
+              // Main info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            complaint.title,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 4.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: complaint.priorityColor.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(18.r),
-                          ),
-                          child: Text(
-                            complaint.priority,
-                            style: TextStyle(
-                              color: complaint.priorityColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      complaint.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                      ),
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      complaint.location,
+                      formattedDate,
                       style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey.shade700,
+                        fontSize: 12.sp,
+                        color: Colors.grey.shade600,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 6.h),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            complaint.id,
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 4.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: complaint.statusColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(18.r),
-                          ),
-                          child: Text(
-                            complaint.status,
-                            style: TextStyle(
-                              color: complaint.status == 'Completed'
-                                  ? Colors.green.shade900
-                                  : Colors.orange.shade900,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                   ],
+                ),
+              ),
+              // Status chip
+              Container(
+                margin: EdgeInsets.only(left: 8.w),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: chipBg,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Text(
+                  complaint.status,
+                  style: TextStyle(
+                    color: chipText,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13.sp,
+                  ),
                 ),
               ),
             ],
@@ -367,22 +490,15 @@ class _SimpleStatusCard extends StatelessWidget {
 
 class ComplaintItem {
   final String id;
-  final String title;
-  final String location;
-  final String priority;
+  final String title; // category-subcategory
   final String status;
   final Color statusColor;
-  final Color priorityColor;
-  final String imageUrl;
-
+  final String dateTime;
   ComplaintItem({
     required this.id,
     required this.title,
-    required this.location,
-    required this.priority,
     required this.status,
     required this.statusColor,
-    required this.priorityColor,
-    required this.imageUrl,
+    required this.dateTime,
   });
 }

@@ -10,7 +10,6 @@ import '../l10n/app_localizations.dart';
 import '../locale_provider.dart';
 import '../login_page.dart';
 import 'package:CiTY/pages/profile_page.dart';
-import 'package:CiTY/providers/user_provider.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
 import 'reports_page.dart';
