@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/app_localizations.dart';
 import 'worker_main_page.dart';
+import 'package:CiTY/services/firebase_api.dart'; // Add this import
 
 class WorkerLoginPage extends StatefulWidget {
   const WorkerLoginPage({super.key});
@@ -112,10 +113,9 @@ class _WorkerLoginPageState extends State<WorkerLoginPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('workerId', workerId);
 
-      // Optional: You could also store worker name or other non-sensitive info
-      if (workerData.containsKey('name')) {
-        await prefs.setString('workerName', workerData['name'] as String);
-      }
+      // --- ADD THIS LINE ---
+      // Save the FCM token for the worker after successful login
+      await FirebaseApi().saveWorkerTokenToDatabase();
 
       if (!mounted) return;
       setState(() => _isLoading = false);

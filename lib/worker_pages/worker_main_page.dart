@@ -4,6 +4,7 @@ import 'worker_home_page.dart';
 import 'worker_myTasks_page.dart';
 import 'worker_profile_page.dart';
 import '../l10n/app_localizations.dart';
+import 'package:CiTY/services/firebase_api.dart'; // Add this import
 
 class WorkerMainPage extends StatefulWidget {
   const WorkerMainPage({super.key});
@@ -15,8 +16,14 @@ class WorkerMainPage extends StatefulWidget {
 class _WorkerMainPageState extends State<WorkerMainPage> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    // REMOVE THE LINE BELOW
+    // FirebaseApi().initNotifications();
+  }
+
   // The list of pages to be displayed.
-  // These pages should NOT have their own BottomNavigationBar.
   static const List<Widget> _pages = <Widget>[
     WorkerHomePage(),
     WorkerMyTasksPage(),

@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import 'worker_complaint_page.dart';
+import 'worker_notifications_page.dart'; // Add this import
 
 class WorkerHomePage extends StatefulWidget {
   const WorkerHomePage({super.key});
@@ -451,7 +452,22 @@ class WorkerDashboardHeader extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              Icon(Icons.notifications, color: Colors.white, size: 22.sp),
+              IconButton(
+                // Change Icon to IconButton
+                icon: Icon(
+                  Icons.notifications,
+                  color: Colors.white,
+                  size: 22.sp,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const WorkerNotificationsPage(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ],

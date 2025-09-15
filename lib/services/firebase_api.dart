@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:CiTY/services/notification_service.dart'; // Add this import
+import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -69,6 +70,32 @@ class FirebaseApi {
       await userRef.update({'fcmToken': token});
     } catch (e) {
       debugPrint("Error saving FCM token: $e");
+    }
+  }
+
+  // --- ADD THIS NEW METHOD FOR WORKERS ---
+  Future<void> saveWorkerTokenToDatabase() async {
+    final prefs = await SharedPreferences.getInstance();
+    final workerId = prefs.getString('workerId');
+
+    // Exit if worker is not logged in
+    if (workerId == null) {
+      debugPrint("Worker not logged in, cannot save token.");
+      return;
+    }
+
+    final token = await _firebaseMessaging.getToken();
+    if (token == null) {
+      debugPrint("Failed to get FCM token for worker.");
+      return;
+    }
+
+    debugPrint("Saving FCM Token for worker $workerId: $token");
+    try {
+      final workerRef = FirebaseDatabase.instance.ref('workers/$workerId');
+      await workerRef.update({'fcmToken': token});
+    } catch (e) {
+      debugPrint("Error saving worker FCM token: $e");
     }
   }
 }

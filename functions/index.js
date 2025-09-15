@@ -29,7 +29,38 @@ exports.onstatusupdate = onValueUpdated(
 
     const complaintId = event.params.complaintId;
     const newStatus = afterData.status;
-    const citizenId = afterData.userId; // assuming phone number or user id
+    const citizenId = afterData.userId; // for citizen notification
+
+    // --- START: Worker Notification Logic ---
+    // If a complaint is assigned, notify the worker.
+    if (newStatus === "Assigned" && afterData.assignedTo) {
+      const workerId = afterData.assignedTo;
+      const workerToken = await getTokenForWorker(workerId);
+
+      if (workerToken) {
+        const workerMessage = {
+          notification: {
+            title: "New Task Assigned",
+            body: `You have a new task: Complaint #${complaintId.substring(0, 8)}`,
+          },
+          data: {
+            complaintId: complaintId,
+            click_action: "FLUTTER_NOTIFICATION_CLICK",
+          },
+          token: workerToken,
+        };
+
+        try {
+          await admin.messaging().send(workerMessage);
+          logger.log("✅ Notification sent successfully to worker:", workerId);
+        } catch (error) {
+          logger.error("❌ Error sending notification to worker:", error);
+        }
+      } else {
+        logger.warn("⚠️ No FCM token found for worker:", workerId);
+      }
+    }
+    // --- END: Worker Notification Logic ---
 
     let title = "";
     let body = "";
@@ -82,6 +113,20 @@ exports.onstatusupdate = onValueUpdated(
     }
   }
 );
+
+/**
+ * Helper: Get the FCM token for a given WORKER ID
+ */
+async function getTokenForWorker(workerId) {
+  if (!workerId) return null;
+  try {
+    const snapshot = await admin.database().ref(`/workers/${workerId}/fcmToken`).once("value");
+    return snapshot.val();
+  } catch (err) {
+    logger.error("Error fetching FCM token for worker:", workerId, err);
+    return null;
+  }
+}
 
 /**
  * Helper: Get the FCM token for a given user ID
