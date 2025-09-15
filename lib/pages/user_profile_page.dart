@@ -13,6 +13,7 @@ import 'package:CiTY/pages/profile_page.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
 import 'reports_page.dart';
+import 'faq_page.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -149,7 +150,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         children: [
                           _profileCard(loc, mainBlue, userProfile),
                           SizedBox(height: 18.h),
-                          _badgeCard(loc, userProfile),
+                          _badgeCard(loc, userProfile, resolvedReports),
                           SizedBox(height: 18.h),
                           _reportsSummary(
                             loc,
@@ -394,8 +395,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  Widget _badgeCard(AppLocalizations loc, UserProfile profile) {
-    int points = profile.points;
+  Widget _badgeCard(
+    AppLocalizations loc,
+    UserProfile profile,
+    int resolvedCount,
+  ) {
+    int points = resolvedCount; // Use resolved complaints as points
     int nextLevelPoints = 15;
     String nextLevelName = "Neighborhood Guardian 🦸‍♂️";
     if (points >= 15) {
@@ -435,7 +440,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    profile.points.toString(), // Dynamic points
+                    points
+                        .toString(), // <-- Use the local resolved complaints count
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -683,7 +689,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
               size: 20.sp,
               color: Colors.grey,
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => FaqPage()),
+              );
+            },
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,

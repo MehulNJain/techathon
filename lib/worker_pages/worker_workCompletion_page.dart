@@ -104,13 +104,10 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.orange.shade700, // Main orange
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Text(
-          "Work Completion",
-          style: TextStyle(color: Colors.white, fontSize: 18.sp),
-        ),
+        title: null, // No title
         centerTitle: true,
       ),
       body: Center(
@@ -119,10 +116,17 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.check_circle_outline,
-                color: Colors.green,
-                size: 80.sp,
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFFD1FADF),
+                ),
+                padding: EdgeInsets.all(24.w),
+                child: Icon(
+                  Icons.check,
+                  color: const Color(0xFF12B76A),
+                  size: 46.sp,
+                ),
               ),
               SizedBox(height: 24.h),
               Text(
@@ -150,6 +154,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white, // White text
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -176,6 +181,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white, // White text
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -192,9 +198,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (_) => const WorkerMainPage(),
-                    ), // Change this line
+                    MaterialPageRoute(builder: (_) => const WorkerMainPage()),
                     (route) => false,
                   );
                 },

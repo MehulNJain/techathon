@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import '../login_page.dart';
 import '../l10n/app_localizations.dart';
 import '../locale_provider.dart';
+import 'worker_workCompletion_page.dart'; // Add this import at the top
 
 class WorkerProfilePage extends StatefulWidget {
   const WorkerProfilePage({super.key});
@@ -497,6 +498,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
               }),
               SizedBox(height: 12.h),
               _actionTile(Icons.logout, l10n.logout, Colors.red, _handleLogout),
+              SizedBox(height: 12.h),
             ],
           ),
         ),
