@@ -13,6 +13,8 @@ import 'locale_provider.dart'; // Separated for clarity
 import 'fallback_material_localizations_delegate.dart'; // The new fallback delegate
 import 'firebase_options.dart';
 import 'providers/user_provider.dart';
+import 'services/firebase_api.dart'; // Add this import
+import 'package:CiTY/services/notification_service.dart';
 
 // Localization
 import 'l10n/app_localizations.dart';
@@ -21,13 +23,18 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  // Initialize notifications
+  await FirebaseApi().initNotifications();
+
   // Initialize Hive for local data caching
   await Hive.initFlutter();
   Hive.registerAdapter(ReportAdapter());
   Hive.registerAdapter(UserProfileAdapter()); // Register the new adapter
   await Hive.openBox<Report>('reportsBox');
+  Hive.registerAdapter(NotificationModelAdapter());
+  await Hive.openBox<NotificationModel>('notificationsBox');
   await Hive.openBox<UserProfile>('userProfileBox'); // Open the new box
-
+  await NotificationService().init();
   // Initialize and load the initial locale
   final localeProvider = LocaleProvider();
   await localeProvider.fetchLocale();

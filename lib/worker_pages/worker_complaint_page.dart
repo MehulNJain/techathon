@@ -124,19 +124,10 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
         .child(widget.complaintId);
 
     try {
-      final Map<String, dynamic> updateData = {'status': newStatus};
-      if (newStatus == 'In Progress') {
-        updateData['inProgressTimestamp'] = DateTime.now().toIso8601String();
-      }
-      await dbRef.update(updateData);
-
+      await dbRef.update({'status': newStatus});
       if (mounted) {
         setState(() {
           complaintData!['status'] = newStatus;
-          if (newStatus == 'In Progress') {
-            complaintData!['inProgressTimestamp'] =
-                updateData['inProgressTimestamp'];
-          }
           _isUpdating = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
@@ -405,7 +396,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                   SizedBox(height: 18.h),
                   // Citizen Submission Card
                   Card(
-                    elevation: 0,
+                    elevation: 3,
                     color:
                         Colors.white, // Match top card and report details page
                     shape: RoundedRectangleBorder(
@@ -596,7 +587,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                   // --- UPDATED COMPLETION PROOF CARD ---
                   if (complaintData!['status'] == 'Resolved')
                     Card(
-                      elevation: 0,
+                      elevation: 3,
                       color: Colors.white, // Match the card style above
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.r),
@@ -794,15 +785,14 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade700,
                       foregroundColor: Colors.white,
-                      elevation: 2,
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       padding: EdgeInsets.symmetric(vertical: 16.h),
                     ),
-                    onPressed: complaintData!['status'] == 'Resolved'
-                        ? null // Disable if resolved
-                        : () {
+                    onPressed: complaintData!['status'] == 'In Progress'
+                        ? () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -811,7 +801,8 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                                 ),
                               ),
                             );
-                          },
+                          }
+                        : null, // Disable if status is not 'In Progress'
                     icon: Icon(Icons.camera_alt, size: 20.sp),
                     label: Text(
                       'Upload Completion Photos',
@@ -853,7 +844,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red.shade100,
                       foregroundColor: Colors.red.shade400,
-                      elevation: 0,
+                      elevation: 3,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.r),
                       ),

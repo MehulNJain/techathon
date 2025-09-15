@@ -411,6 +411,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       final dateStr = DateFormat('yyMMdd').format(DateTime.now());
       final complaintData = {
         "complaintId": complaintId,
+        "userId": phoneNumber,
         "category": selectedCategory,
         "subcategory": _isOtherSelected
             ? customSubcategoryController.text.trim()

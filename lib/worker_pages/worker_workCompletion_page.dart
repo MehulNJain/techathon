@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 import 'worker_home_page.dart';
+import 'worker_main_page.dart'; // Add this import
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -191,7 +192,9 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => WorkerHomePage()),
+                    MaterialPageRoute(
+                      builder: (_) => const WorkerMainPage(),
+                    ), // Change this line
                     (route) => false,
                   );
                 },

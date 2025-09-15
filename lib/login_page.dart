@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import 'pages/home_page.dart';
+import 'services/firebase_api.dart';
 import 'pages/otp_page.dart';
 import 'worker_pages/worker_login_page.dart';
 import 'l10n/app_localizations.dart';
@@ -81,6 +82,16 @@ class _LoginPageState extends State<LoginPage> {
           timeout: const Duration(seconds: 60),
           verificationCompleted: (PhoneAuthCredential credential) async {
             await _auth.signInWithCredential(credential);
+
+            // Save the FCM token now that the user is logged in.
+            await FirebaseApi().saveTokenToDatabase();
+
+            // Then navigate to the next page
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+              (route) => false,
+            );
           },
           verificationFailed: (FirebaseAuthException e) {
             if (!mounted) return;

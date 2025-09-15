@@ -7,6 +7,7 @@ import '../l10n/app_localizations.dart'; // ✅ correct import
 import 'profile_page.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:CiTY/services/firebase_api.dart'; // 1. Add this import
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;
@@ -50,11 +51,15 @@ class _OtpPageState extends State<OtpPage> {
         }
         await _confirmationResult!.confirm(_otp);
       } else {
+        // This is the mobile flow for both real and test users
         PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: widget.verificationId,
           smsCode: _otp,
         );
         await FirebaseAuth.instance.signInWithCredential(credential);
+
+        // 2. Add this line right after signing in
+        await FirebaseApi().saveTokenToDatabase();
       }
       if (!mounted) return;
 

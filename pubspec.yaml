@@ -28,6 +28,8 @@ dependencies:
   hive: ^2.2.3
   firebase_storage: ^13.0.1
   url_launcher: ^6.3.2
+  firebase_messaging: ^16.0.1
+  timeago: ^3.6.1
 
   flutter_localizations:
     sdk: flutter
