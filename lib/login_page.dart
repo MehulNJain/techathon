@@ -211,17 +211,25 @@ class _LoginPageState extends State<LoginPage> {
                         horizontal: 24.w,
                         vertical: 20.h,
                       ),
-                      child: ConstrainedBox(
+                      child: Container(
+                        // This container ensures the column has enough height to center itself.
                         constraints: BoxConstraints(
-                          minHeight: constraints.maxHeight - 120.h,
+                          minHeight:
+                              constraints.maxHeight -
+                              100.h, // Adjust based on bottom section height
                         ),
-                        child: IntrinsicHeight(
-                          child: Stack(
-                            children: [
-                              Align(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Transform.translate(
+                              offset: Offset(
+                                0,
+                                -40.h,
+                              ), // This moves the icon up
+                              child: Align(
                                 alignment: Alignment.topRight,
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.w),
+                                  padding: EdgeInsets.only(bottom: 10.h),
                                   child: IconButton(
                                     icon: Icon(
                                       Icons.language,
@@ -232,193 +240,177 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                            ),
+                            CircleAvatar(
+                              radius: 48.r,
+                              backgroundColor: mainBlue,
+                              child: Icon(
+                                Icons.account_balance,
+                                size: 44.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(height: 28.h),
+                            Text(
+                              l10n.app_title,
+                              style: TextStyle(
+                                fontSize: titleFontSize,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              l10n.login_subtitle,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: subtitleFontSize,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            SizedBox(height: 18.h),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                l10n.phone_number,
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(10.r),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Row(
                                 children: [
-                                  SizedBox(height: 50.h),
-                                  CircleAvatar(
-                                    radius: 48.r,
-                                    backgroundColor: mainBlue,
-                                    child: Icon(
-                                      Icons.account_balance,
-                                      size: 44.sp,
-                                      color: Colors.white,
-                                    ),
+                                  SizedBox(width: 8.w),
+                                  Icon(
+                                    Icons.phone,
+                                    color: Colors.grey.shade500,
+                                    size: 22.sp,
                                   ),
-                                  SizedBox(height: 28.h),
+                                  SizedBox(width: 6.w),
                                   Text(
-                                    l10n.app_title,
+                                    "+91",
                                     style: TextStyle(
-                                      fontSize: titleFontSize,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  Text(
-                                    l10n.login_subtitle,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: subtitleFontSize,
-                                      color: Colors.black54,
+                                      fontSize: 16.sp,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  SizedBox(height: 18.h),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      l10n.phone_number,
-                                      style: TextStyle(
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 10.h),
+                                  SizedBox(width: 6.w),
                                   Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade50,
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      border: Border.all(
-                                        color: Colors.grey.shade300,
+                                    height: 36.h,
+                                    width: 1.w,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _phoneController,
+                                      keyboardType: TextInputType.phone,
+                                      maxLength: 10,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        hintText: l10n.enter_phone_number,
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 10.h,
+                                        ),
                                       ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(width: 8.w),
-                                        Icon(
-                                          Icons.phone,
-                                          color: Colors.grey.shade500,
-                                          size: 22.sp,
-                                        ),
-                                        SizedBox(width: 6.w),
-                                        Text(
-                                          "+91",
-                                          style: TextStyle(
-                                            fontSize: 16.sp,
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        SizedBox(width: 6.w),
-                                        Container(
-                                          height: 36.h,
-                                          width: 1.w,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                        SizedBox(width: 6.w),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: _phoneController,
-                                            keyboardType: TextInputType.phone,
-                                            maxLength: 10,
-                                            decoration: InputDecoration(
-                                              counterText: "",
-                                              hintText: l10n.enter_phone_number,
-                                              border: InputBorder.none,
-                                              isDense: true,
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                    vertical: 10.h,
-                                                  ),
-                                            ),
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .digitsOnly,
-                                              LengthLimitingTextInputFormatter(
-                                                10,
-                                              ),
-                                            ],
-                                            onChanged: (_) => setState(() {}),
-                                          ),
-                                        ),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        LengthLimitingTextInputFormatter(10),
                                       ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 24.h),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            _phoneController.text.length == 10
-                                            ? mainBlue
-                                            : Colors.grey.shade300,
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: buttonPadding,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8.r,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed:
-                                          (_phoneController.text.length == 10 &&
-                                              !_isLoading)
-                                          ? _sendOtp
-                                          : null,
-                                      child: _isLoading
-                                          ? SizedBox(
-                                              height: 20.h,
-                                              width: 20.w,
-                                              child:
-                                                  const CircularProgressIndicator(
-                                                    strokeWidth: 2,
-                                                    color: Colors.white,
-                                                  ),
-                                            )
-                                          : Text(
-                                              l10n.send_otp,
-                                              style: TextStyle(
-                                                fontSize: buttonFontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                    ),
-                                  ),
-                                  if (kIsWeb) ...[
-                                    SizedBox(height: 20.h),
-                                    SizedBox(
-                                      height: 60.h,
-                                      child: const HtmlElementView(
-                                        viewType: 'recaptcha',
-                                      ),
-                                    ),
-                                  ],
-                                  SizedBox(height: 32.h),
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const WorkerLoginPage(),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.engineering,
-                                      size: 20.sp,
-                                      color: mainBlue,
-                                    ),
-                                    label: Text(
-                                      l10n.login_as_worker,
-                                      style: TextStyle(
-                                        fontSize: 15.sp,
-                                        color: mainBlue,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      onChanged: (_) => setState(() {}),
                                     ),
                                   ),
                                 ],
                               ),
+                            ),
+                            SizedBox(height: 24.h),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      _phoneController.text.length == 10
+                                      ? mainBlue
+                                      : Colors.grey.shade300,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: buttonPadding,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                ),
+                                onPressed:
+                                    (_phoneController.text.length == 10 &&
+                                        !_isLoading)
+                                    ? _sendOtp
+                                    : null,
+                                child: _isLoading
+                                    ? SizedBox(
+                                        height: 20.h,
+                                        width: 20.w,
+                                        child: const CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        l10n.send_otp,
+                                        style: TextStyle(
+                                          fontSize: buttonFontSize,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                              ),
+                            ),
+                            if (kIsWeb) ...[
+                              SizedBox(height: 20.h),
+                              SizedBox(
+                                height: 60.h,
+                                child: const HtmlElementView(
+                                  viewType: 'recaptcha',
+                                ),
+                              ),
                             ],
-                          ),
+                            SizedBox(height: 32.h),
+                            TextButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const WorkerLoginPage(),
+                                  ),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.engineering,
+                                size: 20.sp,
+                                color: mainBlue,
+                              ),
+                              label: Text(
+                                l10n.login_as_worker,
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  color: mainBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
