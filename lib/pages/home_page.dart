@@ -900,6 +900,8 @@ class _HomePageState extends State<HomePage> {
     Color statusColor,
     Color chipBg,
   ) {
+    final loc = AppLocalizations.of(context)!; // Get localizations
+
     return Card(
       color: Colors.white,
       margin: EdgeInsets.symmetric(vertical: 8.h),
@@ -937,7 +939,7 @@ class _HomePageState extends State<HomePage> {
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Text(
-            status,
+            _getStatusLabel(status, loc), // Use the translated status label
             style: TextStyle(
               color: statusColor,
               fontWeight: FontWeight.bold,
@@ -947,6 +949,21 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  String _getStatusLabel(String status, AppLocalizations loc) {
+    switch (status) {
+      case "Pending":
+        return loc.pending;
+      case "Assigned":
+        return loc.assigned;
+      case "In Progress":
+        return loc.inProgress;
+      case "Resolved":
+        return loc.resolved;
+      default:
+        return status;
+    }
   }
 
   IconData _getCategoryIcon(String title) {

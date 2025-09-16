@@ -1,9 +1,10 @@
 import 'package:CiTY/pages/report_details_page.dart';
 import 'package:CiTY/pages/submitted_page.dart';
 import 'package:flutter/material.dart';
-import 'package:CiTY/services/notification_service.dart'; // Add this import
-import 'package:timeago/timeago.dart' as timeago; // Add this for relative time
-import 'package:hive_flutter/hive_flutter.dart'; // Add this import
+import 'package:CiTY/services/notification_service.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:CiTY/l10n/app_localizations.dart'; // Add this import
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -17,12 +18,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!; // Get localizations
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       appBar: AppBar(
         backgroundColor: SubmittedPage.mainBlue,
-        title: const Text(
-          'Notifications',
+        title: Text(
+          loc.notifications, // Use translated title
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -30,17 +32,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ValueListenableBuilder<Box<NotificationModel>>(
-        // Change this
-        valueListenable: _notificationService.listenable, // Change this
+        valueListenable: _notificationService.listenable,
         builder: (context, box, _) {
-          // Get notifications and sort them with newest first
           final notifications = box.values.toList().cast<NotificationModel>();
           notifications.sort((a, b) => b.receivedAt.compareTo(a.receivedAt));
 
           if (notifications.isEmpty) {
             return Center(
               child: Text(
-                "No notifications yet.",
+                loc.noNotificationsYet, // Use translated text
                 style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
               ),
             );

@@ -159,13 +159,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get pending => 'बाकी';
 
   @override
-  String get inProgress => 'कार्य प्रगति पर है';
+  String get inProgress => 'प्रगति पर';
 
   @override
   String get success => 'सफलता!';
 
   @override
-  String get resolved => 'समाधान हो गया';
+  String get resolved => 'समाधान';
 
   @override
   String get recentReports => 'ताज़ा रिपोर्ट';
@@ -444,6 +444,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get close => 'बंद करें';
 
   @override
+  String get raiseGrievance => 'शिकायत दर्ज करें';
+
+  @override
   String get statusTimeline => 'स्टेटस टाइमलाइन';
 
   @override
@@ -536,4 +539,180 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get reportIssuee => 'एक और समस्या दर्ज करें';
+
+  @override
+  String get complaintDetails => 'शिकायत का विवरण';
+
+  @override
+  String get complaintId => 'शिकायत आईडी';
+
+  @override
+  String get navigate => 'नेविगेट करें';
+
+  @override
+  String get citizenSubmission => 'नागरिक द्वारा प्रस्तुत';
+
+  @override
+  String get photos => 'तस्वीरें';
+
+  @override
+  String get noPhotosAvailable => 'कोई तस्वीर उपलब्ध नहीं है।';
+
+  @override
+  String get description => 'विवरण';
+
+  @override
+  String get completionProof => 'कार्य समाप्ति का प्रमाण';
+
+  @override
+  String get noCompletionPhotos =>
+      'कार्य समाप्ति की कोई तस्वीर उपलब्ध नहीं है।';
+
+  @override
+  String get noDescriptionProvided => 'कोई विवरण नहीं दिया गया।';
+
+  @override
+  String get uploadCompletionPhotos => 'कार्य समाप्ति की तस्वीरें अपलोड करें';
+
+  @override
+  String get markAsInProgress => 'कार्य प्रगति पर है के रूप में चिह्नित करें';
+
+  @override
+  String statusUpdated(String status) {
+    return 'स्थिति \"$status\" में अपडेट की गई';
+  }
+
+  @override
+  String failedToUpdateStatus(String error) {
+    return 'स्थिति अपडेट करने में विफल: $error';
+  }
+
+  @override
+  String get couldNotOpenMaps => 'नक्शा नहीं खोल सका';
+
+  @override
+  String get completionProofTitle => 'कार्य समाप्ति का प्रमाण';
+
+  @override
+  String get completionProofInfo =>
+      'कार्य समाप्ति के प्रमाण के रूप में कम से कम 1 फोटो (अधिकतम 3) अपलोड करें।';
+
+  @override
+  String get photoRequirementNote =>
+      'कम से कम 1 फोटो आवश्यक है। अधिकतम 3 फोटो की अनुमति है।';
+
+  @override
+  String get addNotesHint => 'नोट्स/टिप्पणी जोड़ें (वैकल्पिक)';
+
+  @override
+  String get submitting => 'सबमिट हो रहा है...';
+
+  @override
+  String get submit => 'सबमिट करें';
+
+  @override
+  String failedToSubmitProof(String error) {
+    return 'प्रमाण सबमिट करने में विफल: $error';
+  }
+
+  @override
+  String get storagePermissionDenied => 'स्टोरेज की अनुमति नहीं है';
+
+  @override
+  String get workCompletionReport => 'कार्य समाप्ति रिपोर्ट';
+
+  @override
+  String pdfComplaintId(String id) {
+    return 'शिकायत आईडी: $id';
+  }
+
+  @override
+  String pdfSupervisorId(String id) {
+    return 'सुपरवाइजर आईडी: $id';
+  }
+
+  @override
+  String pdfCitizenId(String id) {
+    return 'नागरिक आईडी: $id';
+  }
+
+  @override
+  String get pdfStatus => 'स्थिति: पूर्ण';
+
+  @override
+  String pdfDate(String date) {
+    return 'दिनांक: $date';
+  }
+
+  @override
+  String get downloadsDirNotFound => 'डाउनलोड डायरेक्टरी नहीं मिली';
+
+  @override
+  String get downloaded => 'सफलतापूर्वक डाउनलोड किया गया';
+
+  @override
+  String failedToDownloadReport(String error) {
+    return 'रिपोर्ट डाउनलोड करने में विफल: $error';
+  }
+
+  @override
+  String get workMarkedAsResolved => 'कार्य समाधान के रूप में चिह्नित!';
+
+  @override
+  String get completionProofSent =>
+      'आपका कार्य समाप्ति का प्रमाण शिकायतकर्ता और सुपरवाइजर को भेज दिया गया है।';
+
+  @override
+  String get shareStatus => 'स्थिति साझा करें';
+
+  @override
+  String get downloadReport => 'रिपोर्ट डाउनलोड करें';
+
+  @override
+  String get backToHome => 'होम पर वापस जाएं';
+
+  @override
+  String get workerNotificationsTitle => 'सूचनाएं';
+
+  @override
+  String get noNotificationsYet => 'अभी तक कोई सूचना नहीं है।';
+
+  @override
+  String get faqTitle => 'अक्सर पूछे जाने वाले प्रश्न';
+
+  @override
+  String get faqQ1 => 'मैं शिकायत कैसे दर्ज करूं?';
+
+  @override
+  String get faqA1 =>
+      'होम पेज पर जाएं और \'+\' बटन या \'समस्या रिपोर्ट करें\' पर टैप करके नई शिकायत दर्ज करें।';
+
+  @override
+  String get faqQ2 => 'मैं अपनी शिकायत की स्थिति कैसे ट्रैक कर सकता हूं?';
+
+  @override
+  String get faqA2 =>
+      'अपनी सभी शिकायतों की स्थिति और विवरण देखने के लिए \'मेरी रिपोर्ट\' खोलें।';
+
+  @override
+  String get faqQ3 => 'मैं अपनी प्रोफ़ाइल जानकारी कैसे अपडेट करूं?';
+
+  @override
+  String get faqA3 =>
+      'अपना नाम या ईमेल अपडेट करने के लिए अपनी प्रोफ़ाइल पेज पर एडिट आइकन पर टैप करें।';
+
+  @override
+  String get faqQ4 => 'विभिन्न शिकायत स्थितियों का क्या मतलब है?';
+
+  @override
+  String get faqA4 =>
+      'बाकी: समीक्षा की प्रतीक्षा में।\nसौंपा गया: एक कार्यकर्ता को सौंपा गया।\nप्रगति पर: काम शुरू हो गया है।\nसमाधान: समस्या ठीक हो गई है।';
+
+  @override
+  String get faqQ5 =>
+      'यदि मेरी शिकायत का समाधान नहीं होता है तो मैं शिकायत कैसे दर्ज करूं?';
+
+  @override
+  String get faqA5 =>
+      'शिकायत विवरण खोलें और नीचे \'शिकायत दर्ज करें\' पर टैप करें।';
 }

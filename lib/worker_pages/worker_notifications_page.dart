@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../services/notification_service.dart';
 import 'worker_complaint_page.dart';
+import '../l10n/app_localizations.dart';
 
 class WorkerNotificationsPage extends StatelessWidget {
   const WorkerNotificationsPage({super.key});
@@ -11,13 +12,14 @@ class WorkerNotificationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final NotificationService notificationService = NotificationService();
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       appBar: AppBar(
         backgroundColor: Colors.orange.shade700,
-        title: const Text(
-          'Notifications',
+        title: Text(
+          loc.workerNotificationsTitle,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -33,7 +35,7 @@ class WorkerNotificationsPage extends StatelessWidget {
           if (notifications.isEmpty) {
             return Center(
               child: Text(
-                "No notifications yet.",
+                loc.noNotificationsYet,
                 style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
               ),
             );

@@ -3,10 +3,11 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 import 'worker_home_page.dart';
-import 'worker_main_page.dart'; // Add this import
+import 'worker_main_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:CiTY/l10n/app_localizations.dart'; // Add this import
 
 class WorkerWorkCompletionSuccessPage extends StatelessWidget {
   final String complaintId;
@@ -21,6 +22,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
   });
 
   Future<void> _downloadReport(BuildContext context) async {
+    final loc = AppLocalizations.of(context)!;
     try {
       if (Platform.isAndroid) {
         var storageStatus = await Permission.storage.status;
@@ -32,39 +34,41 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
           var manageStatus = await Permission.manageExternalStorage.request();
           if (!manageStatus.isGranted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Storage permission denied')),
+              SnackBar(content: Text(loc.storagePermissionDenied)),
             );
             return;
           }
         }
         if (!await Permission.storage.isGranted &&
             !await Permission.manageExternalStorage.isGranted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Storage permission denied')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(loc.storagePermissionDenied)));
           return;
         }
       }
 
       final pdf = pw.Document();
+      final formattedDate = DateFormat.yMd().add_jms().format(DateTime.now());
+
       pdf.addPage(
         pw.Page(
           build: (pw.Context context) => pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                'Work Completion Report',
+                loc.workCompletionReport,
                 style: pw.TextStyle(
                   fontSize: 22,
                   fontWeight: pw.FontWeight.bold,
                 ),
               ),
               pw.SizedBox(height: 16),
-              pw.Text('Complaint ID: $complaintId'),
-              pw.Text('Supervisor ID: $supervisorId'),
-              pw.Text('Citizen ID: $citizenId'),
-              pw.Text('Status: Completed'),
-              pw.Text('Date: ${DateTime.now()}'),
+              pw.Text(loc.pdfComplaintId(complaintId)),
+              pw.Text(loc.pdfSupervisorId(supervisorId)),
+              pw.Text(loc.pdfCitizenId(citizenId)),
+              pw.Text(loc.pdfStatus),
+              pw.Text(loc.pdfDate(formattedDate)),
             ],
           ),
         ),
@@ -80,7 +84,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
         downloadsDir = await getApplicationDocumentsDirectory();
       }
       if (downloadsDir == null) {
-        throw Exception("Downloads directory not found");
+        throw Exception(loc.downloadsDirNotFound);
       }
 
       final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
@@ -91,16 +95,17 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Downloaded')));
+      ).showSnackBar(SnackBar(content: Text(loc.downloaded)));
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to download report: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.failedToDownloadReport(e.toString()))),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -130,7 +135,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
               ),
               SizedBox(height: 24.h),
               Text(
-                "Work Marked as Completed!",
+                loc.workMarkedAsResolved,
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
@@ -140,7 +145,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
               ),
               SizedBox(height: 16.h),
               Text(
-                "Your completion proof has been sent to the complaint owner and supervisor.",
+                loc.completionProofSent,
                 style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
                 textAlign: TextAlign.center,
               ),
@@ -150,7 +155,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
                 child: ElevatedButton.icon(
                   icon: Icon(Icons.share, color: Colors.white, size: 24.sp),
                   label: Text(
-                    "Share Status",
+                    loc.shareStatus,
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
@@ -165,9 +170,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Share status pressed")),
-                    );
+                    // This can be implemented later
                   },
                 ),
               ),
@@ -177,7 +180,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
                 child: ElevatedButton.icon(
                   icon: Icon(Icons.download, color: Colors.white, size: 24.sp),
                   label: Text(
-                    "Download Report",
+                    loc.downloadReport,
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
@@ -203,7 +206,7 @@ class WorkerWorkCompletionSuccessPage extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  "Back to Home",
+                  loc.backToHome,
                   style: TextStyle(fontSize: 15.sp, color: Colors.blue),
                 ),
               ),

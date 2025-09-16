@@ -267,6 +267,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
   }
 
   Widget buildComplaintCard(ComplaintItem complaint) {
+    final loc = AppLocalizations.of(context)!; // Get localizations
     String formattedDate = '';
     try {
       final dt = DateTime.parse(complaint.dateTime);
@@ -394,7 +395,10 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Text(
-                  complaint.status,
+                  _getStatusLabel(
+                    complaint.status,
+                    loc,
+                  ), // Use translated status
                   style: TextStyle(
                     color: chipText,
                     fontWeight: FontWeight.bold,
@@ -407,6 +411,20 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
         ),
       ),
     );
+  }
+
+  // Helper function to get translated status labels
+  String _getStatusLabel(String status, AppLocalizations loc) {
+    switch (status) {
+      case "Assigned":
+        return loc.assigned;
+      case "In Progress":
+        return loc.inProgress;
+      case "Resolved":
+        return loc.resolved;
+      default:
+        return status;
+    }
   }
 }
 

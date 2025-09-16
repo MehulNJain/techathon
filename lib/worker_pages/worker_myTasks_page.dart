@@ -225,6 +225,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
   }
 
   Widget buildTaskCard(TaskItem task) {
+    final l10n = AppLocalizations.of(context)!; // Get localizations
     String formattedDate = '';
     try {
       final dt = DateTime.parse(task.dateTime);
@@ -341,7 +342,7 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Text(
-                task.status,
+                _getStatusLabel(task.status, l10n), // Use translated status
                 style: TextStyle(
                   color: chipText,
                   fontWeight: FontWeight.bold,
@@ -353,6 +354,19 @@ class _WorkerMyTasksPageState extends State<WorkerMyTasksPage> {
         ),
       ),
     );
+  }
+
+  String _getStatusLabel(String status, AppLocalizations loc) {
+    switch (status) {
+      case "Assigned":
+        return loc.assigned;
+      case "In Progress":
+        return loc.inProgress;
+      case "Resolved":
+        return loc.resolved;
+      default:
+        return status;
+    }
   }
 
   Color _getStatusColor(String? status) {

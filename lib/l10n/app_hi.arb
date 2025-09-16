@@ -50,8 +50,8 @@
   "reportsSummary": "रिपोर्ट का हाल",
   "total": "कुल",
   "pending": "बाकी",
-  "inProgress": "कार्य प्रगति पर है",
-  "resolved": "समाधान हो गया",
+  "inProgress": "प्रगति पर",
+  "resolved": "समाधान",
   "recentReports": "ताज़ा रिपोर्ट",
   "brokenStreetLight": "टूटी स्ट्रीट लाइट",
   "garbageCollection": "कचरा उठाना",
@@ -176,6 +176,7 @@
   "good_morning": "सुप्रभात,",
   "good_afternoon": "नमस्कार,",
   "good_evening": "शुभ संध्या,",
+  "raiseGrievance": "शिकायत दर्ज करें",
   "refId": "संदर्भ: {id}",
   "@refId": {
     "placeholders": {
@@ -187,5 +188,89 @@
 "worker": "कर्मचारी",
 "selectLanguage": "भाषा चुनें",
 "success": "सफलता!",
-"reportIssuee": "एक और समस्या दर्ज करें"
+"reportIssuee": "एक और समस्या दर्ज करें",
+  "complaintDetails": "शिकायत का विवरण",
+  "complaintId": "शिकायत आईडी",
+  "navigate": "नेविगेट करें",
+  "citizenSubmission": "नागरिक द्वारा प्रस्तुत",
+  "photos": "तस्वीरें",
+  "noPhotosAvailable": "कोई तस्वीर उपलब्ध नहीं है।",
+  "description": "विवरण",
+  "completionProof": "कार्य समाप्ति का प्रमाण",
+  "noCompletionPhotos": "कार्य समाप्ति की कोई तस्वीर उपलब्ध नहीं है।",
+  "noDescriptionProvided": "कोई विवरण नहीं दिया गया।",
+  "uploadCompletionPhotos": "कार्य समाप्ति की तस्वीरें अपलोड करें",
+  "markAsInProgress": "कार्य प्रगति पर है के रूप में चिह्नित करें",
+  "statusUpdated": "स्थिति \"{status}\" में अपडेट की गई",
+  "@statusUpdated": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToUpdateStatus": "स्थिति अपडेट करने में विफल: {error}",
+  "@failedToUpdateStatus": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotOpenMaps": "नक्शा नहीं खोल सका",
+  "completionProofTitle": "कार्य समाप्ति का प्रमाण",
+  "completionProofInfo": "कार्य समाप्ति के प्रमाण के रूप में कम से कम 1 फोटो (अधिकतम 3) अपलोड करें।",
+  "photoRequirementNote": "कम से कम 1 फोटो आवश्यक है। अधिकतम 3 फोटो की अनुमति है।",
+  "addNotesHint": "नोट्स/टिप्पणी जोड़ें (वैकल्पिक)",
+  "submitting": "सबमिट हो रहा है...",
+  "submit": "सबमिट करें",
+  "failedToSubmitProof": "प्रमाण सबमिट करने में विफल: {error}",
+  "@failedToSubmitProof": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+    "failedToSubmitProof": "प्रमाण सबमिट करने में विफल: {error}",
+  "@failedToSubmitProof": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "storagePermissionDenied": "स्टोरेज की अनुमति नहीं है",
+  "workCompletionReport": "कार्य समाप्ति रिपोर्ट",
+  "pdfComplaintId": "शिकायत आईडी: {id}",
+  "@pdfComplaintId": { "placeholders": { "id": { "type": "String" } } },
+  "pdfSupervisorId": "सुपरवाइजर आईडी: {id}",
+  "@pdfSupervisorId": { "placeholders": { "id": { "type": "String" } } },
+  "pdfCitizenId": "नागरिक आईडी: {id}",
+  "@pdfCitizenId": { "placeholders": { "id": { "type": "String" } } },
+  "pdfStatus": "स्थिति: पूर्ण",
+  "pdfDate": "दिनांक: {date}",
+  "@pdfDate": { "placeholders": { "date": { "type": "String" } } },
+  "downloadsDirNotFound": "डाउनलोड डायरेक्टरी नहीं मिली",
+  "downloaded": "सफलतापूर्वक डाउनलोड किया गया",
+  "failedToDownloadReport": "रिपोर्ट डाउनलोड करने में विफल: {error}",
+  "@failedToDownloadReport": { "placeholders": { "error": { "type": "String" } } },
+  "workMarkedAsResolved": "कार्य समाधान के रूप में चिह्नित!",
+  "completionProofSent": "आपका कार्य समाप्ति का प्रमाण शिकायतकर्ता और सुपरवाइजर को भेज दिया गया है।",
+  "shareStatus": "स्थिति साझा करें",
+  "downloadReport": "रिपोर्ट डाउनलोड करें",
+  "backToHome": "होम पर वापस जाएं",
+  "workerNotificationsTitle": "सूचनाएं",
+  "noNotificationsYet": "अभी तक कोई सूचना नहीं है।",
+  "faqTitle": "अक्सर पूछे जाने वाले प्रश्न",
+  "faqQ1": "मैं शिकायत कैसे दर्ज करूं?",
+  "faqA1": "होम पेज पर जाएं और '+' बटन या 'समस्या रिपोर्ट करें' पर टैप करके नई शिकायत दर्ज करें।",
+  "faqQ2": "मैं अपनी शिकायत की स्थिति कैसे ट्रैक कर सकता हूं?",
+  "faqA2": "अपनी सभी शिकायतों की स्थिति और विवरण देखने के लिए 'मेरी रिपोर्ट' खोलें।",
+  "faqQ3": "मैं अपनी प्रोफ़ाइल जानकारी कैसे अपडेट करूं?",
+  "faqA3": "अपना नाम या ईमेल अपडेट करने के लिए अपनी प्रोफ़ाइल पेज पर एडिट आइकन पर टैप करें।",
+  "faqQ4": "विभिन्न शिकायत स्थितियों का क्या मतलब है?",
+  "faqA4": "बाकी: समीक्षा की प्रतीक्षा में।\nसौंपा गया: एक कार्यकर्ता को सौंपा गया।\nप्रगति पर: काम शुरू हो गया है।\nसमाधान: समस्या ठीक हो गई है।",
+  "faqQ5": "यदि मेरी शिकायत का समाधान नहीं होता है तो मैं शिकायत कैसे दर्ज करूं?",
+  "faqA5": "शिकायत विवरण खोलें और नीचे 'शिकायत दर्ज करें' पर टैप करें।"
 }

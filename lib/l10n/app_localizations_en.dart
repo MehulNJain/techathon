@@ -446,6 +446,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'Close';
 
   @override
+  String get raiseGrievance => 'Raise a Grievance';
+
+  @override
   String get statusTimeline => 'Status Timeline';
 
   @override
@@ -539,4 +542,179 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportIssuee => 'Report Another Issue';
+
+  @override
+  String get complaintDetails => 'Complaint Details';
+
+  @override
+  String get complaintId => 'Complaint ID';
+
+  @override
+  String get navigate => 'Navigate';
+
+  @override
+  String get citizenSubmission => 'Citizen Submission';
+
+  @override
+  String get photos => 'Photos';
+
+  @override
+  String get noPhotosAvailable => 'No photos available.';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get completionProof => 'Completion Proof';
+
+  @override
+  String get noCompletionPhotos => 'No completion photos available.';
+
+  @override
+  String get noDescriptionProvided => 'No description provided.';
+
+  @override
+  String get uploadCompletionPhotos => 'Upload Completion Photos';
+
+  @override
+  String get markAsInProgress => 'Mark as In Progress';
+
+  @override
+  String statusUpdated(String status) {
+    return 'Status updated to \"$status\"';
+  }
+
+  @override
+  String failedToUpdateStatus(String error) {
+    return 'Failed to update status: $error';
+  }
+
+  @override
+  String get couldNotOpenMaps => 'Could not open Maps';
+
+  @override
+  String get completionProofTitle => 'Completion Proof';
+
+  @override
+  String get completionProofInfo =>
+      'Upload at least 1 photo (max 3) as proof of work completion.';
+
+  @override
+  String get photoRequirementNote =>
+      'At least 1 photo required. Up to 3 photos allowed.';
+
+  @override
+  String get addNotesHint => 'Add notes/remarks (optional)';
+
+  @override
+  String get submitting => 'Submitting...';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String failedToSubmitProof(String error) {
+    return 'Failed to submit proof: $error';
+  }
+
+  @override
+  String get storagePermissionDenied => 'Storage permission denied';
+
+  @override
+  String get workCompletionReport => 'Work Completion Report';
+
+  @override
+  String pdfComplaintId(String id) {
+    return 'Complaint ID: $id';
+  }
+
+  @override
+  String pdfSupervisorId(String id) {
+    return 'Supervisor ID: $id';
+  }
+
+  @override
+  String pdfCitizenId(String id) {
+    return 'Citizen ID: $id';
+  }
+
+  @override
+  String get pdfStatus => 'Status: Completed';
+
+  @override
+  String pdfDate(String date) {
+    return 'Date: $date';
+  }
+
+  @override
+  String get downloadsDirNotFound => 'Downloads directory not found';
+
+  @override
+  String get downloaded => 'Downloaded successfully';
+
+  @override
+  String failedToDownloadReport(String error) {
+    return 'Failed to download report: $error';
+  }
+
+  @override
+  String get workMarkedAsResolved => 'Work Marked as Resolved!';
+
+  @override
+  String get completionProofSent =>
+      'Your completion proof has been sent to the complaint owner and supervisor.';
+
+  @override
+  String get shareStatus => 'Share Status';
+
+  @override
+  String get downloadReport => 'Download Report';
+
+  @override
+  String get backToHome => 'Back to Home';
+
+  @override
+  String get workerNotificationsTitle => 'Notifications';
+
+  @override
+  String get noNotificationsYet => 'No notifications yet.';
+
+  @override
+  String get faqTitle => 'FAQ';
+
+  @override
+  String get faqQ1 => 'How do I submit a complaint?';
+
+  @override
+  String get faqA1 =>
+      'Go to the home page and tap the \'+\' button or \'Report Issue\' to submit a new complaint.';
+
+  @override
+  String get faqQ2 => 'How can I track my complaint status?';
+
+  @override
+  String get faqA2 =>
+      'Open \'My Reports\' to see the status and details of all your complaints.';
+
+  @override
+  String get faqQ3 => 'How do I update my profile information?';
+
+  @override
+  String get faqA3 =>
+      'Tap the edit icon on your profile page to update your name or email.';
+
+  @override
+  String get faqQ4 => 'What do the different complaint statuses mean?';
+
+  @override
+  String get faqA4 =>
+      'Pending: Waiting for review.\nAssigned: Assigned to a worker.\nIn Progress: Work has started.\nResolved: Issue has been fixed.';
+
+  @override
+  String get faqQ5 =>
+      'How do I raise a grievance if my complaint is not resolved?';
+
+  @override
+  String get faqA5 =>
+      'Open the complaint details and tap \'Raise Grievance\' at the bottom.';
 }

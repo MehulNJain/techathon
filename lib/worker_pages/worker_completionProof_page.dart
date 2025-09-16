@@ -11,6 +11,7 @@ import 'worker_workCompletion_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:CiTY/l10n/app_localizations.dart';
 
 class _PhotoWithTimestamp {
   final File file;
@@ -45,7 +46,10 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
   @override
   void initState() {
     super.initState();
-    _requestAndFetchLocation(); // This correctly fetches location on page load
+    // Use post-frame callback to ensure context is ready for location fetching
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestAndFetchLocation();
+    });
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     Future.microtask(() async {
@@ -65,21 +69,42 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
   }
 
   Future<void> _requestAndFetchLocation() async {
+    final loc = AppLocalizations.of(context)!;
     var status = await Permission.locationWhenInUse.status;
     if (status.isDenied || status.isPermanentlyDenied) {
       status = await Permission.locationWhenInUse.request();
     }
     if (status.isPermanentlyDenied) {
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(loc.permissionRequired),
+          content: Text(loc.locationPermissionPermanentlyDenied),
+          actions: [
+            TextButton(
+              onPressed: () {
+                openAppSettings();
+                Navigator.of(ctx).pop();
+              },
+              child: Text(loc.openSettings),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(loc.cancel),
+            ),
+          ],
+        ),
+      );
       setState(() {
+        address = loc.locationPermissionDenied;
         gps = "";
-        address = "Location permission denied";
       });
       return;
     }
     if (!status.isGranted) {
       setState(() {
         gps = "";
-        address = "Location permission denied";
+        address = loc.locationPermissionDenied;
       });
       return;
     }
@@ -87,6 +112,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
   }
 
   Future<void> _fetchLocation() async {
+    final loc = AppLocalizations.of(context)!;
     try {
       Position pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
@@ -117,13 +143,13 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
         });
       } else {
         setState(() {
-          address = "Address not found";
+          address = loc.addressNotFound;
         });
       }
     } catch (e) {
       setState(() {
         gps = "";
-        address = "Unable to fetch location";
+        address = loc.unableToFetchLocation;
       });
     }
   }
@@ -149,6 +175,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
   }
 
   void _showImagePreview(_PhotoWithTimestamp photo) {
+    final loc = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (_) => Dialog(
@@ -167,7 +194,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                "Close",
+                loc.close,
                 style: TextStyle(color: Colors.white, fontSize: 14.sp),
               ),
             ),
@@ -221,6 +248,18 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
     });
   }
 
+  bool get _isFormValid {
+    final loc = AppLocalizations.of(context)!;
+    final isLocationValid =
+        address != null &&
+        address!.isNotEmpty &&
+        address != loc.addressNotFound &&
+        address != loc.locationPermissionDenied &&
+        address != loc.unableToFetchLocation;
+
+    return photos.isNotEmpty && isLocationValid;
+  }
+
   // --- NEW FIREBASE METHODS ---
 
   Future<List<String>> _uploadPhotosToStorage() async {
@@ -257,6 +296,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
 
   Future<void> _submitCompletionProof() async {
     if (photos.isEmpty || _isSubmitting) return;
+    final loc = AppLocalizations.of(context)!;
 
     setState(() => _isSubmitting = true);
 
@@ -302,7 +342,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to submit proof: $e'),
+          content: Text(loc.failedToSubmitProof(e.toString())),
           backgroundColor: Colors.red,
         ),
       );
@@ -315,6 +355,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -326,7 +367,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Completion Proof",
+          loc.completionProofTitle,
           style: TextStyle(color: Colors.white, fontSize: 17.sp),
         ),
         centerTitle: true,
@@ -359,22 +400,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                           color: Colors.blue.shade900,
                           fontSize: 15.sp,
                         ),
-                        children: [
-                          TextSpan(text: "Upload at least "),
-                          TextSpan(
-                            text: "1 photo",
-                            style: TextStyle(
-                              color: Colors.blue.shade700,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                              fontSize: 15.sp,
-                            ),
-                          ),
-                          TextSpan(
-                            text: " (max 3) as proof of work completion.",
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        ],
+                        children: [TextSpan(text: loc.completionProofInfo)],
                       ),
                     ),
                   ),
@@ -384,7 +410,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
             Row(
               children: [
                 Text(
-                  'Capture Photos',
+                  loc.capturePhotos,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15.sp,
@@ -484,14 +510,14 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
             ),
             SizedBox(height: 6.h),
             Text(
-              'At least 1 photo required. Up to 3 photos allowed.',
+              loc.photoRequirementNote,
               style: TextStyle(fontSize: 12.sp, color: Colors.grey),
             ),
             SizedBox(height: 20.h),
 
             // Location
             Text(
-              'Location',
+              loc.location,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
             ),
             SizedBox(height: 8.h),
@@ -510,7 +536,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                       Icon(Icons.location_on, color: Colors.red, size: 20.sp),
                       SizedBox(width: 6.w),
                       Text(
-                        'Auto-detected Location',
+                        loc.autoDetectedLocation,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14.sp,
@@ -530,7 +556,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                       border: Border.all(color: Colors.grey.shade300),
                     ),
                     child: Text(
-                      address ?? "Fetching address...",
+                      address ?? loc.fetchingAddress,
                       style: TextStyle(fontSize: 15.sp),
                     ),
                   ),
@@ -550,8 +576,8 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                       Expanded(
                         child: Text(
                           gps != null && gps!.isNotEmpty
-                              ? "GPS coordinates: $gps"
-                              : "Fetching GPS...",
+                              ? loc.gpsCoordinates(gps!)
+                              : loc.fetchingGps,
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.black87,
@@ -565,7 +591,10 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
                       icon: Icon(Icons.refresh, size: 16.sp),
-                      label: Text("Refresh", style: TextStyle(fontSize: 13.sp)),
+                      label: Text(
+                        loc.refresh,
+                        style: TextStyle(fontSize: 13.sp),
+                      ),
                       onPressed: _requestAndFetchLocation,
                     ),
                   ),
@@ -576,7 +605,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
 
             // Additional Information
             Text(
-              "Additional Information",
+              loc.additionalDetails,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
             ),
             SizedBox(height: 8.h),
@@ -584,7 +613,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
               controller: notesController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: "Add notes/remarks (optional)",
+                hintText: loc.addNotesHint,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.r),
                 ),
@@ -604,7 +633,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                       ? Row(
                           children: [
                             Text(
-                              'Recording...',
+                              loc.recording,
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -626,7 +655,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                       ? Row(
                           children: [
                             Text(
-                              'Playing...',
+                              loc.playing,
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold,
@@ -646,8 +675,8 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                         )
                       : Text(
                           _audioPath == null
-                              ? 'Record voice note (optional)'
-                              : 'Voice note recorded',
+                              ? loc.recordVoiceNote
+                              : loc.voiceNoteRecorded,
                           style: TextStyle(
                             color: Colors.grey.shade700,
                             fontSize: 13.sp,
@@ -682,7 +711,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                           size: 22.sp,
                         ),
                         onPressed: _deleteVoiceNote,
-                        tooltip: "Delete voice note",
+                        tooltip: loc.deleteVoiceNote,
                       ),
                     ],
                   ),
@@ -709,7 +738,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                         size: 20.sp,
                       ),
                 label: Text(
-                  _isSubmitting ? 'Submitting...' : 'Submit',
+                  _isSubmitting ? loc.submitting : loc.submit,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
@@ -717,7 +746,9 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange.shade700,
+                  backgroundColor: _isFormValid
+                      ? Colors.orange.shade700
+                      : Colors.grey.shade300,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.r),
@@ -725,7 +756,7 @@ class _WorkerCompletionProofPageState extends State<WorkerCompletionProofPage> {
                   foregroundColor: Colors.white,
                   textStyle: TextStyle(color: Colors.white, fontSize: 16.sp),
                 ),
-                onPressed: photos.isNotEmpty && !_isSubmitting
+                onPressed: _isFormValid && !_isSubmitting
                     ? _submitCompletionProof
                     : null,
               ),

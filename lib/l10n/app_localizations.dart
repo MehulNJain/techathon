@@ -964,6 +964,12 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get close;
 
+  /// No description provided for @raiseGrievance.
+  ///
+  /// In en, this message translates to:
+  /// **'Raise a Grievance'**
+  String get raiseGrievance;
+
   /// No description provided for @statusTimeline.
   ///
   /// In en, this message translates to:
@@ -1137,6 +1143,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report Another Issue'**
   String get reportIssuee;
+
+  /// No description provided for @complaintDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint Details'**
+  String get complaintDetails;
+
+  /// No description provided for @complaintId.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint ID'**
+  String get complaintId;
+
+  /// No description provided for @navigate.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate'**
+  String get navigate;
+
+  /// No description provided for @citizenSubmission.
+  ///
+  /// In en, this message translates to:
+  /// **'Citizen Submission'**
+  String get citizenSubmission;
+
+  /// No description provided for @photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get photos;
+
+  /// No description provided for @noPhotosAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No photos available.'**
+  String get noPhotosAvailable;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @completionProof.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion Proof'**
+  String get completionProof;
+
+  /// No description provided for @noCompletionPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'No completion photos available.'**
+  String get noCompletionPhotos;
+
+  /// No description provided for @noDescriptionProvided.
+  ///
+  /// In en, this message translates to:
+  /// **'No description provided.'**
+  String get noDescriptionProvided;
+
+  /// No description provided for @uploadCompletionPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Completion Photos'**
+  String get uploadCompletionPhotos;
+
+  /// No description provided for @markAsInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as In Progress'**
+  String get markAsInProgress;
+
+  /// No description provided for @statusUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated to \"{status}\"'**
+  String statusUpdated(String status);
+
+  /// No description provided for @failedToUpdateStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update status: {error}'**
+  String failedToUpdateStatus(String error);
+
+  /// No description provided for @couldNotOpenMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open Maps'**
+  String get couldNotOpenMaps;
+
+  /// No description provided for @completionProofTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion Proof'**
+  String get completionProofTitle;
+
+  /// No description provided for @completionProofInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload at least 1 photo (max 3) as proof of work completion.'**
+  String get completionProofInfo;
+
+  /// No description provided for @photoRequirementNote.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 1 photo required. Up to 3 photos allowed.'**
+  String get photoRequirementNote;
+
+  /// No description provided for @addNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add notes/remarks (optional)'**
+  String get addNotesHint;
+
+  /// No description provided for @submitting.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting...'**
+  String get submitting;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @failedToSubmitProof.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit proof: {error}'**
+  String failedToSubmitProof(String error);
+
+  /// No description provided for @storagePermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage permission denied'**
+  String get storagePermissionDenied;
+
+  /// No description provided for @workCompletionReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Completion Report'**
+  String get workCompletionReport;
+
+  /// No description provided for @pdfComplaintId.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint ID: {id}'**
+  String pdfComplaintId(String id);
+
+  /// No description provided for @pdfSupervisorId.
+  ///
+  /// In en, this message translates to:
+  /// **'Supervisor ID: {id}'**
+  String pdfSupervisorId(String id);
+
+  /// No description provided for @pdfCitizenId.
+  ///
+  /// In en, this message translates to:
+  /// **'Citizen ID: {id}'**
+  String pdfCitizenId(String id);
+
+  /// No description provided for @pdfStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: Completed'**
+  String get pdfStatus;
+
+  /// No description provided for @pdfDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date: {date}'**
+  String pdfDate(String date);
+
+  /// No description provided for @downloadsDirNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads directory not found'**
+  String get downloadsDirNotFound;
+
+  /// No description provided for @downloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded successfully'**
+  String get downloaded;
+
+  /// No description provided for @failedToDownloadReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to download report: {error}'**
+  String failedToDownloadReport(String error);
+
+  /// No description provided for @workMarkedAsResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Marked as Resolved!'**
+  String get workMarkedAsResolved;
+
+  /// No description provided for @completionProofSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your completion proof has been sent to the complaint owner and supervisor.'**
+  String get completionProofSent;
+
+  /// No description provided for @shareStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Status'**
+  String get shareStatus;
+
+  /// No description provided for @downloadReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Report'**
+  String get downloadReport;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backToHome;
+
+  /// No description provided for @workerNotificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get workerNotificationsTitle;
+
+  /// No description provided for @noNotificationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet.'**
+  String get noNotificationsYet;
+
+  /// No description provided for @faqTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQ'**
+  String get faqTitle;
+
+  /// No description provided for @faqQ1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I submit a complaint?'**
+  String get faqQ1;
+
+  /// No description provided for @faqA1.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the home page and tap the \'+\' button or \'Report Issue\' to submit a new complaint.'**
+  String get faqA1;
+
+  /// No description provided for @faqQ2.
+  ///
+  /// In en, this message translates to:
+  /// **'How can I track my complaint status?'**
+  String get faqQ2;
+
+  /// No description provided for @faqA2.
+  ///
+  /// In en, this message translates to:
+  /// **'Open \'My Reports\' to see the status and details of all your complaints.'**
+  String get faqA2;
+
+  /// No description provided for @faqQ3.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I update my profile information?'**
+  String get faqQ3;
+
+  /// No description provided for @faqA3.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the edit icon on your profile page to update your name or email.'**
+  String get faqA3;
+
+  /// No description provided for @faqQ4.
+  ///
+  /// In en, this message translates to:
+  /// **'What do the different complaint statuses mean?'**
+  String get faqQ4;
+
+  /// No description provided for @faqA4.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending: Waiting for review.\nAssigned: Assigned to a worker.\nIn Progress: Work has started.\nResolved: Issue has been fixed.'**
+  String get faqA4;
+
+  /// No description provided for @faqQ5.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I raise a grievance if my complaint is not resolved?'**
+  String get faqQ5;
+
+  /// No description provided for @faqA5.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the complaint details and tap \'Raise Grievance\' at the bottom.'**
+  String get faqA5;
 }
 
 class _AppLocalizationsDelegate

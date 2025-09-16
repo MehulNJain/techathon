@@ -117,6 +117,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
   Future<void> _updateStatus(String newStatus) async {
     if (_isUpdating) return;
     setState(() => _isUpdating = true);
+    final loc = AppLocalizations.of(context)!;
 
     final dbRef = FirebaseDatabase.instance
         .ref()
@@ -132,7 +133,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Status updated to "$newStatus"'),
+            content: Text(loc.statusUpdated(newStatus)),
             backgroundColor: Colors.green,
           ),
         );
@@ -142,7 +143,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
         setState(() => _isUpdating = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update status: $e'),
+            content: Text(loc.failedToUpdateStatus(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -152,6 +153,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6), // Same as WorkerHomePage
       appBar: AppBar(
@@ -162,7 +164,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Complaint Details',
+          loc.complaintDetails,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -176,7 +178,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
           : complaintData == null
           ? Center(
               child: Text(
-                'Complaint not found',
+                loc.complaintNotFound,
                 style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
               ),
             )
@@ -212,7 +214,10 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                                 borderRadius: BorderRadius.circular(14.r),
                               ),
                               child: Text(
-                                complaintData!['status'] ?? '',
+                                _getStatusLabel(
+                                  complaintData!['status'] ?? '',
+                                  loc,
+                                ),
                                 style: TextStyle(
                                   color: _getStatusTextColor(
                                     complaintData!['status'] ?? '',
@@ -227,7 +232,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Complaint ID',
+                                loc.complaintId,
                                 style: TextStyle(
                                   color: Colors.grey.shade500,
                                   fontSize: 14.sp,
@@ -320,7 +325,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                                           size: 20.sp,
                                         ),
                                         label: Text(
-                                          'Navigate',
+                                          loc.navigate,
                                           style: TextStyle(
                                             color: Colors.blue,
                                             fontWeight: FontWeight.bold,
@@ -374,7 +379,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                                                 ).showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      'Could not open Maps',
+                                                      loc.couldNotOpenMaps,
                                                     ),
                                                     backgroundColor: Colors.red,
                                                   ),
@@ -408,7 +413,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Citizen Submission',
+                            loc.citizenSubmission,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16.sp,
@@ -417,7 +422,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                           ),
                           SizedBox(height: 14.h),
                           Text(
-                            'Photos',
+                            loc.photos,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14.sp,
@@ -481,7 +486,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                                               onPressed: () =>
                                                   Navigator.of(context).pop(),
                                               child: Text(
-                                                'Close',
+                                                loc.close,
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14.sp,
@@ -547,7 +552,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                             ),
                           SizedBox(height: 18.h),
                           Text(
-                            'Description',
+                            loc.description,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14.sp,
@@ -565,8 +570,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Text(
-                              complaintData!['description'] ??
-                                  'N/A', // Corrected key
+                              complaintData!['description'] ?? loc.notAvailable,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14.sp,
@@ -598,7 +602,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Completion Proof',
+                              loc.completionProof,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.sp,
@@ -607,7 +611,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                             ),
                             SizedBox(height: 14.h),
                             Text(
-                              'Photos',
+                              loc.photos,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14.sp,
@@ -680,7 +684,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                                                     context,
                                                   ).pop(),
                                                   child: Text(
-                                                    'Close',
+                                                    loc.close,
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 14.sp,
@@ -732,12 +736,12 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                               )
                             else
                               Text(
-                                'No completion photos available.',
+                                loc.noCompletionPhotos,
                                 style: TextStyle(color: Colors.grey.shade600),
                               ),
                             SizedBox(height: 18.h),
                             Text(
-                              'Description', // Changed from 'Notes'
+                              loc.description,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14.sp,
@@ -756,7 +760,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                               ),
                               child: Text(
                                 complaintData!['completionNotes'] ??
-                                    'No description provided.',
+                                    loc.noDescriptionProvided,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14.sp,
@@ -805,7 +809,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                         : null, // Disable if status is not 'In Progress'
                     icon: Icon(Icons.camera_alt, size: 20.sp),
                     label: Text(
-                      'Upload Completion Photos',
+                      loc.uploadCompletionPhotos,
                       style: TextStyle(fontSize: 16.sp),
                     ),
                   ),
@@ -835,7 +839,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                           )
                         : Icon(Icons.build, size: 20.sp),
                     label: Text(
-                      'Mark as In Progress',
+                      loc.markAsInProgress,
                       style: TextStyle(fontSize: 16.sp),
                     ),
                   ),
@@ -862,7 +866,7 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
                           },
                     icon: Icon(Icons.report_problem, size: 20.sp),
                     label: Text(
-                      'Report Issue',
+                      loc.reportIssue,
                       style: TextStyle(fontSize: 16.sp),
                     ),
                   ),
@@ -883,6 +887,19 @@ class _WorkerComplaintPageState extends State<WorkerComplaintPage> {
         image: DecorationImage(image: NetworkImage(url), fit: BoxFit.cover),
       ),
     );
+  }
+
+  String _getStatusLabel(String status, AppLocalizations loc) {
+    switch (status) {
+      case "Assigned":
+        return loc.assigned;
+      case "In Progress":
+        return loc.inProgress;
+      case "Resolved":
+        return loc.resolved;
+      default:
+        return status;
+    }
   }
 
   Color _getCategoryBgColor(String category) {

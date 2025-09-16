@@ -217,6 +217,21 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
     }
   }
 
+  String _getStatusLabel(String status, AppLocalizations loc) {
+    switch (status) {
+      case "Pending":
+        return loc.pending;
+      case "Assigned":
+        return loc.assigned;
+      case "In Progress":
+        return loc.inProgress;
+      case "Resolved":
+        return loc.resolved;
+      default:
+        return status;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
@@ -365,7 +380,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                         // ✅ DYNAMIC STATUS CHIP
                         Chip(
                           label: Text(
-                            effectiveStatus,
+                            _getStatusLabel(effectiveStatus, loc),
                             style: TextStyle(
                               color: _getStatusColor(effectiveStatus.trim()),
                               fontWeight: FontWeight.bold,
@@ -736,7 +751,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                       size: 22.sp,
                     ),
                     label: Text(
-                      'Raise Grievance',
+                      loc.raiseGrievance,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

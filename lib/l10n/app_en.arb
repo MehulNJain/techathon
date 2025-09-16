@@ -163,6 +163,7 @@
     }
   },
   "close": "Close",
+  "raiseGrievance": "Raise a Grievance",
   "statusTimeline": "Status Timeline",
   "submitted": "Submitted",
   "reportSubmittedByCitizen": "Report submitted by citizen.",
@@ -217,5 +218,92 @@
   },
 "worker": "Worker",
 "selectLanguage": "Select Language",
-"reportIssuee":"Report Another Issue"
+
+
+  "reportIssuee": "Report Another Issue",
+  "complaintDetails": "Complaint Details",
+  "complaintId": "Complaint ID",
+  "navigate": "Navigate",
+  "citizenSubmission": "Citizen Submission",
+  "photos": "Photos",
+  "noPhotosAvailable": "No photos available.",
+  "description": "Description",
+  "completionProof": "Completion Proof",
+  "noCompletionPhotos": "No completion photos available.",
+  "noDescriptionProvided": "No description provided.",
+  "uploadCompletionPhotos": "Upload Completion Photos",
+  "markAsInProgress": "Mark as In Progress",
+  "statusUpdated": "Status updated to \"{status}\"",
+  "@statusUpdated": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToUpdateStatus": "Failed to update status: {error}",
+  "@failedToUpdateStatus": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotOpenMaps": "Could not open Maps",
+  "completionProofTitle": "Completion Proof",
+  "completionProofInfo": "Upload at least 1 photo (max 3) as proof of work completion.",
+  "photoRequirementNote": "At least 1 photo required. Up to 3 photos allowed.",
+  "addNotesHint": "Add notes/remarks (optional)",
+  "submitting": "Submitting...",
+  "submit": "Submit",
+  "failedToSubmitProof": "Failed to submit proof: {error}",
+  "@failedToSubmitProof": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+    "failedToSubmitProof": "Failed to submit proof: {error}",
+  "@failedToSubmitProof": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "storagePermissionDenied": "Storage permission denied",
+  "workCompletionReport": "Work Completion Report",
+  "pdfComplaintId": "Complaint ID: {id}",
+  "@pdfComplaintId": { "placeholders": { "id": { "type": "String" } } },
+  "pdfSupervisorId": "Supervisor ID: {id}",
+  "@pdfSupervisorId": { "placeholders": { "id": { "type": "String" } } },
+  "pdfCitizenId": "Citizen ID: {id}",
+  "@pdfCitizenId": { "placeholders": { "id": { "type": "String" } } },
+  "pdfStatus": "Status: Completed",
+  "pdfDate": "Date: {date}",
+  "@pdfDate": { "placeholders": { "date": { "type": "String" } } },
+  "downloadsDirNotFound": "Downloads directory not found",
+  "downloaded": "Downloaded successfully",
+  "failedToDownloadReport": "Failed to download report: {error}",
+  "@failedToDownloadReport": { "placeholders": { "error": { "type": "String" } } },
+  "workMarkedAsResolved": "Work Marked as Resolved!",
+  "completionProofSent": "Your completion proof has been sent to the complaint owner and supervisor.",
+  "shareStatus": "Share Status",
+  "downloadReport": "Download Report",
+  "backToHome": "Back to Home",
+    "workerNotificationsTitle": "Notifications",
+  "noNotificationsYet": "No notifications yet.",
+"faqTitle": "FAQ",
+  "faqQ1": "How do I submit a complaint?",
+  "faqA1": "Go to the home page and tap the '+' button or 'Report Issue' to submit a new complaint.",
+  "faqQ2": "How can I track my complaint status?",
+  "faqA2": "Open 'My Reports' to see the status and details of all your complaints.",
+  "faqQ3": "How do I update my profile information?",
+  "faqA3": "Tap the edit icon on your profile page to update your name or email.",
+  "faqQ4": "What do the different complaint statuses mean?",
+  "faqA4": "Pending: Waiting for review.\nAssigned: Assigned to a worker.\nIn Progress: Work has started.\nResolved: Issue has been fixed.",
+  "faqQ5": "How do I raise a grievance if my complaint is not resolved?",
+  "faqA5": "Open the complaint details and tap 'Raise Grievance' at the bottom."
+
 }

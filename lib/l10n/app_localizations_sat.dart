@@ -445,6 +445,9 @@ class AppLocalizationsSat extends AppLocalizations {
   String get close => 'Close';
 
   @override
+  String get raiseGrievance => 'ᱩᱡᱩᱨ ᱨᱟᱠᱟᱵ ᱢᱮ';
+
+  @override
   String get statusTimeline => 'ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱴᱟᱭᱢᱞᱟᱭᱱ';
 
   @override
@@ -455,7 +458,7 @@ class AppLocalizationsSat extends AppLocalizations {
       'ᱟᱢᱟᱜ ᱩᱡᱩᱨ ᱥᱟᱯᱲᱟᱣ ᱦᱚᱲᱚᱜ ᱠᱚ ᱥᱟᱹᱱᱫᱚᱨᱵ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾';
 
   @override
-  String get assigned => 'ᱥᱟᱯᱲᱟᱣ ᱠᱚ ᱦᱟᱛᱟᱣᱟ᱾';
+  String get assigned => 'ᱪᱟᱞᱟᱣᱟ';
 
   @override
   String get timestampNotAvailable => 'Timestamp not available';
@@ -538,4 +541,178 @@ class AppLocalizationsSat extends AppLocalizations {
 
   @override
   String get reportIssuee => 'ᱮᱴᱟᱜ ᱩᱡᱩᱨ ᱥᱟᱯᱲᱟᱣ ᱢᱮ';
+
+  @override
+  String get complaintDetails => 'ᱩᱡᱩᱨ ᱵᱤᱵᱨᱚᱬ';
+
+  @override
+  String get complaintId => 'ᱩᱡᱩᱨ ID';
+
+  @override
+  String get navigate => 'ᱰᱟᱦᱟᱨ';
+
+  @override
+  String get citizenSubmission => 'ᱱᱟᱜᱟᱨᱤᱭᱟᱹ ᱮᱢ';
+
+  @override
+  String get photos => 'ᱯᱷᱚᱴᱚᱠᱚ';
+
+  @override
+  String get noPhotosAvailable => 'ᱯᱷᱚᱴᱚ ᱵᱟᱹᱱᱩᱜᱼᱟ';
+
+  @override
+  String get description => 'ᱵᱤᱵᱨᱚᱬ';
+
+  @override
+  String get completionProof => 'ᱯᱩᱨᱟᱹᱣ ᱥᱟᱹᱠᱷᱤ';
+
+  @override
+  String get noCompletionPhotos => 'ᱯᱩᱨᱟᱹᱣ ᱯᱷᱚᱴᱚ ᱵᱟᱹᱱᱩᱜᱼᱟ';
+
+  @override
+  String get noDescriptionProvided => 'ᱵᱤᱵᱨᱚᱬ ᱵᱟᱹᱱᱩᱜᱼᱟ';
+
+  @override
+  String get uploadCompletionPhotos => 'ᱯᱩᱨᱟᱹᱣ ᱯᱷᱚᱴᱚ ᱟᱯᱞᱳᱰ ᱢᱮ';
+
+  @override
+  String get markAsInProgress => 'ᱠᱟᱹ𝘮ᱤ ᱮᱦᱚᱵ ᱢᱮ';
+
+  @override
+  String statusUpdated(String status) {
+    return '\"$status\" ᱞᱮᱠᱟᱛᱮ ᱟᱯᱰᱮᱴ ᱮᱱᱟ';
+  }
+
+  @override
+  String failedToUpdateStatus(String error) {
+    return 'ᱟᱯᱰᱮᱴ ᱨᱮ ᱟᱥᱚᱯᱷᱚᱞ: $error';
+  }
+
+  @override
+  String get couldNotOpenMaps => 'ᱱᱟᱠᱥᱟ ᱵᱟᱝ ᱠᱷᱩᱞᱟᱹᱣ ᱞᱮᱱᱟ';
+
+  @override
+  String get completionProofTitle => 'ᱯᱩᱨᱟᱹᱣ ᱥᱟᱹᱠᱷᱤ';
+
+  @override
+  String get completionProofInfo =>
+      'ᱠᱟᱹᱢᱤ ᱯᱩᱨᱟᱹᱣ ᱨᱮᱭᱟᱜ ᱥᱟᱹᱠᱷᱤ ᱞᱮᱠᱟᱛᱮ ᱠᱚᱢ ᱥᱮ ᱠᱚᱢ ᱑ ᱯᱷᱚᱴᱚ (ᱡᱟᱹᱥᱛᱤ ᱓) ᱟᱯᱞᱳᱰ ᱢᱮ᱾';
+
+  @override
+  String get photoRequirementNote =>
+      'ᱠᱚᱢ ᱥᱮ ᱠᱚᱢ ᱑ ᱯᱷᱚᱴᱚ ᱞᱟᱹᱜᱛᱤᱭᱟᱹᱜᱼᱟ᱾ ᱡᱟᱹᱥᱛᱤ ᱓ ᱯᱷᱚᱴᱚ ᱜᱮ ᱪᱟᱞᱟᱜᱼᱟ᱾';
+
+  @override
+  String get addNotesHint => 'ᱱᱚᱴ/ᱴᱤᱯᱯᱚᱬᱤ ᱚᱞ ᱢᱮ (ᱵᱟᱪᱷᱟᱣ ᱨᱮ)';
+
+  @override
+  String get submitting => 'ᱮᱢᱚᱜ ᱠᱟᱱᱟ...';
+
+  @override
+  String get submit => 'ᱮᱢᱚᱜ ᱢᱮ';
+
+  @override
+  String failedToSubmitProof(String error) {
+    return 'ᱥᱟᱹᱠᱷᱤ ᱮᱢ ᱨᱮ ᱟᱥᱚᱯᱷᱚᱞ: $error';
+  }
+
+  @override
+  String get storagePermissionDenied => 'ᱥᱴᱚᱨᱮᱡᱽ ᱨᱮᱭᱟᱜ ᱟᱹᱱᱩᱢᱟᱹᱛᱤ ᱵᱟᱹᱱᱩᱜᱼᱟ';
+
+  @override
+  String get workCompletionReport => 'ᱠᱟᱹᱢᱤ ᱯᱩᱨᱟᱹᱣ ᱨᱤᱯᱚᱴ';
+
+  @override
+  String pdfComplaintId(String id) {
+    return 'ᱩᱡᱩᱨ ID: $id';
+  }
+
+  @override
+  String pdfSupervisorId(String id) {
+    return 'ᱥᱩᱯᱟᱨᱣᱟᱭᱡᱟᱹᱨ ID: $id';
+  }
+
+  @override
+  String pdfCitizenId(String id) {
+    return 'ᱱᱟᱜᱟᱨᱤᱭᱟᱹ ID: $id';
+  }
+
+  @override
+  String get pdfStatus => 'స్థితి: ᱯᱩᱨᱟᱹᱣᱮᱱᱟ';
+
+  @override
+  String pdfDate(String date) {
+    return 'ᱢᱟᱦᱟᱸ: $date';
+  }
+
+  @override
+  String get downloadsDirNotFound => 'ᱰᱟᱣᱩᱱᱞᱳᱰ ᱰᱟᱭᱨᱮᱠᱴᱚᱨᱤ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ';
+
+  @override
+  String get downloaded => 'ᱰᱟᱣᱩᱱᱞᱳᱰ ᱦᱩᱭᱮᱱᱟ';
+
+  @override
+  String failedToDownloadReport(String error) {
+    return 'ᱨᱤᱯᱚᱴ ᱰᱟᱣᱩᱱᱞᱳᱰ ᱨᱮ ᱟᱥᱚᱯᱷᱚᱞ: $error';
+  }
+
+  @override
+  String get workMarkedAsResolved => 'ᱠᱟᱹᱢᱤ ᱯᱩᱨᱟᱹᱣᱮᱱᱟ!';
+
+  @override
+  String get completionProofSent => 'ᱟᱢᱟᱜ ᱯᱩᱨᱟᱹᱣ ᱥᱟᱹᱠᱷᱤ ᱥᱟᱯᱷᱚᱞ ᱮᱢᱮᱱᱟ᱾';
+
+  @override
+  String get shareStatus => 'స్థితి ᱥᱮᱭᱟᱨ ᱢᱮ';
+
+  @override
+  String get downloadReport => 'ᱨᱤᱯᱚᱴ ᱰᱟᱣᱩᱱᱞᱳᱰ ᱢᱮ';
+
+  @override
+  String get backToHome => 'ᱚᱲᱟᱜ ᱛᱮ ᱨᱩᱣᱟᱹᱲ';
+
+  @override
+  String get workerNotificationsTitle => 'ᱥᱩᱪᱟᱹᱱᱟᱠᱚ';
+
+  @override
+  String get noNotificationsYet => 'ᱱᱤᱛᱚᱜ ᱫᱷᱟᱹᱵᱤᱡ ᱥᱩᱪᱟᱹᱱᱟ ᱵᱟᱹᱱᱩᱜᱼᱟ᱾';
+
+  @override
+  String get faqTitle => 'ᱟᱹᱰᱤ ᱫᱷᱟᱣ ᱠᱩᱞᱤ ᱨᱮᱭᱟᱜ ᱠᱩᱠᱞᱤ';
+
+  @override
+  String get faqQ1 => 'ᱤᱧ ᱪᱮᱫ ᱞᱮᱠᱟ ᱩᱡᱩᱨ ᱮᱢ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ?';
+
+  @override
+  String get faqA1 =>
+      'ᱚᱲᱟᱜ ᱯᱮᱡᱽ ᱨᱮ ᱪᱟᱞᱟᱜ ᱢᱮ ᱟᱨ \'+\' ᱵᱚᱴᱚᱱ ᱥᱮ \'ᱩᱡᱩᱨ ᱨᱤᱯᱚᱴ ᱢᱮ\' ᱨᱮ ᱚᱛᱟᱭ ᱢᱮ ᱱᱟᱣᱟ ᱩᱡᱩᱨ ᱮᱢ ᱞᱟᱹᱜᱤᱫ᱾';
+
+  @override
+  String get faqQ2 => 'ᱤᱧ իմ ᱩᱡᱩᱨ ᱨᱮᱭᱟᱜ ᱥᱛᱤᱛᱤ ᱪᱮᱫ ᱞᱮᱠᱟ ᱧᱮᱞ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ?';
+
+  @override
+  String get faqA2 =>
+      'ᱟᱢᱟᱜ ᱡᱚᱛᱚ ᱩᱡᱩᱨ ᱨᱮᱭᱟᱜ ᱥᱛᱤᱛᱤ ᱟᱨ ᱵᱤᱵᱨᱚᱬ ᱧᱮᱞ ᱞᱟᱹᱜᱤᱫ \'ᱤᱧᱟᱜ ᱨᱤᱯᱚᱴ\' ᱠᱷᱩᱞᱟᱹᱣ ᱢᱮ᱾';
+
+  @override
+  String get faqQ3 => 'ᱤᱧ իմ ᱯᱨᱚᱯᱷᱟᱭᱤᱞ ᱡᱟᱱᱠᱟᱨᱤ ᱪᱮᱫ ᱞᱮᱠᱟ ᱵᱚᱫᱚᱞ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ?';
+
+  @override
+  String get faqA3 =>
+      'ᱟᱢᱟᱜ ᱧᱩᱛᱩᱢ ᱥᱮ ᱤᱢᱮᱞ ᱵᱚᱫᱚᱞ ᱞᱟᱹᱜᱤᱫ ᱟᱢᱟᱜ ᱯᱨᱚᱯᱷᱟᱭᱤᱞ ᱯᱮᱡᱽ ᱨᱮᱭᱟᱜ ᱮᱰᱤᱴ ᱟᱭᱠᱚᱱ ᱨᱮ ᱚᱛᱟᱭ ᱢᱮ᱾';
+
+  @override
+  String get faqQ4 => 'ᱵᱷᱮᱜᱟᱨᱼᱵᱷᱮᱜᱟᱨ ᱩᱡᱩᱨ ᱥᱛᱤᱛᱤ ᱨᱮᱭᱟᱜ ᱢᱟᱱᱮ ᱪᱮᱫ ᱠᱟᱱᱟ?';
+
+  @override
+  String get faqA4 =>
+      'ᱞᱟᱹᱢᱛᱤᱜ: ᱧᱮᱞ ᱞᱟᱹᱜᱤᱫ ᱛᱟᱺᱜᱤ ᱨᱮ᱾\nᱮᱢ ᱟᱠᱟᱱᱟ: ᱠᱟᱹᱢᱤᱭᱟᱹ ᱴᱷᱮᱱ ᱮᱢ ᱟᱠᱟᱱᱟ᱾\nᱠᱟᱹᱢᱤ ᱪᱟᱞᱟᱜ ᱠᱟᱱᱟ: ᱠᱟᱹᱢᱤ ᱮᱦᱚᱵ ᱟᱠᱟᱱᱟ᱾\nᱥᱚᱞᱦᱮᱭᱮᱱᱟ: ᱥᱚᱢᱚᱥᱭᱟ ᱴᱷᱤᱠ ᱮᱱᱟ᱾';
+
+  @override
+  String get faqQ5 =>
+      'ᱡᱩᱫᱤ ᱤᱧᱟᱜ ᱩᱡᱩᱨ ᱵᱟᱝ ᱥᱚᱞᱦᱮᱭᱚᱜᱼᱟ ᱛᱚᱵᱮ ᱤᱧ ᱪᱮᱫ ᱞᱮᱠᱟ ᱩᱡᱩᱨ ᱮᱢ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ?';
+
+  @override
+  String get faqA5 =>
+      'ᱩᱡᱩᱨ ᱵᱤᱵᱨᱚᱬ ᱠᱷᱩᱞᱟᱹᱣ ᱢᱮ ᱟᱨ ᱞᱟᱛᱟᱨ ᱨᱮ \'ᱩᱡᱩᱨ ᱨᱟᱠᱟᱵ ᱢᱮ\' ᱨᱮ ᱚᱛᱟᱭ ᱢᱮ᱾';
 }
