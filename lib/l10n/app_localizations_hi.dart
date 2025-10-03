@@ -9,9 +9,6 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get santhali => 'ᱥᱟᱱᱛᱟᱲᱤ';
-
-  @override
   String get app_title => 'स्मार्ट नागरिक पोर्टल';
 
   @override
@@ -30,7 +27,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get login_as_worker => 'कर्मचारी लॉगिन';
 
   @override
-  String get government_initiative => 'झारखंड सरकार की पहल';
+  String get government_initiative => 'सरकार की पहल';
 
   @override
   String get secure_and_verified => 'सुरक्षित और प्रमाणित';
@@ -261,7 +258,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get all => 'सभी';
 
   @override
-  String get footerNote => 'झारखंड सरकार की पहल – सुरक्षित और प्रमाणित';
+  String get footerNote => 'सरकार की पहल – सुरक्षित और प्रमाणित';
 
   @override
   String get settings => 'सेटिंग्स';

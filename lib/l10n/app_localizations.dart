@@ -7,7 +7,6 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
 import 'app_localizations_hi.dart';
-import 'app_localizations_sat.dart';
 
 // ignore_for_file: type=lint
 
@@ -97,14 +96,7 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('hi'),
-    Locale('sat'),
   ];
-
-  /// No description provided for @santhali.
-  ///
-  /// In en, this message translates to:
-  /// **'Santhali'**
-  String get santhali;
 
   /// No description provided for @app_title.
   ///
@@ -145,7 +137,7 @@ abstract class AppLocalizations {
   /// No description provided for @government_initiative.
   ///
   /// In en, this message translates to:
-  /// **'Government of Jharkhand Initiative'**
+  /// **'Government Initiative'**
   String get government_initiative;
 
   /// No description provided for @secure_and_verified.
@@ -607,7 +599,7 @@ abstract class AppLocalizations {
   /// No description provided for @footerNote.
   ///
   /// In en, this message translates to:
-  /// **'Government of Jharkhand Initiative – Secure & Verified'**
+  /// **'Government Initiative – Secure & Verified'**
   String get footerNote;
 
   /// No description provided for @settings.
@@ -1456,7 +1448,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'hi', 'sat'].contains(locale.languageCode);
+      <String>['en', 'hi'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1469,8 +1461,6 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEn();
     case 'hi':
       return AppLocalizationsHi();
-    case 'sat':
-      return AppLocalizationsSat();
   }
 
   throw FlutterError(

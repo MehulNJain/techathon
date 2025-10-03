@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'pages/home_page.dart';
 import 'services/firebase_api.dart';
 import 'pages/otp_page.dart';
-import 'worker_pages/worker_login_page.dart';
+
 import 'l10n/app_localizations.dart';
 
 import 'locale_provider.dart'; // CORRECTED: Import from its own file
@@ -144,7 +144,6 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                // Always show "English" in English
                 title: const Text('English'),
                 onTap: () {
                   localeProvider.setLocale(const Locale('en'));
@@ -152,17 +151,9 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               ListTile(
-                // Always show "हिन्दी" in Hindi
                 title: const Text('हिन्दी'),
                 onTap: () {
                   localeProvider.setLocale(const Locale('hi'));
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: const Text('ᱥᱟᱱᱛᱟᱲᱤ'),
-                onTap: () {
-                  localeProvider.setLocale(const Locale('sat'));
                   Navigator.of(context).pop();
                 },
               ),
@@ -387,15 +378,16 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                             SizedBox(height: 32.h),
                             TextButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const WorkerLoginPage(),
-                                  ),
-                                );
-                              },
+                              onPressed: () {},
+                              // {
+                              //   Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) =>
+                              //           const WorkerLoginPage(),
+                              //     ),
+                              //   );
+                              // },
                               icon: Icon(
                                 Icons.engineering,
                                 size: 20.sp,

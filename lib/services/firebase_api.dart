@@ -57,10 +57,6 @@ class FirebaseApi {
 
     // Get the current token if not provided
     token ??= await _firebaseMessaging.getToken();
-    if (token == null) {
-      debugPrint("Failed to get FCM token.");
-      return;
-    }
 
     debugPrint("Saving FCM Token for user ${user.phoneNumber}: $token");
     try {

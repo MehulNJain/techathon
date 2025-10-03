@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "santhali": "Santhali",
+
 
   "app_title": "Smart Civic Portal",
   "login_subtitle": "Report civic issues and connect with your local government",
@@ -8,7 +8,7 @@
   "enter_phone_number": "Enter your phone number",
   "send_otp": "Send OTP",
   "login_as_worker": "Login as Worker",
-  "government_initiative": "Government of Jharkhand Initiative",
+  "government_initiative": "Government Initiative",
   "secure_and_verified": "Secure & Verified",
   "english": "English",
   "hindi": "Hindi",
@@ -90,7 +90,7 @@
 
   "myReports": "My Complaints",
   "all": "All",
-  "footerNote": "Government of Jharkhand Initiative – Secure & Verified",
+  "footerNote": "Government Initiative – Secure & Verified",
   "settings": "Settings",
   "notifications": "Notifications",
   "privacyPolicy": "Privacy Policy",

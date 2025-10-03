@@ -595,8 +595,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
       switch (localeProvider.locale?.languageCode) {
         case 'hi':
           return loc.hindi;
-        case 'sat':
-          return loc.santhali;
         case 'en':
         default:
           return loc.english;
@@ -776,13 +774,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
               },
             ),
             // START: ADDED SANTALI OPTION
-            ListTile(
-              title: const Text('ᱥᱟᱱᱛᱟᱲᱤ'),
-              onTap: () {
-                localeProvider.setLocale(const Locale('sat'));
-                Navigator.of(context).pop();
-              },
-            ),
             // END: ADDED SANTALI OPTION
           ],
         ),
