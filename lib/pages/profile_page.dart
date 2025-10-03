@@ -8,7 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/user_provider.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String phoneNumber; // already verified from OTP
+  final String phoneNumber;
   final String initialName;
   final String initialEmail;
 
@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Use initial values passed from OTP page
+
     _nameController.text = widget.initialName;
     _emailController.text = widget.initialEmail;
   }
@@ -72,11 +72,9 @@ class _ProfilePageState extends State<ProfilePage> {
         await userRef.update({
           "fullName": _nameController.text.trim(),
           "email": _emailController.text.trim(),
-          // Do NOT overwrite complaints or other data!
         });
       }
 
-      // Update global state
       Provider.of<UserProvider>(
         context,
         listen: false,
@@ -119,10 +117,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: IntrinsicHeight(
                   child: Column(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // Center vertically
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // REMOVE the Expanded widget, just use the Form directly:
                       Form(
                         key: _formKey,
                         child: Column(
@@ -185,7 +181,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             SizedBox(height: 20.h),
 
-                            // Phone Number (readonly, verified)
                             TextField(
                               readOnly: true,
                               decoration: InputDecoration(
@@ -217,7 +212,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             SizedBox(height: 20.h),
 
-                            // Email Address (optional)
                             TextFormField(
                               controller: _emailController,
                               decoration: InputDecoration(
@@ -246,7 +240,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             SizedBox(height: 30.h),
 
-                            // Continue Button
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
@@ -285,13 +278,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                               ),
                             ),
-                            // Add extra space at the bottom for scrolling
+
                             SizedBox(height: 40.h),
                           ],
                         ),
                       ),
 
-                      // Footer
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 24.w,

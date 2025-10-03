@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
     if (userProfile != null) {
       _badgeName = userProfile.badge;
-      // Set badge points as the number of resolved complaints
+
       _badgePoints = reports.where((r) => r.status == 'Resolved').length;
     }
 
@@ -74,24 +74,18 @@ class _HomePageState extends State<HomePage> {
       _recentReports = reports.take(4).toList();
     }
 
-    // If we have cached data, stop showing the main loader
     if (userProfile != null || reports.isNotEmpty) {
       setState(() => _isLoading = false);
     }
   }
 
   Future<void> _fetchHomePageData() async {
-    // This method now acts as a background refresh.
-    // The UI is already built with cached data.
     final user = FirebaseAuth.instance.currentUser;
     if (user == null || user.phoneNumber == null) {
       if (mounted) setState(() => _isLoading = false);
       return;
     }
 
-    // We can use the existing fetch methods from other pages to ensure consistency
-    // For simplicity, we'll keep the combined fetch here, but it updates the cache
-    // which in turn will update the UI via setState.
     final userRef = FirebaseDatabase.instance.ref('users/${user.phoneNumber}');
     final complaintsRef = userRef.child('complaints');
 
@@ -104,7 +98,6 @@ class _HomePageState extends State<HomePage> {
       final userSnapshot = snapshots[0];
       final complaintsSnapshot = snapshots[1];
 
-      // Process and cache user profile
       if (userSnapshot.exists && userSnapshot.value != null) {
         final userData = Map<String, dynamic>.from(userSnapshot.value as Map);
         final civicData = userData['civicProfile'] != null
@@ -120,12 +113,10 @@ class _HomePageState extends State<HomePage> {
         await _userProfileBox.put('currentUser', userProfile);
       }
 
-      // Process and cache complaints
       if (complaintsSnapshot.exists && complaintsSnapshot.value != null) {
         final Map<String, Report> fetchedReportsMap = {};
         final data = complaintsSnapshot.value as Map;
 
-        // Reference to global complaints node
         final globalComplaintsRef = FirebaseDatabase.instance.ref('complaints');
 
         for (final complaintId in data.keys) {
@@ -156,7 +147,6 @@ class _HomePageState extends State<HomePage> {
         await _reportsBox.putAll(fetchedReportsMap);
       }
 
-      // After fetching and caching, reload state from cache to update UI
       if (mounted) {
         setState(() {
           _loadDataFromCache();
@@ -178,17 +168,13 @@ class _HomePageState extends State<HomePage> {
     bool updated = false;
     for (final report in reports) {
       try {
-        // If already ISO, this will succeed
         DateTime.parse(report.date);
       } catch (_) {
-        // Try to parse as display format and convert to ISO
         try {
           final parsed = DateFormat('MMM dd, h:mm a').parse(report.date);
           report.date = parsed.toIso8601String();
           updated = true;
-        } catch (_) {
-          // If can't parse, leave as is
-        }
+        } catch (_) {}
       }
     }
     if (updated) {
@@ -243,7 +229,6 @@ class _HomePageState extends State<HomePage> {
 
   void _onItemTapped(int index) {
     if (index == 0) {
-      // Already on home, do nothing or refresh
     } else if (index == 1) {
       Navigator.push(
         context,
@@ -263,11 +248,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openReportIssueWithCategory(String localizedCategory) {
-    // Map localized category names back to English for the ReportIssuePage
     final loc = AppLocalizations.of(context)!;
     String englishCategory;
 
-    // Convert localized category name to English equivalent
     if (localizedCategory == loc.garbage) {
       englishCategory = 'Garbage';
     } else if (localizedCategory == loc.streetLight) {
@@ -277,7 +260,7 @@ class _HomePageState extends State<HomePage> {
     } else if (localizedCategory == loc.water) {
       englishCategory = 'Water';
     } else {
-      englishCategory = localizedCategory; // Fallback
+      englishCategory = localizedCategory;
     }
 
     Navigator.push(
@@ -310,7 +293,6 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header Card
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
@@ -391,7 +373,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               SizedBox(height: 12.h),
                               Text(
-                                _getGreeting(loc), // Dynamic Greeting
+                                _getGreeting(loc),
                                 style: TextStyle(
                                   color: Colors.white70,
                                   fontSize: 14.sp,
@@ -409,7 +391,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        // Floating "Report an Issue" button
+
                         Positioned(
                           left: 48.w,
                           right: 48.w,
@@ -457,7 +439,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 40.h),
 
-                    // Quick Report
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 19.w),
                       child: Column(
@@ -557,7 +538,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             SizedBox(height: 4.h),
                             Text(
-                              _badgeName, // Dynamic badge name
+                              _badgeName,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15.sp,
@@ -566,8 +547,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             SizedBox(height: 10.h),
                             LinearProgressIndicator(
-                              value:
-                                  badgeDetails["progress"], // Dynamic progress
+                              value: badgeDetails["progress"],
                               backgroundColor: Colors.white24,
                               color: Colors.white,
                               minHeight: 7.h,
@@ -588,7 +568,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 18.h),
 
-                    // Report Summary
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Column(
@@ -652,7 +631,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 18.h),
 
-                    // Recent Reports
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Column(
@@ -693,7 +671,6 @@ class _HomePageState extends State<HomePage> {
                                   chipBg = Colors.yellow.shade50;
                               }
 
-                              // Fix date parsing and formatting
                               DateTime date;
                               String subtitle;
                               try {
@@ -718,7 +695,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: _reportItem(
                                   report.title,
-                                  subtitle, // Use the properly formatted date
+                                  subtitle,
                                   status,
                                   statusColor,
                                   chipBg,
@@ -831,7 +808,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Quick Report Card
   Widget _quickReportCard(
     IconData icon,
     String title,
@@ -866,7 +842,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Report Summary Box
   Widget _summaryBox(String value, String label, Color color) {
     return Column(
       children: [
@@ -884,7 +859,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Recent Report Item - updated to match reports_page.dart style
   Widget _reportItem(
     String title,
     String subtitle,
@@ -892,15 +866,14 @@ class _HomePageState extends State<HomePage> {
     Color statusColor,
     Color chipBg,
   ) {
-    final loc = AppLocalizations.of(context)!; // Get localizations
-
+    final loc = AppLocalizations.of(context)!;
     return Card(
       color: Colors.white,
       margin: EdgeInsets.symmetric(vertical: 8.h),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-        // Category icon instead of an image
+
         leading: Container(
           width: 50.w,
           height: 50.w,
@@ -931,7 +904,7 @@ class _HomePageState extends State<HomePage> {
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Text(
-            _getStatusLabel(status, loc), // Use the translated status label
+            _getStatusLabel(status, loc),
             style: TextStyle(
               color: statusColor,
               fontWeight: FontWeight.bold,
@@ -959,7 +932,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   IconData _getCategoryIcon(String title) {
-    // Extract the main category from the title (e.g. "Garbage - Overflow" -> "Garbage")
     final mainCategory = title.split(' - ').first;
 
     switch (mainCategory) {

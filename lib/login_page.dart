@@ -11,10 +11,9 @@ import 'pages/otp_page.dart';
 
 import 'l10n/app_localizations.dart';
 
-import 'locale_provider.dart'; // CORRECTED: Import from its own file
+import 'locale_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  // ... rest of your LoginPage code is perfect and does not need changes.
   const LoginPage({super.key});
 
   @override
@@ -83,10 +82,8 @@ class _LoginPageState extends State<LoginPage> {
           verificationCompleted: (PhoneAuthCredential credential) async {
             await _auth.signInWithCredential(credential);
 
-            // Save the FCM token now that the user is logged in.
             await FirebaseApi().saveTokenToDatabase();
 
-            // Then navigate to the next page
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const HomePage()),
@@ -139,7 +136,6 @@ class _LoginPageState extends State<LoginPage> {
     final currentLocale =
         Provider.of<LocaleProvider>(context).locale?.languageCode ?? 'en';
 
-    // Adjust font sizes and button height for Hindi/Santali to avoid overflow
     double titleFontSize = (currentLocale == 'sat' || currentLocale == 'hi')
         ? 20.sp
         : 24.sp;
@@ -170,11 +166,8 @@ class _LoginPageState extends State<LoginPage> {
                         vertical: 20.h,
                       ),
                       child: Container(
-                        // This container ensures the column has enough height to center itself.
                         constraints: BoxConstraints(
-                          minHeight:
-                              constraints.maxHeight -
-                              100.h, // Adjust based on bottom section height
+                          minHeight: constraints.maxHeight - 100.h,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

@@ -8,7 +8,6 @@ import 'reports_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../l10n/app_localizations.dart';
 
-// Icon selection based on complaint category
 IconData getCategoryIcon(String category) {
   switch (category) {
     case 'Garbage':
@@ -26,9 +25,8 @@ IconData getCategoryIcon(String category) {
   }
 }
 
-// Voice note player widget
 class VoiceNotePlayer extends StatefulWidget {
-  final String url; // Changed from path to url
+  final String url;
   const VoiceNotePlayer({super.key, required this.url});
 
   @override
@@ -59,7 +57,6 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
     if (_isPlaying) {
       await _player.pause();
     } else {
-      // ✅ Use UrlSource for Firebase URLs
       await _player.play(UrlSource(widget.url));
     }
     setState(() => _isPlaying = !_isPlaying);
@@ -76,16 +73,14 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
       icon: Icon(
         _isPlaying ? Icons.pause : Icons.play_arrow,
         color: Colors.blue,
-        size: 20.sp, // Slightly smaller icon
+        size: 20.sp,
       ),
       label: Text(
         _isPlaying ? loc.pauseVoiceNote : loc.playVoiceNote,
         style: TextStyle(
           color: Colors.blue,
           fontWeight: FontWeight.bold,
-          fontSize: isNonLatinScript
-              ? 12.sp
-              : 14.sp, // Smaller font for Hindi/Santali
+          fontSize: isNonLatinScript ? 12.sp : 14.sp,
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -93,10 +88,7 @@ class _VoiceNotePlayerState extends State<VoiceNotePlayer> {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue.withOpacity(0.08),
         elevation: 0,
-        padding: EdgeInsets.symmetric(
-          horizontal: 10.w,
-          vertical: 8.h,
-        ), // Reduced horizontal padding
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       ),
       onPressed: _togglePlay,
@@ -110,7 +102,7 @@ class ReportDetailsPage extends StatefulWidget {
 
   static const mainBlue = Color(0xFF1746D1);
   static const navBg = Color(0xFFF0F4FF);
-  static const bgGrey = Color(0xFFF6F6F6); // Add this for home page grey
+  static const bgGrey = Color(0xFFF6F6F6);
 
   @override
   State<ReportDetailsPage> createState() => _ReportDetailsPageState();
@@ -130,24 +122,21 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
   }
 
   Future<void> _loadComplaint() async {
-    // First, try to load from Hive cache for instant display
     final box = Hive.box<Report>('reportsBox');
     final cachedReport = box.get(widget.complaintId);
     if (cachedReport != null) {
-      // Use cached data to build a temporary map for display
       setState(() {
         complaintData = {
           'complaintId': cachedReport.complaintId,
           'category': cachedReport.title.split(' - ')[0],
           'subcategory': cachedReport.title.split(' - ')[1],
           'status': cachedReport.status,
-          // We need to fetch the rest from Firebase
         };
         effectiveStatus = cachedReport.status;
-        _loading = false; // Stop loading, show cached data
+        _loading = false;
       });
     }
-    // Always fetch from Firebase for the latest details
+
     await _fetchComplaintFromFirebase();
   }
 
@@ -160,7 +149,6 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
     if (snapshot.exists) {
       final data = Map<String, dynamic>.from(snapshot.value as Map);
 
-      // Always use the status from the global complaint data
       String status = data['status'] ?? 'Pending';
 
       DateTime? dt = DateTime.tryParse(data['dateTime'] ?? '');
@@ -172,7 +160,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
       if (mounted) {
         setState(() {
           complaintData = data;
-          effectiveStatus = status; // Always use status from global node
+          effectiveStatus = status;
           _loading = false;
         });
       }
@@ -185,7 +173,6 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
     }
   }
 
-  // ✅ Helper to get status color
   Color _getStatusColor(String status) {
     switch (status) {
       case "Pending":
@@ -201,7 +188,6 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
     }
   }
 
-  // ✅ Helper to get status background color
   Color _getStatusBgColor(String status) {
     switch (status) {
       case "Pending":
@@ -770,7 +756,6 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                       ), // Remove extra vertical padding
                     ),
                     onPressed: () {
-                      // TODO: Implement grievance raising logic or navigation
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Raise Grievance pressed!')),
                       );

@@ -5,14 +5,14 @@ import 'home_page.dart';
 import 'report_issue_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import '../l10n/app_localizations.dart'; // Add this import
+import '../l10n/app_localizations.dart';
 
 class SubmittedPage extends StatefulWidget {
   final String complaintId;
   const SubmittedPage({super.key, required this.complaintId});
 
   static const mainBlue = Color(0xFF1746D1);
-  static const bgGrey = Color(0xFFF6F6F6); // Same as HomePage
+  static const bgGrey = Color(0xFFF6F6F6);
 
   @override
   State<SubmittedPage> createState() => _SubmittedPageState();

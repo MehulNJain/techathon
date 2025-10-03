@@ -51,19 +51,16 @@ class _OtpPageState extends State<OtpPage> {
         }
         await _confirmationResult!.confirm(_otp);
       } else {
-        // This is the mobile flow for both real and test users
         PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: widget.verificationId,
           smsCode: _otp,
         );
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-        // 2. Add this line right after signing in
         await FirebaseApi().saveTokenToDatabase();
       }
       if (!mounted) return;
 
-      // Fetch profile data before navigation
       final dbRef = FirebaseDatabase.instance.ref();
       final snapshot = await dbRef
           .child("users")
@@ -77,7 +74,6 @@ class _OtpPageState extends State<OtpPage> {
         email = data["email"] ?? "";
       }
 
-      // Now navigate and pass pre-fetched data
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
