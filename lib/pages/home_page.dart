@@ -1,7 +1,6 @@
 import 'package:CiTY/models/report_model.dart';
 import 'package:CiTY/models/user_profile_model.dart';
 import 'package:CiTY/pages/report_details_page.dart';
-import 'package:CiTY/pages/notifications_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -361,14 +360,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   InkWell(
                                     borderRadius: BorderRadius.circular(24.r),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => NotificationsPage(),
-                                        ),
-                                      );
-                                    },
+                                    onTap: () {},
                                     child: Stack(
                                       children: [
                                         Icon(

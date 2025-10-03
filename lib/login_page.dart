@@ -131,39 +131,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _showLanguageDialog() {
-    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
-    final l10n = AppLocalizations.of(context)!;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.select_language),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                title: const Text('English'),
-                onTap: () {
-                  localeProvider.setLocale(const Locale('en'));
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: const Text('हिन्दी'),
-                onTap: () {
-                  localeProvider.setLocale(const Locale('hi'));
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     const mainBlue = Color(0xFF1746D1);
@@ -212,26 +179,6 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Transform.translate(
-                              offset: Offset(
-                                0,
-                                -40.h,
-                              ), // This moves the icon up
-                              child: Align(
-                                alignment: Alignment.topRight,
-                                child: Padding(
-                                  padding: EdgeInsets.only(bottom: 10.h),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.language,
-                                      size: 40.sp,
-                                      color: mainBlue,
-                                    ),
-                                    onPressed: _showLanguageDialog,
-                                  ),
-                                ),
-                              ),
-                            ),
                             CircleAvatar(
                               radius: 48.r,
                               backgroundColor: mainBlue,

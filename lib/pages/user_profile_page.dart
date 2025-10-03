@@ -13,7 +13,6 @@ import 'package:CiTY/pages/profile_page.dart';
 import 'home_page.dart';
 import 'report_issue_page.dart';
 import 'reports_page.dart';
-import 'faq_page.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -687,12 +686,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               size: 20.sp,
               color: Colors.grey,
             ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => FaqPage()),
-              );
-            },
+            onTap: () {},
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
